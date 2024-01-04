@@ -1,0 +1,36 @@
+.btn-global-primary{
+    border: 0px solid rgb(171, 171, 171) ;
+    width: auto ;
+    padding: 0.5rem ;
+    background-color: #F6EF38;
+    /* border-radius:30px; */
+    max-height: 4rem;
+    color: #ffffff;
+    transition: 200ms background-color ;
+}
+.btn-global-primary:hover{
+    background-color:rgb(192, 199, 67) ;
+}
+
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-weight: 800;
+    font-style:normal;
+}
+@font-face {
+    font-family: 'Jomhuria';
+    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-weight: normal;
+    font-style:normal;
+}
+
+.btn-global-primary{
+    font-family: Inter;
+    font-weight: 300;
+}
+
+.hide{
+    display: none;
+}
