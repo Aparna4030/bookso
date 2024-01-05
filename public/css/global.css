@@ -34,3 +34,20 @@
 .hide{
     display: none;
 }
+
+.bg-bookso{
+    background-color: #F6EF38;
+}
+.text-bookso{
+    color: #F6EF38;
+}
+.custom-text-shadow {
+    color: #F6EF38;
+    text-shadow: 1px 1px 1px rgba(202, 202, 202, 0.5);
+  }
+
+  .font-color-secondary{
+    color: 535351;
+  }
+
+  

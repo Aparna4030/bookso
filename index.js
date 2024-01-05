@@ -1,6 +1,20 @@
+
+// User Side: User sign up with validation, User Login, Admin Sign-In{complete}
+//                 : OTP Login {complete}
+//                 : List products, Products detail page in user side
+
+// Admin Side: List users, User management(Block/Unblock)
+//                    : Category management(Add, edit, delete)
+//                    : Product management(Add, edit, delete)
+
+
+
+
+
 const express = require('express')
 const session = require("express-session")
 const indexRouter = require('./routes/indexRouter')
+const adminRouter = require('./routes/adminRouter')
 const path = require("path")
 require('dotenv').config();
 const app = express()
@@ -32,8 +46,10 @@ app.use(disableCacheMiddleware);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/admin",adminRouter)
 app.use("/", indexRouter)
 
 app.listen(process.env.PORT, () => {
     console.log("http://localhost:8888")
 })
+
