@@ -7,12 +7,19 @@
 <h1 id="landing-text-color">STEAL THE BIGGEST DEALS</h1>
 
 <div class="container">
-    <div class="row" style="padding-top: 20px;">
-      <div class="col-md-3" >
-        <img class="img-1" style="height: 200px; width: 140px;" src="../images/atomic.webp">
-        <div class="img-1-steal">Atomic habits</div>
-      </div>
-      <div class="col-md-3">
+  <div class="row" style="padding-top: 20px;">  
+    <% products.forEach(product => { %>
+      <a href="/product/<%= product._id %>">
+        <div class="col-md-3">
+          <img class="img-1" style="height: 200px; width: 140px;" src="../uploads/<%= product.img %>">
+          <div class="img-1-steal"><%= product.name %></div>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+      <!-- <div class="col-md-3">
         <img class="img-2" style="height: 200px; width: 140px;" src="../images/3 thousand.jpg">
         <div class="img-1-steal">Three thousand wishes</div>
       </div>
@@ -23,7 +30,7 @@
       <div class="col-md-3">
         <img class="img-4" style="height: 200px; width: 140px;" src="../images/h2.jpg">
         <div class="img-1-steal">Harry potter and the chamber of secrets</div>
-      </div>
-    </div>
-  </div>
+      </div> -->
+
+
   

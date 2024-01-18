@@ -75,10 +75,10 @@
                         <td><%= catego.name %></td>
                         <td class="px-3"><%= catego.description %></td>
                         <td><% if (catego.isListed) { %>
-                            <a class="btn btn-success" href="/admin/category/unlist/<%= catego._id %>">
+                            <a class="btn btn-danger" href="/admin/category/unlist/<%= catego._id %>">
                                 Unlist
                             <% }else{ %> 
-                              <a class="btn btn-danger" href="/admin/category/list/<%= catego._id %>">
+                              <a class="btn btn-success" href="/admin/category/list/<%= catego._id %>">
                                 List
                             <% } %> 
                           </a></td>

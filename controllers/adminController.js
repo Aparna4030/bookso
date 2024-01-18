@@ -17,7 +17,8 @@ const adminLogin = (req, res) => {
         res.redirect("/admin")
     }
     else{
-        res.redirect('/login')
+        req.session.message = "Invalid Credentials"
+        res.redirect('/admin/login')
     }
 }
 
@@ -114,14 +115,6 @@ const addProduct = async (req, res) => {
 
 
 }
-// const logout = (req,res)=>{
-//     req.session.isAdmin = null
-//     res.locals.isLoggedin = null;
-//     res.redirect("/admin/login")
-// }
-
-
-
 
 module.exports = {
     renderLogin,
@@ -138,5 +131,5 @@ module.exports = {
     editCategory,
     renderProducts,
     renderaddProduct,
-    addProduct
+    addProduct,
 }

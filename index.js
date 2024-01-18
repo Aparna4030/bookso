@@ -2,6 +2,7 @@ const express = require('express')
 const session = require("express-session")
 const indexRouter = require('./routes/indexRouter')
 const adminRouter = require('./routes/adminRouter')
+const productRouter = require('./routes/productRouter')
 const path = require("path")
 require('dotenv').config();
 const multer = require('multer')
@@ -30,7 +31,7 @@ const disableCacheMiddleware = (req, res, next) => {
 };
 
 app.use((req,res,next)=>{
-    if(req.session.userId){
+    if(req.session.userId || req.session.isAdmin){
         res.locals.isLoggedin = true;
     }else{
         res.locals.isLoggedin = false;
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/admin",adminRouter)
 app.use("/", indexRouter)
+app.use("/product",productRouter)
 
 app.listen(process.env.PORT, () => {
     console.log("http://localhost:8888")

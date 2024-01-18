@@ -121,10 +121,8 @@ const validateOtp = async (req, res) => {
 
 
 const logout = (req,res)=>{
-    console.log('ok')
-    console.log(req.session.userId)
     req.session.userId = null
-    console.log(req.session.userId)
+    req.session.isAdmin = null
     res.locals.isLoggedin = null;
     res.redirect("/")
 }

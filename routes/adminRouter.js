@@ -10,6 +10,7 @@ const upload = require('../middlewares/multer')
 router.get("/login",adminIsLoggedOut,adminController.renderLogin)
 router.post("/login",adminController.adminLogin)
 
+
 router.use(adminIsLoggedIn)
 router.get("/",adminController.renderAdminPanel)
 
