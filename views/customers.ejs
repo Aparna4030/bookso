@@ -1,0 +1,73 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %>
+
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+  crossorigin="anonymous"/>
+
+<div class="container ml-2 p-4 d-flex">
+
+  <div class="col-3 bg-light shadow rounded" style="height: 70vh; width: 35vh">
+    <div class="w-100 bg-bookso text-center py-2 fw-bold font-color-secondary rounded-top" >ADMIN PANEL</div>
+    <div class="w-100 h-75 d-flex flex-column ps-4 justify-content-around text-bookso fw-bold mt-3 custom-text-shadow">
+        <a class="text-decoration-none text-bookso" href="/admin"><div><i class="fa-solid fa-layer-group pe-2" style="color: #535351;"></i>DASHBOARD</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/products"><div><i class="fa-solid fa-cubes-stacked pe-2" style="color: #535351;"></i>PRODUCTS</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/customers"><div><i class="fa-solid fa-users pe-2" style="color: #535351;"></i>CUSTOMERS</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/orders"><div><i class="fa-solid fa-cart-shopping pe-2" style="color: #535351;"></i>ORDERS</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/category"><div><i class="fa-solid fa-list pe-2" style="color: #535351;"></i>CATEGORY</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/report"><div><i class="fa-solid fa-universal-access pe-2" style="color: #535351;"></i>SALES REPORT</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/banner"><div><i class="fa-regular fa-flag pe-2" style="color: #535351;"></i>BANNER MANAGE</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/coupons"><div><i class="fa-solid fa-ticket-simple pe-2" style="color: #535351;"></i>MANAGE COUPONS</div></a>
+    </div>
+  </div>
+  <div class="col-9 px-4">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Blocked</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% let i = 1 %>
+            <% users.forEach(user => { %>
+                <tr>
+                    <th scope="row"><%= i %></th>
+                    <td><%= user.name %></td>
+                    <td><%= user.phone %></td>
+                    <td><%= user.email %></td>
+                    <td><% if (user.isBlocked) { %>
+                        <a class="btn btn-success" href="/admin/unblock/<%= user._id %>">
+                          UNBLOCK
+                        <% }else{ %> 
+                          <a class="btn btn-danger" href="/admin/block/<%= user._id %>">
+                            BLOCK
+                        <% } %> 
+                      </a>
+                    </td>
+                  </tr>
+                  <% i++ %>
+            <% }) %>  
+        </tbody>
+      </table>
+  </div>
+
+
+
+
+
+
+</div>
+<div class="col-12"></div>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
+<script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>">

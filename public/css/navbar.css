@@ -1,0 +1,26 @@
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-style:normal;
+}
+@font-face {
+    font-family: 'Jomhuria';
+    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-weight: normal;
+    font-style:normal;
+}
+@font-face {
+    font-family: 'inkut antiqua';
+    src: url('../fonts/Inknut_Antiqua/InknutAntiqua-Regular.ttf')format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+#text-color{
+    color: #F6EF38;
+    font-family: jomhuria;
+    font-size: 43px;
+}
+#text-style{
+    font-family: inkut antiqua;
+}

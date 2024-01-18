@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-style:normal;
+}
+@font-face {
+    font-family: 'Jomhuria';
+    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    font-weight: normal;
+    font-style:normal;
+}
 .btn-global-primary{
     border: 0px solid rgb(171, 171, 171) ;
     width: auto ;
@@ -7,28 +18,11 @@
     max-height: 4rem;
     color: #ffffff;
     transition: 200ms background-color ;
+    font-family: Inter;
+    font-weight: 300;
 }
 .btn-global-primary:hover{
     background-color:rgb(192, 199, 67) ;
-}
-
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); /* Adjust the path and font format as needed */
-    font-weight: 800;
-    font-style:normal;
-}
-@font-face {
-    font-family: 'Jomhuria';
-    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); /* Adjust the path and font format as needed */
-    font-weight: normal;
-    font-style:normal;
-}
-
-.btn-global-primary{
-    font-family: Inter;
-    font-weight: 300;
 }
 
 .hide{
@@ -50,4 +44,31 @@
     color: 535351;
   }
 
-  
+  .btn-global-secondary{
+    border: 0px solid rgb(171, 171, 171) ;
+    border-radius: 6px;
+    width: auto ;
+    padding: 0.5rem ;
+    background-color: #535351;
+    /* border-radius:30px; */
+    max-height: 4rem;
+    color: #F6EF38;
+    transition: 200ms background-color ;
+    font-family: inter;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .text-bookso-product{
+    color:#535351;
+    font-family: jomhuria;
+    font-size: 28px;
+  }
+
+
+  .image{
+    width: 100%;
+    object-fit: contain;
+    margin: 2px;
+  }

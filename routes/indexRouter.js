@@ -1,18 +1,25 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const adminController = require("../controllers/adminController");
-const { isLoggedin } = require("../middlewares/auth_middleware");
+const { isLoggedin,isLoggedOut} = require("../middlewares/auth_middleware");
 const router = express.Router();
 
 router.get("/", (req, res) => {
     console.log(req.session.userId);
-    res.send('hello')
+
+    res.render("landing")
 })
-router.get("/login", isLoggedin, userController.renderLogin)
+router.get("/logout",userController.logout)
+router.use(isLoggedOut)
+router.get("/login",userController.renderLogin)
 router.post("/login", userController.userLogin)
-router.get("/signup", isLoggedin, userController.renderSignup)
+router.get("/signup", userController.renderSignup)
 router.post("/signup", userController.register)
+
+router.get("/otp",userController.renderEmailOtp)
 router.post("/otp", userController.validateOtp)
+
+router.get("/resend",userController.resendOtp)
 
 
 

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <title>OTP Validation</title>
     <style>
         body {
@@ -55,8 +58,37 @@
         <form method="post" action="/otp">
             <input type="text" placeholder="Enter OTP"  name="otp" id="otpInput" maxlength="6" required>
             <button type="submit">Validate OTP</button>
+            <% if (message) { %>
+                <div
+                class="alert alert-danger"
+                role="alert"
+                id="error-message"
+                ><%= message%></div>
+                <% } %>
+
         </form>
+
+        <div class="container mt-2 fw-bold" id="timer">
+          30 
+        </div>
     </div>
 
+    
 </body>
+<script>
+    let i = 30
+    const timerContainer = document.querySelector("#timer")
+
+    const intervelId = setInterval(() => {
+        if(i<=0){
+            clearInterval(intervelId)
+            const resendButton = `<a href="/resend">Resend OTP</a>`
+            timerContainer.innerHTML = resendButton;
+        }else{
+            i--;
+            timerContainer.innerHTML = i;
+        }
+    },1000);
+
+</script>
 </html>

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
-const productSchema= new mongoose.schema({
+const productSchema= new mongoose.Schema({
     name:{
-        type:string,
+        type:String,
         required:true,
     },
     publication:{
-        type:string,
+        type:String,
         required:true,
     },
     category_id:{
@@ -13,11 +13,15 @@ const productSchema= new mongoose.schema({
         required:true,
     },
     author:{
-        type:string,
+        type:String,
         required:true,
     },
     price:{
         type:Number,
+        required:true,
+    },
+    language:{
+        type:String,
         required:true,
     },
     discount:{
@@ -30,17 +34,17 @@ const productSchema= new mongoose.schema({
     },
     isListed:{
         type:Boolean,
-        default:false,
+        default:true,
     },
     image:{
-        type:string,
+        type:[String],
         required:true,
     },
     description:{
-        type:string,
+        type:String,
         required:true,
     }
 },{timestamps:true})
 
-const productModal = mongoose.model('Product',productSchema)
-module.exports = productModal
+const productModel = mongoose.model('Product',productSchema)
+module.exports = productModel
