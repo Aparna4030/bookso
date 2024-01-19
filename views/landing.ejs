@@ -7,14 +7,14 @@
 <h1 id="landing-text-color">STEAL THE BIGGEST DEALS</h1>
 
 <div class="container">
-  <div class="row" style="padding-top: 20px;">  
+  <div class="row d-flex" style="padding-top: 20px;">  
     <% products.forEach(product => { %>
-      <a href="/product/<%= product._id %>">
-        <div class="col-md-3">
-          <img class="img-1" style="height: 200px; width: 140px;" src="../uploads/<%= product.img %>">
+      <div class="col-md-3">
+          <a href="/product/<%= product._id %>">
+          <img class="img-1" style="height: 200px; width: 140px;" src="../uploads/<%= product.image[0] %>">
           <div class="img-1-steal"><%= product.name %></div>
+        </a>
         </div>
-      </a>
     <% }) %>
   </div>
 </div>

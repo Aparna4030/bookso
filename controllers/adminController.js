@@ -84,8 +84,9 @@ const editCategory = async (req, res) => {
 }
 
 
-const renderProducts = (req, res) => {
-    res.render("products")
+const renderProducts = async(req, res) => {
+    const products = await Product.find()
+    res.render("products",{products})
 }
 
 const renderaddProduct = async (req, res) => {

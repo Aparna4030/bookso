@@ -5,6 +5,6 @@ const {adminIsLoggedIn,adminIsLoggedOut} = require("../middlewares/auth_middlewa
 
 
 
-router.get("/product",productController.renderProduct)
+router.get("/:id",productController.renderProduct)
 
 module.exports = router;
