@@ -1,21 +1,22 @@
 const session = require("express-session")
-const User = require("../models/userModel")
-const sendOTPemail = require("../utils/sendEmail")
+const asynchandler = require("express-async-handler")
+const User = require("../../models/userModel")
+const sendOTPemail = require("../../utils/sendEmail")
 const bcrypt = require("bcrypt")
 const { redirect } = require("express/lib/response")
 
 
 
-const renderLogin = (req, res) => {
+const renderLogin = asynchandler((req, res) => {
     let message = null
     if(req.session.message){
         message = req.session.message
         req.session.message = null
     }
     res.render("login",{message:message})
-}
+})
 
-const userLogin = async (req,res)=>{
+const userLogin =asynchandler( async (req,res)=>{
     console.log(req.body)
  
     const existingUser = await User.findOne({email:req.body.email})
@@ -43,18 +44,19 @@ const userLogin = async (req,res)=>{
                 res.redirect("/login")
             }
         }
-    }
+    })
 
-const renderSignup = (req, res) => {
+const renderSignup = asynchandler((req, res) => {
+    
     let message = null
     if (req.session.message) {
         message = req.session.message
         req.session.message = null
     }
     res.render("signup", { message: message })
-}
+})
 
-const register = async (req, res) => {
+const register = asynchandler(async (req, res) => {
     const existingUser = await User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }]}, {})
     if (existingUser) {
         req.session.message = "User Exist"
@@ -66,27 +68,27 @@ const register = async (req, res) => {
         req.session.user.time = Date.now()
         res.redirect("/otp")
     }
-}
+})
 
-const renderEmailOtp = (req,res)=>{
+const renderEmailOtp =asynchandler((req,res)=>{
     let message = null;
      if(req.session.message){
         message = req.session.message
         req.session.message = null
     } 
     res.render("emailOtp",{message:message})
-}
+})
 
-const resendOtp =async (req,res)=>{
+const resendOtp =asynchandler( async (req,res)=>{
  const reOtp = await sendOTPemail(req.session.user.email)
  console.log(req.session)
  console.log(req.session.user.email)
  req.session.user.otp = reOtp
  req.session.user.time = Date.now()
  res.redirect("/otp")
-}
+})
 
-const validateOtp = async (req, res) => {
+const validateOtp = asynchandler( async (req, res) => {
     const expiryTime = Date.now()-req.session.user.time;
     if(expiryTime>1000*60*5){
         req.session.message = "Otp Expired"
@@ -117,14 +119,16 @@ const validateOtp = async (req, res) => {
         req.session.message = "Something went wrong"
         res.redirect("/signup")
     }
-}
+})
 
 
-const logout = (req,res)=>{
+const logout = asynchandler( (req,res)=>{
     req.session.userId = null
     req.session.isAdmin = null
     res.locals.isLoggedin = null;
     res.redirect("/")
-}
+})
+
+
 
 module.exports = { renderLogin, renderSignup, register, validateOtp, userLogin,logout,renderEmailOtp,resendOtp}

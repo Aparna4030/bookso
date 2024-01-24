@@ -1,15 +1,15 @@
 const express = require("express")
-const adminController = require("../controllers/adminController")
+const adminController = require("../controllers/admin/adminController")
+const categoryController = require("../controllers/admin/categoryController")
+const productController = require("../controllers/admin/productController")
 const {adminIsLoggedIn,adminIsLoggedOut} = require("../middlewares/auth_middleware");
-
-const router = express.Router()
 const upload = require('../middlewares/multer')
+const router = express.Router()
 
 
 
 router.get("/login",adminIsLoggedOut,adminController.renderLogin)
 router.post("/login",adminController.adminLogin)
-
 
 router.use(adminIsLoggedIn)
 router.get("/",adminController.renderAdminPanel)
@@ -18,17 +18,17 @@ router.get("/customers",adminController.renderCustomers)
 router.get("/block/:id",adminController.block)
 router.get("/unblock/:id",adminController.unblock)
 
-router.get("/category",adminController.renderCategory)
-router.post("/category",adminController.addCategory)
+router.get("/products",productController.renderProducts)
+router.get("/addProduct",productController.renderaddProduct)
 
-router.get("/category/list/:id",adminController.listCategory)
-router.get("/category/unlist/:id",adminController.unlistCategory)
+router.post("/product",upload.array('images',4),productController.addProduct)
 
-router.get("/category/edit/:id",adminController.rendereditCategory)
-router.post("/category/edit",adminController.editCategory)
+router.get("/category",categoryController.renderCategory)
+router.post("/category",categoryController.addCategory)
 
-router.get("/products",adminController.renderProducts)
-router.get("/addProduct",adminController.renderaddProduct)
+router.get("/category/list/:id",categoryController.listCategory)
+router.get("/category/unlist/:id",categoryController.unlistCategory)
 
-router.post("/product",upload.array('images',4),adminController.addProduct)
+router.get("/category/edit/:id",categoryController.rendereditCategory)
+router.post("/category/edit",categoryController.editCategory)
 module.exports = router;

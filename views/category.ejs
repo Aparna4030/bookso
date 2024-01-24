@@ -27,7 +27,14 @@
     <div class="col-9 px-4">
 <button type="button" class="btn-global-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     New Category
-  </button>
+  </button> 
+  <% if (message) { %>
+    <div
+    class="alert alert-danger"
+    role="alert"
+    id="error-message"
+    ><%= message%></div>
+    <% } %>
   
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -38,16 +45,17 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form method="post" action="/admin/category">
+            <form method="post" id="category-form" action="/admin/category">
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Name</label>
-                <input name="name" type="text" class="form-control" id="exampleFormControlInput1">
+                <input name="name" type="text" class="form-control" id="exampleFormControlInput1" required>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
             </div>
         </div>
+        
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Add Category</button>
@@ -106,3 +114,6 @@
   crossorigin="anonymous"
 ></script>
 <script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>
+<script>
+
+</script>

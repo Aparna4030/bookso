@@ -1,6 +1,6 @@
 const express = require('express');
-const userController = require('../controllers/userController');
-const adminController = require("../controllers/adminController");
+const userController = require('../controllers/user/userController');
+const productUserController = require("../controllers/user/productUserController");
 const Product = require("../models/productModel");
 const { isLoggedin,isLoggedOut} = require("../middlewares/auth_middleware");
 const router = express.Router();
@@ -22,12 +22,6 @@ router.post("/otp", userController.validateOtp)
 
 router.get("/resend",userController.resendOtp)
 
-
-
-
-// router.get("/admin",adminController.renderLogin)
-// router.post("/admin",adminController.adminLogin)
-// router.get("/adminpanel",adminController.renderAdminPanel)
-
+router.get("/:id",productUserController.renderProduct)
 
 module.exports = router

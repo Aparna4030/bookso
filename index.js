@@ -2,14 +2,10 @@ const express = require('express')
 const session = require("express-session")
 const indexRouter = require('./routes/indexRouter')
 const adminRouter = require('./routes/adminRouter')
-const productRouter = require('./routes/productRouter')
 const path = require("path")
 require('dotenv').config();
-const multer = require('multer')
 const app = express()
 const connectdb = require("./config/connection");
-
-
 
 
 connectdb()
@@ -18,7 +14,7 @@ app.set("views", path.join(__dirname, "/views"))
 app.set("view engine", "ejs")
 
 app.use(session({
-    secret: "qwe123asd",
+    secret:process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
 }))
@@ -30,10 +26,10 @@ const disableCacheMiddleware = (req, res, next) => {
     next();
 };
 
-app.use((req,res,next)=>{
-    if(req.session.userId || req.session.isAdmin){
+app.use((req, res, next) => {
+    if (req.session.userId || req.session.isAdmin) {
         res.locals.isLoggedin = true;
-    }else{
+    } else {
         res.locals.isLoggedin = false;
     }
     next();
@@ -46,9 +42,16 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-app.use("/admin",adminRouter)
+app.use("/admin", adminRouter)
 app.use("/", indexRouter)
-app.use("/product",productRouter)
+
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.render('errorpage')
+});
+
+
 
 app.listen(process.env.PORT, () => {
     console.log("http://localhost:8888")
