@@ -29,23 +29,36 @@
           <thead>
             <tr>
               <th scope="col">No</th>
+              <th scope="col">Image</th>
               <th scope="col">Product</th>
               <th scope="col">Author</th>
               <th scope="col">Stock</th>
               <th scope="col">Price</th>
               <th scope="col">Discount</th>
+              <th scope="col">Status</th>
+              <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
               <% let i = 1 %>
               <% products.forEach(product => { %>
-                  <tr>
+                  <tr >
                       <th scope="row"><%= i %></th>
+                      <td class="w-25"><img class="w-25" src="../uploads/<%= product.image[0] %>"></td>
                       <td><%= product.name %></td>
                       <td><%= product.author %></td>
                       <td><%= product.stock %></td>
                       <td><%= product.price %></td>
                       <td><%= product.discount %></td>
+                      <td><% if (product.isListed) { %>
+                      <a class="btn btn-danger" href="/admin/product/unlist/<%= product._id %>">
+                            Unlist
+                        <% }else{ %> 
+                          <a class="btn btn-success" href="/admin/product/list/<%= product._id %>">
+                            List
+                        <% } %> 
+                      </a></td>
+                      <td><a class="btn btn-warning" href="/admin/editProduct/<%=product._id%>">EDIT</a></td>
                     </tr>
                     <%i++ %>
               <% }) %>  
@@ -56,10 +69,5 @@
   
 
 </div>
-
-      <script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>

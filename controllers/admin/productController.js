@@ -39,4 +39,46 @@ const addProduct = asynchandler( async (req, res) => {
 
 })
 
-module.exports ={renderProducts,renderaddProduct,addProduct,}
+const renderEditProduct = asynchandler(async(req,res)=>{
+    const product = await Product.findOne({ _id: req.params.id })
+    const categories = await Category.find()
+    res.render("editProduct",{product,categories})
+})
+
+const editProduct = asynchandler( async (req, res) => {
+    //  const { name, description,} = req.body
+    console.log("hellohellohello",req.files)
+    console.log("okeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",req.body)
+    const product = await Product.updateOne({_id:req.params.id}, { $set: { 
+        name: req.body.name,
+        publication: req.body.Publisher,
+        category_id: req.body.category,
+        author: req.body.author,
+        price: parseInt(req.body.price),
+        language:req.body.language,
+        discount: parseInt(req.body.discount),
+        stock: parseInt(req.body.stock),
+        image: req.files.map(file => {
+            return file.filename
+        }),
+        description: req.body.description, } })
+
+        console.log('updastessss',product)
+     res.redirect("/admin/products")
+})
+
+
+const listProducts = asynchandler (async (req, res) => {
+    const productId = req.params.id
+    const productData = await Product.updateOne({ _id: productId }, { $set: { isListed: true } })
+    res.redirect("/admin/products")
+})
+
+const unlistProducts = asynchandler(async (req, res) => {
+    const productId = req.params.id
+    const productData = await Product.updateOne({ _id: productId }, { $set: { isListed: false } })
+    res.redirect("/admin/products")
+})
+
+
+module.exports ={listProducts,unlistProducts,renderProducts,renderaddProduct,addProduct,renderEditProduct,editProduct}

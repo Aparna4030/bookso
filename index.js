@@ -14,10 +14,13 @@ app.set("views", path.join(__dirname, "/views"))
 app.set("view engine", "ejs")
 
 app.use(session({
-    secret:process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-}))
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    }
+}));
 
 const disableCacheMiddleware = (req, res, next) => {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');

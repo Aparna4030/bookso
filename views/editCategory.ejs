@@ -29,12 +29,12 @@
             <div class="mb-3">
                 <input name="id" value="<%= category._id %>" style="display: none;">
                 <label for="exampleFormControlInput1" class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Name" value="<%= category.name %>">
+                <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Name" value="<%= category.name %>" required>
                 
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Description"><%= category.description %></textarea>
+                <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Description" required><%= category.description %></textarea>
             </div>
             <button class="btn-global-secondary">Submit</button>
          </form>

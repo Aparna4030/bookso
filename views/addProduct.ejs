@@ -1,70 +1,41 @@
 <%- include('partials/head.ejs') %> 
 <%- include('partials/navbar.ejs') %>
 
-<form action="/admin/product" method="post" enctype="multipart/form-data">
+<form action="/admin/product" method="post" enctype="multipart/form-data" id="add-product">
   <div class="container p-4 d-flex">
     <div
       class="col-3 bg-light shadow rounded"
-      style="height: 70vh; width: 35vh"
-    >
-      <div
-        class="w-100 bg-bookso text-center py-2 fw-bold font-color-secondary rounded-top"
-      >
+      style="height: 70vh; width: 35vh">
+      <div class="w-100 bg-bookso text-center py-2 fw-bold font-color-secondary rounded-top">
         ADMIN PANEL
       </div>
-      <div
-        class="w-100 h-75 d-flex flex-column ps-4 justify-content-around text-bookso fw-bold mt-3 custom-text-shadow"
-      >
-        <a class="text-decoration-none text-bookso" href="/admin"
-          ><div>
-            <i class="fa-solid fa-layer-group pe-2" style="color: #535351"></i
-            >DASHBOARD
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/products"
-          ><div>
-            <i class="fa-solid fa-cubes-stacked pe-2" style="color: #535351"></i
-            >PRODUCTS
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/customers"
-          ><div>
-            <i class="fa-solid fa-users pe-2" style="color: #535351"></i
-            >CUSTOMERS
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/orders"
-          ><div>
-            <i class="fa-solid fa-cart-shopping pe-2" style="color: #535351"></i
-            >ORDERS
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/category"
-          ><div>
+      <div class="w-100 h-75 d-flex flex-column ps-4 justify-content-around text-bookso fw-bold mt-3 custom-text-shadow">
+        <a class="text-decoration-none text-bookso" href="/admin"><div>
+            <i class="fa-solid fa-layer-group pe-2" style="color: #535351"></i>DASHBOARD
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/products"><div>
+            <i class="fa-solid fa-cubes-stacked pe-2" style="color: #535351"></i>PRODUCTS
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/customers"><div>
+            <i class="fa-solid fa-users pe-2" style="color: #535351"></i>CUSTOMERS
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/orders"><div>
+            <i class="fa-solid fa-cart-shopping pe-2" style="color: #535351"></i>ORDERS
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/category"><div>
             <i class="fa-solid fa-list pe-2" style="color: #535351"></i>CATEGORY
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/report"
-          ><div>
-            <i
-              class="fa-solid fa-universal-access pe-2"
-              style="color: #535351"
-            ></i
-            >SALES REPORT
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/banner"
-          ><div>
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/report"><div>
+            <i class="fa-solid fa-universal-access pe-2"
+              style="color: #535351"></i>SALES REPORT
+            </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/banner"><div>
             <i class="fa-regular fa-flag pe-2" style="color: #535351"></i>BANNER
             MANAGE
-          </div></a
-        >
-        <a class="text-decoration-none text-bookso" href="/admin/coupons"
-          ><div>
-            <i class="fa-solid fa-ticket-simple pe-2" style="color: #535351"></i
-            >MANAGE COUPONS
-          </div></a
-        >
+          </div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/coupons"><div>
+            <i class="fa-solid fa-ticket-simple pe-2" style="color: #535351"></i>MANAGE COUPONS
+          </div></a>
       </div>
     </div>
     <!-- <form method="post" action="/admin/Product"> -->
@@ -137,6 +108,7 @@
           <div class="text-bookso-product">Stock Quantity</div>
           <input
             name="stock"
+            id="stock"
             type="number"
             class="form-control"
             aria-label="Text input with dropdown button"
@@ -147,6 +119,7 @@
           <div class="text-bookso-product">Price</div>
           <input
             name="price"
+            id="price"
             type="number"
             class="form-control"
             aria-label="Text input with dropdown button"
@@ -169,6 +142,7 @@
           <div class="text-bookso-product">Discount</div>
           <input
             name="discount"
+            id="discount"
             type="number"
             class="form-control"
             aria-label="Text input with dropdown button"
@@ -210,6 +184,10 @@
 <script>
   const imageInput = document.querySelector("#img-input");
   const imageContainer = document.querySelector('#image-container');
+  const addProductform = document.querySelector("#add-product")
+  const stockInput = document.querySelector("#stock")
+  const priceInput = document.querySelector("#price")
+  const discountInput = document.querySelector("#discount")
 
   imageInput.addEventListener("input", (event) => {
 
@@ -228,4 +206,15 @@
 
     }
   });
+
+  addProductform.addEventListener("submit",(event)=>{
+    if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
+      event.preventDefault()
+      stockInput.value = " "
+      priceInput.value = " "
+      discountInput.value = " "
+      alert("Invalid Input")
+    }
+
+  })
 </script>

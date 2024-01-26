@@ -23,6 +23,12 @@ router.get("/addProduct",productController.renderaddProduct)
 
 router.post("/product",upload.array('images',4),productController.addProduct)
 
+router.get("/editProduct/:id",productController.renderEditProduct)
+router.post("/editProduct/:id",upload.array('images'),productController.editProduct)
+
+router.get("/product/list/:id",productController.listProducts)
+router.get("/product/unlist/:id",productController.unlistProducts)
+
 router.get("/category",categoryController.renderCategory)
 router.post("/category",categoryController.addCategory)
 

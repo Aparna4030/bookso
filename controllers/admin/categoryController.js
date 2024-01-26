@@ -17,7 +17,7 @@ const addCategory = asynchandler( async (req, res) => {
 
     const existingCategory = await Category.findOne({name:req.body.name});
     if(existingCategory){
-        console.log("existinggggggggggggggggggggggggggggggg",existingCategory)
+        console.log("existingggg",existingCategory)
         req.session.message = "Category exists"
         res.redirect('/admin/category')
         return;
@@ -51,6 +51,13 @@ const rendereditCategory = asynchandler( async (req, res) => {
 
 const editCategory = asynchandler( async (req, res) => {
     const { name, description, id } = req.body
+    const existingCategory = await Category.findOne({name:req.body.name});
+    if(existingCategory){
+        console.log("existingggg",existingCategory)
+        req.session.message = "Category exists"
+        res.redirect('/admin/category')
+        return;
+    }
     console.log(req.body)
     const category = await Category.updateOne({ _id: id }, { $set: { name, description } })
     res.redirect("/admin/category")

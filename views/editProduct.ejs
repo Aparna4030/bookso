@@ -1,0 +1,171 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %>
+<center><body> 
+    <form method="post" action="/admin/editProduct/<%= product._id %>" enctype="multipart/form-data" id="add-product">
+          <div class="col-6">
+            <div class="row mb-1 ms-4">
+              <div class="col-12">
+                <div class="text-bookso-product">Product Name</div>
+                <input
+                  name="name"
+                  value="<%= product.name %>"
+                  type="text"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row ms-4">
+              <div class="col-6">
+                <div class="text-bookso-product">Author</div>
+                <input
+                  name="author"
+                  value="<%= product.author %>"
+                  type="text"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+              <div class="col-6">
+                <div class="text-bookso-product">Publisher</div>
+                <input
+                  name="Publisher"
+                  value="<%= product.publication%>"
+                  type="text"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+            </div>
+           <div class="row ms-4 ">
+              <div class="col-6 w-100">
+                <div class="text-bookso-product">Category</div>
+                <select
+                  name="category"
+                  value="<%= product.category %>"
+                  class="form-select"
+                  aria-label="Default select example"
+                  required
+                >
+                  <option selected>Category</option>
+                  <%categories.forEach(element => { %>
+                      <option value=<%= element._id %>> <%= element.name %></option>
+                      
+                  <% }) %>
+                  
+                </select>
+              </div>
+            </div>
+            <div class="row ms-4">
+              <div class="col-6">
+                <div class="text-bookso-product">Stock Quantity</div>
+                <input
+                  name="stock"
+                  id="stock"
+                  value="<%= product.stock %>"
+                  type="number"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+              <div class="col-6">
+                <div class="text-bookso-product">Price</div>
+                <input
+                  name="price"
+                  id="price"
+                  value="<%= product.price %>"
+                  type="number"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row ms-4">
+              <div class="col-6">
+                <div class="text-bookso-product">Language</div>
+                <input
+                  name="language"
+                  value="<%= product.language %>"
+                  type="text"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+              <div class="col-6">
+                <div class="text-bookso-product">Discount</div>
+                <input
+                  name="discount"
+                  id="discount"
+                  value="<%= product.discount %>"
+                  type="number"
+                  class="form-control"
+                  aria-label="Text input with dropdown button"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row ms-4">
+              <div class="text-bookso-product">Description</div>
+              <textarea
+                name="description"
+                
+                type="text"
+                class="form-control" required
+              ><%= product.description %></textarea>
+            </div>
+            </div>
+            <div class="col-3 ms-4 d-flex flex-column mt-3">
+                <div id="image-container" class="mb-3 w-100 border border-warning">
+                  <input id="img-input" class="w-100" type="file"  name="images" multiple />
+                </div>   
+        </div>  
+        <button  class="btn-global-primary w-25 ms-4 mt-2 mb-3 fw-bold" type="submit">UPDATE</button>
+      </form>
+    </center>
+
+    <script>
+        const imageInput = document.querySelector("#img-input");
+        const imageContainer = document.querySelector('#image-container');
+        const addProductform = document.querySelector("#add-product")
+        const stockInput = document.querySelector("#stock")
+        const priceInput = document.querySelector("#price")
+        const discountInput = document.querySelector("#discount")
+      
+        imageInput.addEventListener("input", (event) => {
+      
+      
+          const images = event.target.files;
+          console.log(images);
+      
+          for (let i = 0; i < images.length; i++) {
+      
+            console.log(images[i]);
+      
+            const img = document.createElement("img");
+            img.classList.add("image");
+            img.src = URL.createObjectURL(images[i]);
+            imageContainer.append(img);
+      
+          }
+        });
+
+  addProductform.addEventListener("submit",(event)=>{
+    if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
+      event.preventDefault()
+      stockInput.value = " "
+      priceInput.value = " "
+      discountInput.value = " "
+      alert("Invalid Input")
+    }
+  })
+
+</script>      
+</body>
+</html>
+

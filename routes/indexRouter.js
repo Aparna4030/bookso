@@ -11,9 +11,19 @@ router.get("/", async (req, res) => {
     res.render("landing",{products:products})
 })
 router.get("/logout",userController.logout)
+router.get("/product/:id",productUserController.renderProduct)
+
 router.use(isLoggedOut)
 router.get("/login",userController.renderLogin)
 router.post("/login", userController.userLogin)
+
+router.post("/sendForgotLink",userController.sendForgotLink)
+router.get("/forgotPasswordEmail",userController.renderForgotPasswordEmail)
+
+router.post("/updatePassword",userController.updatePassword)
+
+router.get('/resetPassword/:id',userController.renderResetPassword)
+
 router.get("/signup", userController.renderSignup)
 router.post("/signup", userController.register)
 
@@ -22,6 +32,5 @@ router.post("/otp", userController.validateOtp)
 
 router.get("/resend",userController.resendOtp)
 
-router.get("/:id",productUserController.renderProduct)
 
 module.exports = router
