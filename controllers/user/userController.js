@@ -18,12 +18,9 @@ const renderLogin = asynchandler((req, res) => {
 })
 
 const userLogin = asynchandler(async (req, res) => {
-    console.log(req.body)
 
     const existingUser = await User.findOne({ email: req.body.email })
-    console.log(existingUser)
     if (!existingUser) {
-        console.log('inside the existing..')
         req.session.message = "User does not exist"
         res.redirect("/login")
     } else {
@@ -35,7 +32,6 @@ const userLogin = asynchandler(async (req, res) => {
         }
         if (valid) {
             req.session.userId = existingUser._id
-            console.log(req.session.userId);
             res.redirect("/")
         } else {
             req.session.message = "Password don't match"
@@ -123,8 +119,6 @@ const renderEmailOtp = asynchandler((req, res) => {
 
 const resendOtp = asynchandler(async (req, res) => {
     const reOtp = await sendOTPemail(req.session.user.email)
-    console.log(req.session)
-    console.log(req.session.user.email)
     req.session.user.otp = reOtp
     req.session.user.time = Date.now()
     res.redirect("/otp")
@@ -139,7 +133,6 @@ const validateOtp = asynchandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.session.user.password, 10)
     try {
         if (req.session.user.otp.toString() === req.body.otp.toString()) {
-            console.log(req.session.user)
             const newUser = new User({
                 name: req.session.user.name,
                 email: req.session.user.email,

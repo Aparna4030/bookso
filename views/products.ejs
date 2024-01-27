@@ -25,6 +25,10 @@
     </div>
     <div class="col-9 px-4">
     <a class="btn-global-secondary" href="/admin/addProduct">Add Product</a>
+    <div class="d-flex px-3 ml-3 mt-3 ">
+      <input class="form-control mx-2" id="search" type="search" placeholder="Search Product" aria-label="Search">
+      <button class="btn btn-outline-dark mx-auto" id="searchButton" >Search</button>
+    </div>
       <table class="table">
           <thead>
             <tr>
@@ -39,7 +43,7 @@
               <th scope="col">Edit</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="tableData">
               <% let i = 1 %>
               <% products.forEach(product => { %>
                   <tr >
@@ -52,7 +56,7 @@
                       <td><%= product.discount %></td>
                       <td><% if (product.isListed) { %>
                       <a class="btn btn-danger" href="/admin/product/unlist/<%= product._id %>">
-                            Unlist
+                            Unlist</a>
                         <% }else{ %> 
                           <a class="btn btn-success" href="/admin/product/list/<%= product._id %>">
                             List
@@ -71,3 +75,44 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>
+<script>
+ const searchInput = document.querySelector("#search")
+ const button = document.querySelector("#searchButton")
+ const tableData = document.querySelector("#tableData")
+
+ button.addEventListener("click",async()=>{
+  const string = searchInput.value;
+  if(!string)return;
+
+  const response = await fetch(`/admin/product/search?search=${string}`)
+  const products = await response.json()
+  console.log(products)
+
+  let inner = ""
+  let i = 1
+  products.forEach(product => {
+    let button = " ";
+    if(product.isListed){
+      button = ` <a class="btn btn-danger" href="/admin/product/unlist/${product._id}">Unlist</a>`
+    }else{
+      button = `<a class="btn btn-success" href="/admin/product/list/${product._id}">List</a>`                     
+    }
+
+    inner += `<tr>
+      <th scope="row">${i}</th>
+      <td class="w-25"><img class="w-25" src="../uploads/${product.image[0]}"></td>
+      <td>${product.name}</td>
+      <td>${product.author}</td>
+      <td>${product.stock}</td>
+      <td>${product.price}</td>
+      <td>${product.discount}</td>
+      <td>${button}</td>
+      <td><a class="btn btn-warning" href="/admin/editProduct/${product._id}">EDIT</a></td>
+      </tr>`
+      i++
+  });
+  tableData.innerHTML = inner;
+ 
+ })
+
+</script>

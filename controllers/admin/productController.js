@@ -33,7 +33,6 @@ const addProduct = asynchandler( async (req, res) => {
         description: req.body.description,
     })
 
-    console.log(product)
     const data = await product.save()
     res.redirect("/admin/products")
 
@@ -47,8 +46,6 @@ const renderEditProduct = asynchandler(async(req,res)=>{
 
 const editProduct = asynchandler( async (req, res) => {
     //  const { name, description,} = req.body
-    console.log("hellohellohello",req.files)
-    console.log("okeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",req.body)
     const product = await Product.updateOne({_id:req.params.id}, { $set: { 
         name: req.body.name,
         publication: req.body.Publisher,
@@ -63,7 +60,6 @@ const editProduct = asynchandler( async (req, res) => {
         }),
         description: req.body.description, } })
 
-        console.log('updastessss',product)
      res.redirect("/admin/products")
 })
 
@@ -80,5 +76,11 @@ const unlistProducts = asynchandler(async (req, res) => {
     res.redirect("/admin/products")
 })
 
+const searchProduct = asynchandler(async(req,res)=>{
+    const searchString = req.query.search
+    const products = await Product.find({name:{$regex: searchString}})
+    res.json(products);
+})
 
-module.exports ={listProducts,unlistProducts,renderProducts,renderaddProduct,addProduct,renderEditProduct,editProduct}
+
+module.exports ={searchProduct,listProducts,unlistProducts,renderProducts,renderaddProduct,addProduct,renderEditProduct,editProduct}

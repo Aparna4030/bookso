@@ -23,6 +23,10 @@
     </div>
   </div>
   <div class="col-9 px-4">
+    <div class="d-flex mt-3 ">
+      <input class="form-control mx-2" id="search" type="search" placeholder="Search Product" aria-label="Search">
+      <button class="btn btn-outline-dark mx-auto" id="searchButton" >Search</button>
+    </div>
     <table class="table">
         <thead>
           <tr>
@@ -33,7 +37,7 @@
             <th scope="col">Blocked</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="tableData">
             <% let i = 1 %>
             <% users.forEach(user => { %>
                 <tr>
@@ -71,3 +75,39 @@
   crossorigin="anonymous"
 ></script>
 <script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>">
+
+<script>
+const searchInput = document.querySelector("#search")
+const button = document.querySelector("#searchButton")
+const tableData = document.querySelector("#tableData")
+
+button.addEventListener("click",async()=>{
+  const string = searchInput.value;
+  if(!string)return;
+
+  const response = await fetch(`/admin/users?search=${string}`)
+  const users = await response.json()
+  console.log(users)
+
+let inner = ""
+let i = 1
+  users.forEach(user => {
+    let button = " ";
+    if(user.isBlocked){
+      button = `<a class="btn btn-success" href="/admin/unblock/${user._id}">UNBLOCK</a>`
+    }else{
+      button = `<a class="btn btn-danger" href="/admin/block/${user._id}">BLOCK</a>`                     
+    }
+    inner += `<tr>
+      <th scope="row">${i}</th>
+      <td>${user.name}</td>
+      <td>${user.phone}</td>
+      <td>${user.email}</td>
+      <td>${button}</td>
+    </tr>`
+    i++
+  });
+
+  tableData.innerHTML = inner;
+})
+</script>

@@ -28,7 +28,6 @@ const renderAdminPanel = asynchandler( (req, res) => {
 
 const renderCustomers = asynchandler( async (req, res) => {
     const users = await User.find({}, { password: 0 })
-    console.log(users)
     res.render("customers", { users })
 })
 
@@ -44,6 +43,12 @@ const unblock = asynchandler( async (req, res) => {
     res.redirect("/admin/customers")
 })
 
+const searchUser = asynchandler(async(req,res)=>{
+    const searchString = req.query.search
+    const users = await User.find({name:{$regex: searchString}})
+    res.json(users);
+})
+
 module.exports = {
     renderLogin,
     adminLogin,
@@ -51,5 +56,5 @@ module.exports = {
     renderCustomers,
     block,
     unblock,
-   
+    searchUser,
 }

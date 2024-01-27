@@ -37,4 +37,12 @@ router.get("/category/unlist/:id",categoryController.unlistCategory)
 
 router.get("/category/edit/:id",categoryController.rendereditCategory)
 router.post("/category/edit",categoryController.editCategory)
+
+router.get("/product/search",productController.searchProduct)
+router.get("/users",adminController.searchUser)
+
+
+
+
+
 module.exports = router;

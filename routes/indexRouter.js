@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
     const products = await Product.find().limit(4)
-    console.log(products)
     res.render("landing",{products:products})
 })
 router.get("/logout",userController.logout)

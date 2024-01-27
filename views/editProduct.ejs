@@ -123,6 +123,10 @@
             <div class="col-3 ms-4 d-flex flex-column mt-3">
                 <div id="image-container" class="mb-3 w-100 border border-warning">
                   <input id="img-input" class="w-100" type="file"  name="images" multiple />
+                  <%product.image.forEach(image => { %>
+                    <p><%= image %></p>
+                    <img src="../uploads/<%= image %>">
+                  <% }) %>
                 </div>   
         </div>  
         <button  class="btn-global-primary w-25 ms-4 mt-2 mb-3 fw-bold" type="submit">UPDATE</button>
