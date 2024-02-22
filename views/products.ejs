@@ -34,6 +34,7 @@
             <tr>
               <th scope="col">No</th>
               <th scope="col">Image</th>
+              <th scope="col">Category</th>
               <th scope="col">Product</th>
               <th scope="col">Author</th>
               <th scope="col">Stock</th>
@@ -45,10 +46,11 @@
           </thead>
           <tbody id="tableData">
               <% let i = 1 %>
-              <% products.forEach(product => { %>
+              <% filteredProducts.forEach(product => { %>
                   <tr >
                       <th scope="row"><%= i %></th>
-                      <td class="w-25"><img class="w-25" src="../uploads/<%= product.image[0] %>"></td>
+                      <td><img class="w-75" src="../uploads/<%= product.image[0] %>"></td>
+                      <td><%= product.category_id.name %></td>
                       <td><%= product.name %></td>
                       <td><%= product.author %></td>
                       <td><%= product.stock %></td>

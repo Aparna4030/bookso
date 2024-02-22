@@ -2,6 +2,12 @@ const express = require('express')
 const session = require("express-session")
 const indexRouter = require('./routes/indexRouter')
 const adminRouter = require('./routes/adminRouter')
+const addressRouter = require('./routes/addressRouter')
+const cartRouter = require('./routes/cartRouter')
+
+const Product = require("./models/productModel")
+const Cart = require("./models/cartModel")
+
 const {isBlockedMiddleware} = require("./middlewares/auth_middleware")
 const path = require("path")
 require('dotenv').config();
@@ -30,11 +36,14 @@ const disableCacheMiddleware = (req, res, next) => {
     next();
 };
 
-app.use((req, res, next) => {
+app.use(async(req, res, next) => {
     if (req.session.userId || req.session.isAdmin) {
         res.locals.isLoggedin = true;
+        const cart = await Cart.findOne({userId:req.session.userId})
+        res.locals.cartQty = cart.products.length
     } else {
         res.locals.isLoggedin = false;
+        res.locals.cartQty = null;
     }
     next();
 })
@@ -43,13 +52,17 @@ app.use(disableCacheMiddleware);
 
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 
 app.use(isBlockedMiddleware);
 
+
+
+app.use("/cart",cartRouter)
+app.use("/address",addressRouter)
 app.use("/admin", adminRouter)
 app.use("/", indexRouter)
-
 
 app.use((err, req, res, next) => {
     console.error(err);
@@ -59,6 +72,6 @@ app.use((err, req, res, next) => {
 
 
 app.listen(process.env.PORT, () => {
-    console.log("http://localhost:8888")
+    console.log("http://localhost:8080")
 })
 

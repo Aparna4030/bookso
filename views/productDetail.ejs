@@ -2,91 +2,159 @@
 <%- include('partials/navbar.ejs') %>
 <link rel="stylesheet" href="css/productDetail.css">
 
-  <!-- content -->
-  <section class="py-5">
-    <div class="container">
-      <div class="row gx-5">
-        <aside class="col-lg-6">
-          <div class="border rounded-4 mb-3 d-flex justify-content-center">
-            <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image">
-              <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="../uploads/<%= product.image[0] %>" />
-            </a>
-          </div>
-          <div class="d-flex justify-content-center mb-3">
-            <% product.image.forEach(image => { %>
-            <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" class="item-thumb">
-              <img width="60" height="60" class="rounded-2" src="../uploads/<%= image %>" />
-            </a>
-            <% }) %>
-          </div>
-        </aside>
-        <main class="col-lg-6">
-          <div class="ps-lg-3">
-            <h4 class="title text-dark text-capitalize">
-            <%= product.name %>
-            </h4>
-  
-            <div class="mb-3">
-              <span class="h5">$<%= product.price %></span>
-            </div>
-  
-            <p>
-                "The Immortals of Meluha" is the first book in the Shiva Trilogy by Indian author Amish Tripathi. The story is a blend of mythology and fantasy, following the journey of Shiva, a Tibetan tribal leader who is invited to the ancient land of Meluha. Meluha faces numerous problems, including a devastating plague, and its people believe Shiva is the prophesied savior, the Neelkanth. Shiva, initially skeptical, discovers extraordinary powers within himself as he sets out on a quest to unravel the mysteries surrounding Meluha and fulfill his destiny as the savior of the land. The novel explores themes of duty, destiny, and the eternal battle between good and evil.
-            </p>
-  
-            <div class="row">
-              <dt class="col-3">Author:</dt>
-              <dd class="col-9 text-capitalize"><%= product.author %></dd>
-  
-              <dt class="col-3">Publication</dt>
-              <dd class="col-9 text-capitalize "><%= product.publication %></dd>
-  
-              <dt class="col-3">Language</dt>
-              <dd class="col-9 text-capitalize"><%= product.language %></dd>
-  
-              <dt class="col-3">Discount</dt>
-              <dd class="col-9 "><%= product.discount %>%</dd>
+<% const product1 = product%>
 
-              <dt class="col-3">Stock</dt>
-              <dd class="col-9"><%= product.stock %></dd>
-            </div>
-            <hr />
-  
-            <div class="row mb-4">
-              <div class="col-md-4 col-6">
-                <label class="mb-2">Format</label>
-                <select class="form-select border border-secondary" style="height: 35px;">
-                  <option>Paperback</option>
-                  <option>Hard Cover</option>
-                  <option>Kindle</option>
-                  <option>AudioBook</option>
-                </select>
-              </div>
-              <!-- col.// -->
-              <div class="col-md-4 col-6 mb-3">
-                <label class="mb-2 d-block">Quantity</label>
-                <div class="input-group mb-3" style="width: 170px;">
-                  <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon1" data-mdb-ripple-color="dark">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <input type="text" class="form-control text-center border border-secondary" placeholder="14" aria-label="Example text with button addon" aria-describedby="button-addon1" />
-                  <button class="btn btn-white border border-secondary px-3" type="button" id="button-addon2" data-mdb-ripple-color="dark">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
-            <a href="#" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </a>
-            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
+<!-- content -->
+<section class="py-5">
+  <div class="container">
+    <div class="row gx-5">
+      <aside class="col-lg-6">
+        <div class="border rounded-4 mb-3 d-flex justify-content-center">
+          <a
+            data-fslightbox="mygalley"
+            class="rounded-4"
+            target="_blank"
+            data-type="image"
+          >
+            <img
+              style="max-width: 100%; max-height: 100vh; margin: auto"
+              class="rounded-4 fit"
+              src="../uploads/<%= product.image[0] %>"
+            />
+          </a>
+        </div>
+        <div class="d-flex justify-content-center mb-3">
+          <% product.image.forEach(image => { %>
+          <a
+            data-fslightbox="mygalley"
+            class="border mx-1 rounded-2"
+            target="_blank"
+            data-type="image"
+            class="item-thumb"
+          >
+            <img
+              width="60"
+              height="60"
+              class="rounded-2"
+              src="../uploads/<%= image %>"
+            />
+          </a>
+          <% }) %>
+        </div>
+      </aside>
+      <main class="col-lg-6">
+        <div class="ps-lg-3">
+          <h4 class="title text-dark text-capitalize"><%= product.name %></h4>
+
+          <div class="mb-3">
+            <span class="h5">₹<%= product.price %></span>
           </div>
-        </main>
-      </div>
+
+          <p>
+            "The Immortals of Meluha" is the first book in the Shiva Trilogy by
+            Indian author Amish Tripathi. The story is a blend of mythology and
+            fantasy, following the journey of Shiva, a Tibetan tribal leader who
+            is invited to the ancient land of Meluha. Meluha faces numerous
+            problems, including a devastating plague, and its people believe
+            Shiva is the prophesied savior, the Neelkanth. Shiva, initially
+            skeptical, discovers extraordinary powers within himself as he sets
+            out on a quest to unravel the mysteries surrounding Meluha and
+            fulfill his destiny as the savior of the land. The novel explores
+            themes of duty, destiny, and the eternal battle between good and
+            evil.
+          </p>
+
+          <div class="row">
+            <dt class="col-3">Author:</dt>
+            <dd class="col-9 text-capitalize"><%= product.author %></dd>
+
+            <dt class="col-3">Publication</dt>
+            <dd class="col-9 text-capitalize"><%= product.publication %></dd>
+
+            <dt class="col-3">Language</dt>
+            <dd class="col-9 text-capitalize"><%= product.language %></dd>
+
+            <dt class="col-3">Discount</dt>
+            <dd class="col-9"><%= product.discount %>%</dd>
+
+            <dt class="col-3">Stock</dt>
+            <dd class="col-9"><%= product.stock %></dd>
+          </div>
+          <hr />
+
+          <div class="row mb-4">
+            <div class="col-md-4 col-6">
+              <label class="mb-2">Format</label>
+              <select
+                class="form-select border border-secondary"
+                style="height: 35px"
+              >
+                <option>Paperback</option>
+                <option>Hard Cover</option>
+                <option>Kindle</option>
+                <option>AudioBook</option>
+              </select>
+            </div>
+            <!-- col.// -->
+            <% if (cartQty) { %>
+            <div class="alert alert-warning mt-2" role="alert">
+              Already Added <%= cartQty %> To Cart
+            </div>
+            <% } %>
+            <div
+              id="productData"
+              data-product="<%= JSON.stringify(product) %>"
+              style="display: none"
+            ></div>
+            <!--  -->
+            
+            <!--  -->
+            <div class="container mt-2">
+              <div class="quantity-selector d-flex">
+                <button
+                  class="btn quantity-btn border-warning bg-bookso"
+                  onclick="decreaseQuantity()"
+                >
+                  -
+                </button>
+                <span
+                  id="quantity"
+                  productId="<%= product._id %>"
+                  class="ms-1 me-1"
+                >
+                  1
+                </span>
+                <button
+                  class="btn quantity-btn border-warning bg-bookso"
+                  onclick="increaseQuantity()"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <% if (product.stock<10) { %>
+            <span style="color: red">Only <%= product.stock %> Items Left</span>
+            <% } %>
+          </div>
+          <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+            <button onclick="addToCart()" class="btn btn-primary shadow-0">
+              <i class="me-1 fa fa-shopping-basket"></i> Add to cart
+            </button> 
+          
+          <a
+            href="#"
+            class="btn btn-light border border-secondary py-2 icon-hover px-3"
+          >
+            <i class="me-1 fa fa-heart fa-lg"></i> Save
+          </a>
+        </div>
+      </main>
     </div>
-  </section>
-  <!-- content -->
-  
-  <!-- <div class="col-lg-4">
+  </div>
+</section>
+<!-- content -->
+
+<!-- <div class="col-lg-4">
     <div class="px-0 border rounded-2 shadow-0">
       <div class="card">
         <div class="card-body">
@@ -140,3 +208,58 @@
       </div>
     </div>
   </div> -->
+<script>
+  var productDataElement = document.getElementById("productData");
+  var productDataString = productDataElement.getAttribute("data-product");
+  var productData = JSON.parse(productDataString);
+  console.log(productData);
+
+  let quantity = 1;
+
+  function increaseQuantity() {
+    if (quantity < productData.stock) {
+      quantity++;
+      updateQuantity();
+    }
+  }
+
+  function decreaseQuantity() {
+    if (quantity > 1) {
+      quantity--;
+      updateQuantity();
+    }
+  }
+
+  function updateQuantity() {
+    document.getElementById("quantity").innerText = quantity;
+  }
+</script>
+
+<script>
+  const qty = document.getElementById("quantity");
+  const productId = qty.getAttribute("productId");
+
+  const addToCart = () => {
+    fetch("/cart", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        qty: quantity,
+        productId: productId,
+      }),
+    })
+    .then(res => res.json())
+    .then(({message,status}) =>{
+      if(status === 401) window.location.href = '/login'
+      console.log(message)
+
+      window.showToast(message)
+    })
+  };
+
+  
+</script>
+
+<%- include('partials/closingHead.ejs') %>

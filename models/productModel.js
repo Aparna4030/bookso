@@ -11,6 +11,7 @@ const productSchema= new mongoose.Schema({
     category_id:{
         type:mongoose.mongo.ObjectId,
         required:true,
+        ref:'Category'
     },
     author:{
         type:String,

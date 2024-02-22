@@ -1,6 +1,6 @@
 <%- include('partials/head.ejs') %> 
 <%- include('partials/navbar.ejs') %>
-<link rel="stylesheet" href="css/landing.css">
+
 
 
 <img src="../images/books landing.jpg" style="width: 1320px; height: 400px;">
@@ -12,7 +12,7 @@
       <div class="col-md-3">
           <a href="/product/<%= product._id %>">
           <img class="img-1" style="height: 200px; width: 140px;" src="../uploads/<%= product.image[0] %>">
-          <div class="img-1-steal"><%= product.name %></div>
+          <div class="img-1-steal text-decoration-none"><%= product.name %></div>
         </a>
         </div>
     <% }) %>
@@ -33,4 +33,4 @@
       </div> -->
 
 
-  
+      <%- include('partials/closingHead.ejs') %>

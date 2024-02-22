@@ -46,6 +46,7 @@
           <div class="text-bookso-product">Product Name</div>
           <input
             name="name"
+            id="name"
             type="text"
             class="form-control"
             aria-label="Text input with dropdown button"
@@ -182,12 +183,39 @@
 
 <!-- //image need to be seen inside the box  for the visibility of image in the product page -->
 <script>
+  const nameInput = document.querySelector("#name")
   const imageInput = document.querySelector("#img-input");
   const imageContainer = document.querySelector('#image-container');
   const addProductform = document.querySelector("#add-product")
   const stockInput = document.querySelector("#stock")
   const priceInput = document.querySelector("#price")
   const discountInput = document.querySelector("#discount")
+
+  
+  // function validateImages(files) {
+  //   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  //   const maxSize = 1024 * 1024; // 1MB
+
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+
+  //     // Check file type
+  //     if (!allowedTypes.includes(file.type)) {
+  //       alert('Only JPG, PNG, or GIF files are allowed');
+  //       return false;
+  //     }
+
+  //     // Check file size
+  //     if (file.size > maxSize) {
+  //       alert('Image size exceeds 1MB limit');
+  //       return false;
+  //     }
+  //   }
+
+  //   return true;
+  // }
+
+
 
   imageInput.addEventListener("input", (event) => {
 
@@ -207,14 +235,30 @@
     }
   });
 
-  addProductform.addEventListener("submit",(event)=>{
-    if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
-      event.preventDefault()
-      stockInput.value = " "
-      priceInput.value = " "
-      discountInput.value = " "
-      alert("Invalid Input")
-    }
+  // addProductform.addEventListener("submit",(event)=>{
+  //   if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
+  //     event.preventDefault()
+  //     stockInput.value = " "
+  //     priceInput.value = " "
+  //     discountInput.value = " "
+  //     alert("Invalid Input")
+  //   }
 
-  })
+  // })
+  addProductform.addEventListener("submit", (event) => {
+    // Trim whitespace from input values and check if they are empty
+    const isInvalidInput = [nameInput,imageInput,stockInput, priceInput, discountInput].some(input => input.value.trim() === '');
+
+    if (isInvalidInput) {
+        event.preventDefault();
+        alert("Please fill in all fields");
+    } else if (!(stockInput.value > 0 && priceInput.value > 0 && discountInput.value > 0)) {
+        event.preventDefault();
+        stockInput.value = "";
+        priceInput.value = "";
+        discountInput.value = "";
+        alert("Invalid Input");
+    }
+});
+
 </script>

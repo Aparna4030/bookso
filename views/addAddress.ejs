@@ -1,0 +1,126 @@
+<%- include('partials/head.ejs') %>
+<%- include('partials/navbar.ejs') %> 
+<%-include('partials/userSidebar.ejs') %>
+<div class="col-9">
+  <div class="py-2 ps-auto ml-3 mx-3">
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn-global-secondary"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      Add Address
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">NEW ADDRESS</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <!--//input fields-//-->
+          <form action="/address" method="POST">
+          <div class="modal-body">
+            <div class="g-3 align-items-center">
+              <div class="col-auto">
+                <label class="col-form-label">Name</label>
+              </div>
+              <div class="col-auto">
+                <input  name="name" type="text" class="form-control" />
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">Phone Number</label>
+              </div>
+              <div class="col-auto">
+                <input  name="phone" type="number" class="form-control" />
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">Pincode</label>
+              </div>
+              <div class="col-auto">
+                <input  name="pincode" type="number" class="form-control" />
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">Locality</label>
+              </div>
+              <div class="col-auto">
+                <input  name="locality" type="text" class="form-control" />
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">Address</label>
+              </div>
+              <div class="col-auto">
+                <textarea  name="address" class="form-control"></textarea>
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">City/District</label>
+              </div>
+              <div class="col-auto">
+                <input  name="city" type="text" class="form-control" />
+              </div>
+              <div class="col-auto">
+                <label class="col-form-label">Landmark</label>
+              </div>
+              <div class="col-auto">
+                <input  name="landmark" type="text" class="form-control" />
+              </div>
+          
+          </div>
+          <!-- input field -->
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% addresses.forEach(address => { %>
+   
+    <div class="py-3 ml-3 mx-3 border border-warning border-2 shadow rounded mt-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="container px-2 text-bookso-product fs-3 fw-bold text-dark">
+            <%= address.name %>
+          </div>
+          <div class="container text-bookso-product fs-5 fw-bold text-dark">
+            <%= address.phone %>
+          </div>
+          <div class="container text-bookso-product">
+            <%= address.pincode %>
+          </div>
+          <div class="container text-bookso-product">
+            <%= address.address %>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+        <form><a href="/address/delete/<%= address._id %>" class="btn btn-danger fw-bold me-2">Delete</a></form>
+        </div>
+      </div>
+    </div>
+  
+    <% }) %>
+</div>
+
+<%- include('partials/closingHead.ejs') %>

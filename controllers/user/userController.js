@@ -1,6 +1,7 @@
 const session = require("express-session")
 const asynchandler = require("express-async-handler")
 const User = require("../../models/userModel")
+const Product = require("../../models/productModel")
 const sendOTPemail = require("../../utils/sendEmail")
 const sendForgotPasswordLink = require("../../utils/sendForgotEmailLink")
 const bcrypt = require("bcrypt")
@@ -48,7 +49,7 @@ const renderForgotPasswordEmail = asynchandler((req, res) => {
     res.render("forgotPasswordEmail")
 })
 
-const sendForgotLink = asynchandler(async(req,res)=>{
+const sendForgotLink = asynchandler(async (req, res) => {
     const email = req.body.email
     req.session.email = email;
     const secret = await sendForgotPasswordLink(email)
@@ -57,25 +58,25 @@ const sendForgotLink = asynchandler(async(req,res)=>{
     res.redirect('/login')
 })
 
-const renderResetPassword = asynchandler(async(req,res)=>{
-    if(req.params.id === req.session.secret){
+const renderResetPassword = asynchandler(async (req, res) => {
+    if (req.params.id === req.session.secret) {
         req.session.secret = null;
         res.render('forgotPassword')
-    }else{
+    } else {
         req.session.secret = null;
         req.session.message = "Error occured"
         res.redirect('/login')
     }
 })
 
-const updatePassword= asynchandler(async(req,res)=>{
+const updatePassword = asynchandler(async (req, res) => {
     const password = req.body.password
-    if(!req.session.email)throw new Error;
+    if (!req.session.email) throw new Error;
     const email = req.session.email;
     req.session.email = null;
-    const hashedPassword = await bcrypt.hash(password,10)
+    const hashedPassword = await bcrypt.hash(password, 10)
 
-    const data = await User.updateOne({email},{$set:{password:hashedPassword}});
+    const data = await User.updateOne({ email }, { $set: { password: hashedPassword } });
     req.session.message = "Changed successfully"
     res.redirect('/login')
 
@@ -157,6 +158,61 @@ const validateOtp = asynchandler(async (req, res) => {
 })
 
 
+const renderProfile = asynchandler(async (req, res) => {
+    const user = await User.findOne({ _id: req.session.userId })
+    res.render("profile", { user })
+})
+
+const renderUserDetails = asynchandler(async (req, res) => {
+    const user = await User.findOne({ _id: req.session.userId })
+    console.log(user)
+    let message = null;
+    if (req.session.message) {
+        message = req.session.message
+        req.session.message = null;
+    }
+    res.render("userDetails", { user, message })
+})
+
+
+const editUser = asynchandler(async (req, res) => {
+    console.log("ediiiiiiiiiittttttttt", req.body)
+    const { name, email, phone, password, newPassword, confirmPassword } = req.body
+    const user = await User.findOne({ _id: req.session.userId })
+    // console.log("usssseeeeeeeerrrrrr",user)
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+    if (password) {
+
+        if (await bcrypt.compare(newPassword, user.password)) {
+            req.session.message = "This is your old password"
+            res.redirect('/userDetails')
+        }
+        if (!await bcrypt.compare(password, user.password)) {
+            // console.log("helloooooo")
+            req.session.message = "Invalid Password"
+            res.redirect('/userDetails')
+        }
+        if (newPassword !== confirmPassword) {
+            req.session.message = "Password don't match"
+            res.redirect('/userDetails')
+        }
+        
+        user.password = await bcrypt.hash(newPassword);
+
+    }
+    await user.save()
+    res.redirect('/userDetails')
+    console.log("Usssssseeeeeeeerrrr", user)
+})
+
+
+const renderBook = asynchandler(async (req, res) => {
+    const products = await Product.find()
+    res.render("book", { products })
+})
+
 const logout = asynchandler((req, res) => {
     req.session.userId = null
     req.session.isAdmin = null
@@ -164,6 +220,4 @@ const logout = asynchandler((req, res) => {
     res.redirect("/")
 })
 
-
-
-module.exports = { updatePassword,renderResetPassword ,renderLogin,sendForgotLink,renderForgotPasswordEmail, renderSignup, register, validateOtp, userLogin, logout, renderEmailOtp, resendOtp }
+module.exports = { editUser, renderBook, renderUserDetails, renderProfile, updatePassword, renderResetPassword, renderLogin, sendForgotLink, renderForgotPasswordEmail, renderSignup, register, validateOtp, userLogin, logout, renderEmailOtp, resendOtp }

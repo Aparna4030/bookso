@@ -1,0 +1,120 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %>
+<%- include('partials/userSidebar.ejs') %>
+
+<div class="container">
+  <form action="/user/edit" method="post" id="profileForm">
+    <div class="mb-3">
+      <label class="form-label">FIRST NAME</label>
+      <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+      <div id="nameHelp" class="form-text"></div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">EMAIL ADDRESS</label>
+      <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+      <div id="emailHelp" class="form-text"></div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">PHONE NUMBER</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="<%= user.phone %>" required>
+      <div id="phoneHelp" class="form-text"></div>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="change-Password-btn">
+      <label class="form-check-label" >Change Password</label>
+    </div>
+    <div id="passwordFields" style="display: none;">
+      <div class="mb-3">
+        <label class="form-label">CURRENT PASSWORD</label>
+        <input class="form-control editPassword" type="password" name="password"  id="currentPassword"  disabled>
+        <div id="passwordHelp" class="form-text"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">NEW PASSWORD</label>
+        <input  class="form-control editPassword" type="password" name="newPassword" id="newPassword" disabled>
+        <div id="newPasswordHelp" class="form-text"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">CONFIRM PASSWORD</label>
+        <input class="form-control editPassword" type="password"  name="confirmPassword" id="confirmPassword" disabled>
+        <div id="confirmPasswordHelp" class="form-text"></div>
+      </div>
+    </div>
+  <% if (message) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= message %>
+    </div>
+  <% } %>
+  <button type="submit" class="btn btn-success mt-2">Save</button> 
+  <button type="submit" class="btn btn-primary mt-2">Submit</button> 
+  </form>
+</div>
+
+<script>
+  // document.getElementById('profileForm').addEventListener('submit', async (event) => {
+  //   event.preventDefault();
+
+  //   const name = document.getElementById('name').value;
+  //   const email = document.getElementById('email').value;
+  //   const phone = document.getElementById('phone').value;
+  //   const currentPassword = document.getElementById('currentPassword').value;
+  //   const newPassword = document.getElementById('newPassword').value;
+
+  //   try {
+  //     const response = await fetch('/editProfile', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({
+  //         name,
+  //         email,
+  //         phone,
+  //         currentPassword,
+  //         newPassword
+  //       })
+  //     });
+
+  //     if (response.ok) {
+  //       alert('Profile updated successfully!');
+  //       // Optionally, redirect the user to another page
+  //       // window.location.href = '/profile';
+  //     } else {
+  //       const errorData = await response.json();
+  //       alert(errorData.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     alert('An error occurred while updating your profile. Please try again later.');
+  //   }
+  // });
+const passwordBtn = document.getElementById('change-Password-btn');
+const passwords = document.querySelectorAll('.editPassword');
+const passwordFields = document.getElementById('passwordFields');
+
+passwordBtn.addEventListener("click", () => {
+    passwords.forEach((password) => {
+        password.disabled = false; 
+    });
+
+    passwordFields.style.display = passwordFields.style.display === 'none' ? 'block' : 'none';
+
+    const isDisplayed = passwordFields.style.display === 'block';
+    passwords.forEach((password) => {
+        password.disabled = !isDisplayed;
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<%- include('partials/closingHead.ejs') %>

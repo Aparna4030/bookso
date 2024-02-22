@@ -1,6 +1,9 @@
 const express = require('express');
 const userController = require('../controllers/user/userController');
 const productUserController = require("../controllers/user/productUserController");
+const addressController = require("../controllers/user/addressController");
+const orderController = require("../controllers/user/orderController");
+const cartController = require("../controllers/user/cartController");
 const Product = require("../models/productModel");
 const { isLoggedin,isLoggedOut} = require("../middlewares/auth_middleware");
 const router = express.Router();
@@ -12,7 +15,18 @@ router.get("/", async (req, res) => {
 router.get("/logout",userController.logout)
 router.get("/product/:id",productUserController.renderProduct)
 
+router.get("/profile",isLoggedin,userController.renderProfile)
+router.get("/userDetails",isLoggedin,userController.renderUserDetails)
+router.post("/user/edit",userController.editUser)
+
+router.get("/bookShop",userController.renderBook)
+
+router.get("/orders",orderController.renderOrders)
+router.get("/placeOrder",orderController.renderPlaceOrder)
+
+
 router.use(isLoggedOut)
+
 router.get("/login",userController.renderLogin)
 router.post("/login", userController.userLogin)
 
@@ -30,6 +44,5 @@ router.get("/otp",userController.renderEmailOtp)
 router.post("/otp", userController.validateOtp)
 
 router.get("/resend",userController.resendOtp)
-
 
 module.exports = router

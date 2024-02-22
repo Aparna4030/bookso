@@ -1,0 +1,185 @@
+<%- include('partials/head.ejs') %> <%-include('partials/navbar.ejs') %>
+<!-- <%-// include('partials/userSidebar.ejs') %> -->
+
+<% let totalPrice = 0 %>
+
+<div class="container">
+  <div class="container bg-bookso text-center text-light fs-4 fw-bold">
+    CART
+  </div>
+
+  <div class="d-flex">
+    <div class="ms-4 col-6 mt-4" id="product-container">
+      <% products.forEach(product => { %>
+
+      <div class="w-100 d-flex border rounded m-2 shadow" id="product-card">
+        <div class="col-2 ms-2">
+          <img
+            src="../uploads/<%= product.productId.image[0] %>"
+            class="w-100"
+            style="width: 100%; height: 100%; object-fit: contain"
+          />
+        </div>
+
+        <div class="col-10 d-flex flex-column py-2 ps-2">
+          <div class="fw-bold mt-1"><%= product.productId.name %></div>
+
+          <div class="fw-bold text-primary mt-1">
+            <%totalPrice = totalPrice+(product.productId.price*product.qty)%>
+            price: ₹<%= product.productId.price %>
+          </div>
+          <!-- <div class="fw-bold text-success mt-1">Delivered on 17th Aug</div> -->
+          <!-- <div class="fw-bold text-primary mt-1">discount: ₹<%=// product.productId.discount %></div> -->
+          <div class="container mt-2">
+            <div class="quantity-selector d-flex">
+              <!-- <span id="quantity" class="ms-1 me-1 qty" productId="<%= product.productId._id %>"></span> -->
+              <button class="btn quantity-btn border-warning bg-bookso qty-dec">
+                -
+              </button>
+              <span
+                id="quantity"
+                class="ms-1 me-1 qty"
+                productId="<%= product.productId._id %>"
+                ><%= product.qty %></span
+              >
+              <button class="btn quantity-btn border-warning bg-bookso qty-inc">
+                +
+              </button>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+              <form>
+                <a
+                  href="/cart/delete/<%= product.productId._id %>"
+                  class="btn btn-danger fw-bold me-2"
+                  >Delete</a
+                >
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% }) %>
+    </div>
+
+    <div class="ms-4 col-5 mt-4">
+      <div
+        class="w-100 border border-3 rounded m-2"
+        style="background-color: #d3dbee"
+      >
+        <div class="ms-4 fw-bold mb-2">APPLY COUPON</div>
+        <div class="row g-3 align-items-center mb-3">
+          <div class="col-auto ms-4 w-50">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter coupon code"
+            />
+          </div>
+          <button class="btn-global-primary">CHECK</button>
+        </div>
+      </div>
+
+      <div class="w-100 border shadow shadow-rounded rounded m-2">
+        <div class="container text-bookso text-center fs-4 fw-bold mt-2">
+          PRICE DETAILS
+        </div>
+        <hr />
+        <div class="ms-2 text-secondary fw-bold">
+          PRICE:<span style="color: blue">₹<%=totalPrice %></span>
+          <br>
+          DISCOUNT: 
+          <br>
+          DELIVERY CHARGES:<span style="color: blue"><%= totalPrice*0.05 %></span>
+        </div>
+        <hr />
+        <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*1.05 %></span>
+        <hr />
+      </div>
+      <a class="text-decoration-none" href="/placeOrder"
+        ><div
+          class="container bg-bookso text-center text-light fs-4 fw-bold mt-4 ms-2"
+        >
+          PLACE ORDER
+        </div></a
+      >
+    </div>
+  </div>
+
+  <script>
+const quantityAll = document.querySelectorAll(".quantity-selector");
+
+quantityAll.forEach((quantity) => {
+  const qtyVal = quantity.querySelector(".qty");
+  const qtyInc = quantity.querySelector(".qty-inc");
+  const qtyDec = quantity.querySelector(".qty-dec");
+
+  const productId = qtyVal.getAttribute("productId");
+
+  // Event listener for increasing quantity
+  qtyInc.addEventListener("click", async () => {
+    const jsonData = await fetch(
+      `/cart/increaseQty/${productId}/${qtyVal.innerHTML}`
+    );
+    const outOfStockMessageDiv = document.querySelector(
+      ".out-of-stock-message"
+    );
+
+    if (jsonData.status == 406) {
+      if (!outOfStockMessageDiv) {
+        // Create and append a new "Out of Stock" message div
+        const newOutOfStockMessageDiv = document.createElement("div");
+        newOutOfStockMessageDiv.textContent = "Out of Stock";
+        newOutOfStockMessageDiv.classList.add(
+          "ps-2",
+          "text-danger",
+          "out-of-stock-message"
+        );
+        quantity.appendChild(newOutOfStockMessageDiv);
+      }
+    } else {
+      if (outOfStockMessageDiv) {
+        outOfStockMessageDiv.remove();
+      }
+
+      const response = await jsonData.json();
+      qtyVal.innerHTML = response.message;
+    }
+  });
+
+  // Event listener for decreasing quantity
+  qtyDec.addEventListener("click", async () => {
+    const jsonData = await fetch(
+      `/cart/decreaseQty/${productId}/${qtyVal.innerHTML}`
+    );
+    const outOfStockMessageDiv = document.querySelector(
+      ".out-of-stock-message"
+    );
+
+    if (jsonData.status == 406) {
+      if (!outOfStockMessageDiv) {
+        // Create and append a new "Out of Stock" message div
+        const newOutOfStockMessageDiv = document.createElement("div");
+        newOutOfStockMessageDiv.textContent = "Out of Stock";
+        newOutOfStockMessageDiv.classList.add(
+          "ps-2",
+          "text-danger",
+          "out-of-stock-message"
+        );
+        quantity.appendChild(newOutOfStockMessageDiv);
+      }
+    } else {
+      if (outOfStockMessageDiv) {
+        outOfStockMessageDiv.remove();
+      }
+
+      const response = await jsonData.json();
+      qtyVal.innerHTML = response.message;
+    }
+  });
+});
+
+  </script>
+
+  <%- include('partials/closingHead.ejs') %>
+</div>

@@ -1,0 +1,17 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %>
+<div class="container d-flex flex-wrap ">
+    <% products.forEach(product => { %>
+        <div class="card mt-3 me-3" style="width: 16rem;">
+            <a href="/product/<%= product._id %>">
+            <img src="../uploads/<%= product.image[0] %>" class="card-img-top w-50" alt="..." style="margin:auto;"></a>
+            <div class="card-body shadow h-25">
+                <h5 class="card-title"><%= product.name %></h5>
+                <p class="card-text text-primary">₹<%= product.price %></p>
+                <a href="#"><i class="fa-regular fa-heart" style="color: #000000;"></i></a>
+            </div>
+            </div>
+    <% }) %>
+</div>
+  
+<%- include('partials/closingHead.ejs') %>
