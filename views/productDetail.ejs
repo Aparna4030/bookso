@@ -10,17 +10,8 @@
     <div class="row gx-5">
       <aside class="col-lg-6">
         <div class="border rounded-4 mb-3 d-flex justify-content-center">
-          <a
-            data-fslightbox="mygalley"
-            class="rounded-4"
-            target="_blank"
-            data-type="image"
-          >
-            <img
-              style="max-width: 100%; max-height: 100vh; margin: auto"
-              class="rounded-4 fit"
-              src="../uploads/<%= product.image[0] %>"
-            />
+          <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image">
+            <div class="img-magnifier-container"><img style="max-width: 100%; max-height: 100vh; margin: auto" class="rounded-4 fit " id="myimage" src="/uploads/<%= product.image[0] %>"></div>
           </a>
         </div>
         <div class="d-flex justify-content-center mb-3">
@@ -51,17 +42,7 @@
           </div>
 
           <p>
-            "The Immortals of Meluha" is the first book in the Shiva Trilogy by
-            Indian author Amish Tripathi. The story is a blend of mythology and
-            fantasy, following the journey of Shiva, a Tibetan tribal leader who
-            is invited to the ancient land of Meluha. Meluha faces numerous
-            problems, including a devastating plague, and its people believe
-            Shiva is the prophesied savior, the Neelkanth. Shiva, initially
-            skeptical, discovers extraordinary powers within himself as he sets
-            out on a quest to unravel the mysteries surrounding Meluha and
-            fulfill his destiny as the savior of the land. The novel explores
-            themes of duty, destiny, and the eternal battle between good and
-            evil.
+           <%= product.description %>
           </p>
 
           <div class="row">
@@ -77,8 +58,8 @@
             <dt class="col-3">Discount</dt>
             <dd class="col-9"><%= product.discount %>%</dd>
 
-            <dt class="col-3">Stock</dt>
-            <dd class="col-9"><%= product.stock %></dd>
+            <!-- <dt class="col-3">Stock</dt>
+            <dd class="col-9"><%= product.stock %></dd> -->
           </div>
           <hr />
 
@@ -141,73 +122,20 @@
               <i class="me-1 fa fa-shopping-basket"></i> Add to cart
             </button> 
           
-          <a
-            href="#"
-            class="btn btn-light border border-secondary py-2 icon-hover px-3"
+          <button
+            onclick="addToWishlist()"
+            class="btn btn-light border border-secondary py-2 icon-hover px-3"  id="wishlist"
           >
-            <i class="me-1 fa fa-heart fa-lg"></i> Save
-          </a>
+            <i class="me-1 fa fa-heart fa-lg"></i> Wishlist
+          </button>
         </div>
       </main>
     </div>
   </div>
 </section>
-<!-- content -->
 
-<!-- <div class="col-lg-4">
-    <div class="px-0 border rounded-2 shadow-0">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Similar items</h5>
-          <div class="d-flex mb-3">
-            <a href="#" class="me-3">
-              <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-            </a>
-            <div class="info">
-              <a href="#" class="nav-link mb-1">
-                Rucksack Backpack Large <br />
-                Line Mounts
-              </a>
-              <strong class="text-dark"> $38.90</strong>
-            </div>
-          </div>
 
-          <div class="d-flex mb-3">
-            <a href="#" class="me-3">
-              <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-            </a>
-            <div class="info">
-              <a href="#" class="nav-link mb-1">
-                Summer New Men's Denim <br />
-                Jeans Shorts
-              </a>
-              <strong class="text-dark"> $29.50</strong>
-            </div>
-          </div>
 
-          <div class="d-flex mb-3">
-            <a href="#" class="me-3">
-              <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-            </a>
-            <div class="info">
-              <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and lady </a>
-              <strong class="text-dark"> $120.00</strong>
-            </div>
-          </div>
-
-          <div class="d-flex">
-            <a href="#" class="me-3">
-              <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-            </a>
-            <div class="info">
-              <a href="#" class="nav-link mb-1"> Blazer Suit Dress Jacket for Men, Blue color </a>
-              <strong class="text-dark"> $339.90</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 <script>
   var productDataElement = document.getElementById("productData");
   var productDataString = productDataElement.getAttribute("data-product");
@@ -258,6 +186,81 @@
       window.showToast(message)
     })
   };
+
+
+const addToWishlist = async () =>{
+  const res = await fetch(`/wishlist/${productId}`,{
+    method:"post",
+  })
+
+  res.status===201? window.showToast("Added to Wishlist"):window.showToast("Something went Wrong")
+  
+}
+
+
+
+
+
+
+
+
+//   function magnify(imgID, zoom) {
+//   var img, glass, w, h, bw;
+//   img = document.getElementById(imgID);
+//   /*create magnifier glass:*/
+//   glass = document.createElement("DIV");
+//   glass.setAttribute("class", "img-magnifier-glass");
+//   /*insert magnifier glass:*/
+//   img.parentElement.insertBefore(glass, img);
+//   /*set background properties for the magnifier glass:*/
+//   glass.style.backgroundImage = "url('" + img.src + "')";
+//   glass.style.backgroundRepeat = "no-repeat";
+//   glass.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
+//   bw = 3;
+//   w = glass.offsetWidth / 2;
+//   h = glass.offsetHeight / 2;
+//   /*execute a function when someone moves the magnifier glass over the image:*/
+//   glass.addEventListener("mousemove", moveMagnifier);
+//   img.addEventListener("mousemove", moveMagnifier);
+//   /*and also for touch screens:*/
+//   glass.addEventListener("touchmove", moveMagnifier);
+//   img.addEventListener("touchmove", moveMagnifier);
+//   function moveMagnifier(e) {
+//     var pos, x, y;
+//     /*prevent any other actions that may occur when moving over the image*/
+//     e.preventDefault();
+//     /*get the cursor's x and y positions:*/
+//     pos = getCursorPos(e);
+//     x = pos.x;
+//     y = pos.y;
+//     /*prevent the magnifier glass from being positioned outside the image:*/
+//     if (x > img.width - (w / zoom)) {x = img.width - (w / zoom);}
+//     if (x < w / zoom) {x = w / zoom;}
+//     if (y > img.height - (h / zoom)) {y = img.height - (h / zoom);}
+//     if (y < h / zoom) {y = h / zoom;}
+//     /*set the position of the magnifier glass:*/
+//     glass.style.left = (x - w) + "px";
+//     glass.style.top = (y - h) + "px";
+//     /*display what the magnifier glass "sees":*/
+//     glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
+//   }
+//   function getCursorPos(e) {
+//     var a, x = 0, y = 0;
+//     e = e || window.event;
+//     /*get the x and y positions of the image:*/
+//     a = img.getBoundingClientRect();
+//     /*calculate the cursor's x and y coordinates, relative to the image:*/
+//     x = e.pageX - a.left;
+//     y = e.pageY - a.top;
+//     /*consider any page scrolling:*/
+//     x = x - window.pageXOffset;
+//     y = y - window.pageYOffset;
+//     return {x : x, y : y};
+//   }
+// }
+
+// magnify("myimage", 1.5);
+
 
   
 </script>

@@ -128,10 +128,10 @@
             <div class="col-3 ms-4 d-flex flex-column mt-3">
                 <div id="image-container" class="mb-3 w-100 border border-warning">
                   
-                  <input id="img-input" class="w-100" type="file"  name="images"  />
-                  <% product.image.forEach(img => { %>
+                  <input id="img-input" class="w-100" type="file"  name="images"  multiple/>
+                  <% product.image.forEach((img,index) => { %>
                     <img class="w-25" src="/uploads/<%= img %>" onerror="console.error('Error loading image: <%= img %>')">
-                    <button class="delete" class="btn btn-danger fw-bold me-2">Delete</button>
+                    <a class="delete" class="btn btn-danger fw-bold me-2" href="/admin/delete-image/<%= product._id %>/<%= index %>">Delete</a>
                   <% }) %>
                 </div>   
         </div>  
@@ -148,17 +148,13 @@
         const discountInput = document.querySelector("#discount")
         const deleteButtons = document.querySelectorAll(".delete")
 
+        const existingImages = imageContainer.querySelectorAll('img');
+
+
+
 
         
-        const images = []
-      deleteButtons.forEach(button => {
-        button.addEventListener("click",()=>{
-          const imageName = button.dataset.image;
-          images.push(imageName);
-          console.log("Image deleted:", imageName);
-        console.log("Updated images array:", images);
-        })
-      });
+
 
 
         imageInput.addEventListener("input", (event) => {
@@ -189,7 +185,8 @@
       discountInput.value = " "
       alert("Invalid Input")
     }
-  })
+});
+    
 
 </script>      
 

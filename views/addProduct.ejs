@@ -165,6 +165,7 @@
     <div class="col-3 ms-4 d-flex flex-column">
       <div id="image-container" class="mb-3 w-100 border border-warning">
         <input id="img-input" class="w-100" type="file"  name="images" multiple />
+        <div class="image-display-container"></div>
       </div>
     </div>
   </div>
@@ -190,6 +191,7 @@
   const stockInput = document.querySelector("#stock")
   const priceInput = document.querySelector("#price")
   const discountInput = document.querySelector("#discount")
+  const imageDisplay = document.querySelector(".image-display-container")
 
   
   // function validateImages(files) {
@@ -217,9 +219,10 @@
 
 
 
+
   imageInput.addEventListener("input", (event) => {
 
-
+    imageDisplay.innerHTML = "";
     const images = event.target.files;
     console.log(images);
 
@@ -230,7 +233,7 @@
       const img = document.createElement("img");
       img.classList.add("image");
       img.src = URL.createObjectURL(images[i]);
-      imageContainer.append(img);
+      imageDisplay.append(img);
 
     }
   });

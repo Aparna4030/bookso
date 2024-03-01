@@ -24,9 +24,21 @@ const addAddress = asynchandler(async (req, res) => {
     res.redirect("/address")
 })
 
+const renderEditAddress = asynchandler(async(req,res)=>{
+    const address = await Address.findOne({_id: req.params.id})
+    // console.log("AddddddRrrrrrrrrreeeeeeesssssssss",address)
+    res.render("editAddress",{address})
+})
+
+const editAddress = asynchandler(async(req,res)=>{
+    const {name,phone,pincode,locality,address,city,landmark} = req.body
+    console.log("AddddddRrrrrrrrrreeeeeeesssssssss",req.body)
+    const addrss = await Address.updateOne({ _id:req.params.id }, { $set: { name,phone,pincode,locality,address,city,landmark } })
+    res.redirect("/address")
+})
 
 const deleteAddress = asynchandler(async (req, res) => {
     const deleteAdd = await Address.deleteOne({ _id: req.params.id })
     res.redirect("/address")
 })
-module.exports = { renderaddAddress, addAddress, deleteAddress }
+module.exports = { renderEditAddress,editAddress,renderaddAddress, addAddress, deleteAddress }

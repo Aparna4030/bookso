@@ -16,7 +16,7 @@ const ordersSchema = new mongoose.Schema({
             type:Number,
             required:true,
         },
-        price:{
+        pricePerItem:{
             type:Number,
             required:true,
         }
@@ -24,10 +24,11 @@ const ordersSchema = new mongoose.Schema({
     address:{
         type:mongoose.mongo.ObjectId,
         required:true,
-        ref:"Address"
+        ref:"address"
     },
-    paymentMthod:{
+    paymentMethod:{
         type:String,
+        enum:["COD","Card"],
         required:true,
     },
     deliveryChrg:{
@@ -36,7 +37,7 @@ const ordersSchema = new mongoose.Schema({
     },
     discount:{
         type:Number,
-        required:true,
+        // required:true,
     },
     totalAmt:{
         type:Number,

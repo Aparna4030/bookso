@@ -1,0 +1,55 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %>
+<form action="/address/edit/<%= address._id %>" method="post">
+<div class="container align-items-center ">
+<div class="align-items-center">
+    <div class="col-auto">
+      <label class="col-form-label">Name</label>
+    </div>
+    <div class="col-auto">
+      <input  name="name" type="text" class="form-control" value="<%= address.name %>">
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">Phone Number</label>
+    </div>
+    <div class="col-auto">
+      <input  name="phone" type="number" class="form-control" value="<%= address.phone %>">
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">Pincode</label>
+    </div>
+    <div class="col-auto">
+      <input  name="pincode" type="number" class="form-control" value="<%= address.pincode %>">
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">Locality</label>
+    </div>
+    <div class="col-auto">
+      <input  name="locality" type="text" class="form-control" value="<%= address.locality %>">
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">Address</label>
+    </div>
+    <div class="col-auto">
+      <textarea  name="address" class="form-control" ><%= address.address %>"</textarea>
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">City/District</label>
+    </div>
+    <div class="col-auto">
+      <input  name="city" type="text" class="form-control" value="<%= address.city %>">
+    </div>
+    <div class="col-auto">
+      <label class="col-form-label">Landmark</label>
+    </div>
+    <div class="col-auto">
+      <input  name="landmark" type="text" class="form-control" value="<%= address.landmark %>">
+    </div>
+
+  <button type="submit" class="btn btn-primary mt-2">Save changes</button>
+</div>
+</div>
+</form>
+<!-- input field -->
+  
+<%- include('partials/closingHead.ejs') %>

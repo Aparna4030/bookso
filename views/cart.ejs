@@ -10,6 +10,9 @@
 
   <div class="d-flex">
     <div class="ms-4 col-6 mt-4" id="product-container">
+      <% if (products.length === 0) { %>
+       <h2>No items in cart</h2>
+      <% } %>
       <% products.forEach(product => { %>
 
       <div class="w-100 d-flex border rounded m-2 shadow" id="product-card">
@@ -90,13 +93,13 @@
           <br>
           DISCOUNT: 
           <br>
-          DELIVERY CHARGES:<span style="color: blue"><%= totalPrice*0.05 %></span>
+          DELIVERY CHARGES:<span style="color: blue"><%= totalPrice*shippingCharge %></span>
         </div>
         <hr />
-        <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*1.05 %></span>
+        <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*(1+shippingCharge) %></span>
         <hr />
       </div>
-      <a class="text-decoration-none" href="/placeOrder"
+      <a class="text-decoration-none" href="/orders/placeOrder"
         ><div
           class="container bg-bookso text-center text-light fs-4 fw-bold mt-4 ms-2"
         >
@@ -141,10 +144,12 @@ quantityAll.forEach((quantity) => {
       if (outOfStockMessageDiv) {
         outOfStockMessageDiv.remove();
       }
-
+      
       const response = await jsonData.json();
       qtyVal.innerHTML = response.message;
+      window.location.reload()
     }
+    
   });
 
   // Event listener for decreasing quantity
@@ -175,6 +180,7 @@ quantityAll.forEach((quantity) => {
 
       const response = await jsonData.json();
       qtyVal.innerHTML = response.message;
+      window.location.reload()
     }
   });
 });

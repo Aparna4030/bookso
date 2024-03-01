@@ -6,7 +6,8 @@ const asynchandler = require("express-async-handler")
 const renderCart = asynchandler(async (req, res) => {
     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId')
     console.log(cart)
-    res.render("cart", { products: cart ? cart.products : [] });
+    const shippingCharge = 0.05
+    res.render("cart", { shippingCharge, products: cart ? cart.products : [] });
 })
 
 const addToCart = asynchandler(async (req, res) => {

@@ -21,13 +21,22 @@
     font-family: inkut antiqua;
     padding-left: 10px; 
     font-size: 30px;
-     padding-top: 15px;
+    padding-top: 15px;
 }
 #landing-text-style{
     font-family: inkut antiqua;
 }
-.img-1-steal{
-    font-family: inkut antiqua;
-    font-size: 14px;
-    color: #C6BF15;
+.landing-name{
+    text-decoration: none !important;
+    color: rgb(87, 63, 63);
+    text-shadow: #cbcbc9;
+    font-weight:600;
+    font-size: larger;
+    font-family:  inkut antiqua;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
 }
+

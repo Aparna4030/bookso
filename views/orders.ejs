@@ -1,25 +1,85 @@
-<%- include('partials/head.ejs') %> 
+<%- include('partials/head.ejs') %>
 <%- include('partials/navbar.ejs') %>
 <%- include('partials/userSidebar.ejs') %>
 
-
-    <div class="col-9">
-        <div class="py-3 mx-3 shadow custom-box-shadow">
-        <div class="text-center text-bookso fs-4 fw-bold">ORDERS</div>
-            <hr style="color:#F6EF38; height: 6px;">
-            <div class=" mx-3 border rounded border-3 h-75 text-center " >
-                <div class="d-flex mt-2 mb-2 align-items-center">
-                    <img src="images\books landing.jpg" class="mx-2 w-25">
-                    <div class="fw-bold" >Can't Qurantine<br> Our Love</div>
-                    <div class="fw-bold  text-primary ms-5">₹545.00</div>
-                    <div class="fw-bold text-success ms-5">* Delivered on 17th Aug</div>
-                </div>
-                
+<div class="col-9">
+  <% if (orders !== null) { %> 
+    <div class="text-center text-bookso fs-4 fw-bold py-3 mx-3 shadow ">ORDERS
+    <hr style="color: #f6ef38; height: 6px" /></div>
+    <% orders.forEach(order => { %>
+      <div class="py-3 mx-3 shadow custom-box-shadow">
+    <div class="mx-3 border rounded border-2 h-75 p-4 shadow">
+      <div class="">
+        <div>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td class="fw-bold">Order Id:</td>
+                <td><%= order._id %></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Address:</td>
+                <td>
+                  <%= `${order?.address?.name}, ${order?.address?.address},
+                  ${order?.address?.phone}` %>
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Payment:</td>
+                <td><%= order.totalAmt %></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Status:</td>
+                <td><%= order.status %></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Net Amount:</td>
+                <td>₹<%= order.totalAmt %></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Delivery Charges:</td>
+                <td>₹<%= order.deliveryChrg %></td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Total Amount</td>
+                <td>₹<%= order.totalAmt + order.deliveryChrg %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h5>Items</h5>
+        <div class="d-flex mt-2 mb-2 align-items-center flex-column p-3">
+          <% order.items.forEach(product => { %>
+          <div class="card mx-3 border rounded h-100 m-1 w-100">
+            <div class="card-body d-flex align-items-center">
+              <img
+                src="../uploads/<%= product.productId.image[0] %>"
+                class="card-img-top"
+                alt="Product Image"
+                style="width: 70px; height: 70px"
+              />
+              <div class="ms-3">
+                <h5 class="card-title fw-bold mb-1 text-primary">
+                  <%= product.productId.name %>
+                </h5>
+                <p class="card-text mb-1 text-secondary">
+                  Price: ₹<%= product.pricePerItem %>
+                </p>
+                <p class="card-text mb-1 text-secondary">
+                  Quantity: <%= product.qty %>
+                </p>
+              </div>
             </div>
+          </div>
+          <% }) %>
         </div>
-        </div>
-
-
-
+      </div>
+    </div>
+  </div>
+  <% })%>
+   <% }else { %>
+  <h2>No orders</h2>
+  <% } %>
+</div>
 
 <%- include('partials/closingHead.ejs') %>

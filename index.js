@@ -4,7 +4,8 @@ const indexRouter = require('./routes/indexRouter')
 const adminRouter = require('./routes/adminRouter')
 const addressRouter = require('./routes/addressRouter')
 const cartRouter = require('./routes/cartRouter')
-
+const orderRouter = require('./routes/orderRouter')
+const Order = require("./models/ordersModel")
 const Product = require("./models/productModel")
 const Cart = require("./models/cartModel")
 
@@ -40,7 +41,7 @@ app.use(async(req, res, next) => {
     if (req.session.userId || req.session.isAdmin) {
         res.locals.isLoggedin = true;
         const cart = await Cart.findOne({userId:req.session.userId})
-        res.locals.cartQty = cart.products.length
+        res.locals.cartQty = cart?.products?.length
     } else {
         res.locals.isLoggedin = false;
         res.locals.cartQty = null;
@@ -59,6 +60,7 @@ app.use(isBlockedMiddleware);
 
 
 
+app.use("/orders", orderRouter)
 app.use("/cart",cartRouter)
 app.use("/address",addressRouter)
 app.use("/admin", adminRouter)

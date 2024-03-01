@@ -2,7 +2,7 @@
 <%-include('partials/navbar.ejs') %>
 
 <% let totalPrice = 0 %>
-
+<form action="/orders/addOrder" method="post">
 <div class="container">
     <div class="container bg-bookso text-center text-light fs-4 fw-bold">
       ORDER SUMMARY
@@ -16,7 +16,7 @@
             <div class="container mt-2">
               <div class="quantity-selector d-flex">
                 <div class="form-check ">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="<%= address._id %>">
+                  <input class="form-check-input" name="address" type="radio" id="<%= address._id %>" value="<%= address._id %>">
                   <label class="form-check-label" for="<%= address._id %>"> 
                   <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark"> DELIVER TO:</span>
                   <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark"><%= address.name %></span>
@@ -33,14 +33,14 @@
     <% }) %>
     <% products.forEach(item => { %>
     <div class="w-100 d-flex border rounded m-2 shadow">   
-    <div class="col-2 ms-2" ><img src="../uploads/<%= item.productId.image[0] %>"  class="w-100" style="width: 100%; height: 100%; object-fit: contain;"/></div>
-    <div class="col-10 d-flex flex-column py-2 ps-2"><div class="fw-bold mt-1"><%= item.productId.name %></div>  
-    <div class="fw-bold text-primary mt-1">₹<%= item.productId.price %></div>
-    <div class="fw-bold text-secondary mt-1">qty:<%= item.qty %></div>
+    <div class="col-2 ms-2" ><img src="../uploads/<%= item?.productId?.image[0] %>"  class="w-100" style="width: 100%; height: 100%; object-fit: contain;"/></div>
+    <div class="col-10 d-flex flex-column py-2 ps-2"><div class="fw-bold mt-1"><%= item?.productId?.name %></div>  
+    <div class="fw-bold text-primary mt-1">₹<%= item?.productId?.price %></div>
+    <div class="fw-bold text-secondary mt-1">qty:<%= item?.qty %></div>
     <div class="fw-bold text-success mt-1">* Delivered on 17th Aug</div>
     </div>
     </div>
-    <%totalPrice = totalPrice+(item.productId.price*item.qty)%>
+    <%totalPrice = totalPrice+(item?.productId?.price*item?.qty)%>
     <% }) %>
 </div>
 <div class="ms-4 col-5 mt-4 ">
@@ -51,15 +51,29 @@
                     </div>
                     <hr>
                       <div class=" ms-2 text-secondary fw-bold">
-                        PRICE:<span style="color: rgb(21, 85, 224)"><%= totalPrice %> </span><br>
+                        PRICE:
+                        <span style="color: rgb(21, 85, 224)"><%= totalPrice %></span><br>
                         DISCOUNT: <br>
-                        DELIVERY CHARGES:<span style="color: rgb(21, 85, 224)"><%= totalPrice*0.05 %></span>
+                        DELIVERY CHARGES:<span style="color: rgb(21, 85, 224)"><%= totalPrice*shippingCharge %></span>
                       </div>
                     <hr>
-                    <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*1.05 %></span>
+                    <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*(1+shippingCharge) %></span>
                     <hr>
         </div>
-        <a class="text-decoration-none" href=""><div class="container bg-bookso text-center text-light fs-4 fw-bold mt-4 ms-2"> PROCEED TO PAY</div></a>
+        <span>
+          <div class="form-check fs-5" >
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="one" value="COD" >
+            <label class="form-check-label" for="one">COD</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="option" id="three" value="Card">
+            <label class="form-check-label" for="three">Card</label>
+          </div>
+      </span>
+
+  <button type="submit" class="btn-global-primary d-block w-100 mt-4 fw-bold" href="/orders/payment"><div class=""> PROCEED TO PAY</div></button>
+  </form> 
          
         </div>
 </div>

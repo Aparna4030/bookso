@@ -204,13 +204,20 @@ const editUser = asynchandler(async (req, res) => {
     }
     await user.save()
     res.redirect('/userDetails')
-    console.log("Usssssseeeeeeeerrrr", user)
+    // console.log("Usssssseeeeeeeerrrr", user)
+
 })
 
 
 const renderBook = asynchandler(async (req, res) => {
-    const products = await Product.find()
-    res.render("book", { products })
+    const products = await Product.find({isListed:true}).populate('category_id')
+    console.log("prrrrrrrrooooooooduuucccccccccts",products)
+    const filteredProducts = products.filter(product=>{
+      return product.category_id.isListed && product.stock > 0
+        
+    })
+    console.log(filteredProducts)
+    res.render("book", { products :filteredProducts})
 })
 
 const logout = asynchandler((req, res) => {

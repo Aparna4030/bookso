@@ -3,6 +3,7 @@ const adminController = require("../controllers/admin/adminController")
 const categoryController = require("../controllers/admin/categoryController")
 const productController = require("../controllers/admin/productController")
 const {adminIsLoggedIn,adminIsLoggedOut} = require("../middlewares/auth_middleware");
+const orderController = require("../controllers/admin/orderController")
 const upload = require('../middlewares/multer')
 const router = express.Router()
 
@@ -41,8 +42,12 @@ router.post("/category/edit",categoryController.editCategory)
 router.get("/product/search",productController.searchProduct)
 router.get("/users",adminController.searchUser)
 
+router.get("/delete-image/:productId/:index",productController.deleteImage)
 
+router.get("/orders",orderController.renderAdminOrders)
+router.get("/details/:id",orderController.renderOderDetails)
 
+ router.get("/status",orderController.changeStatus)
 
 
 module.exports = router;

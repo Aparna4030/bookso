@@ -15,14 +15,15 @@ const renderCategory = asynchandler( async (req, res) => {
 
 const addCategory = asynchandler( async (req, res) => {
 
-    const existingCategory = await Category.findOne({name:req.body.name});
+    const catName = req.body.name.trim().toLowerCase()
+    const existingCategory = await Category.findOne({name:catName});
     if(existingCategory){
         req.session.message = "Category exists"
         res.redirect('/admin/category')
         return;
     }
     const category = new Category({
-        name: req.body.name,
+        name: catName,
         description: req.body.description
     })
     const data = await category.save()
@@ -49,7 +50,8 @@ const rendereditCategory = asynchandler( async (req, res) => {
 
 const editCategory = asynchandler( async (req, res) => {
     const { name, description, id } = req.body
-    const existingCategory = await Category.findOne({name:req.body.name});
+    const catName = req.body.name.trim().toLowerCase()
+    const existingCategory = await Category.findOne({name:catName});
     if(existingCategory){
         req.session.message = "Category exists"
         res.redirect('/admin/category')
