@@ -10,13 +10,14 @@ const renderOrders = asynchandler(async(req,res)=>{
     let orders = await Order.find({ userId: req.session.userId }).sort({ createdAt: -1 })
     .populate('items.productId')
     .populate('address')
-    console.log("orderssssssss",orders)
+    console.log('vrrrrrrrrrrrrrrrrrrrrrrrrroooooooooooo',orders.length, orders)
     // if(orders.length < 1) orders = null; 
     res.render("orders",{orders})
 })
 
 const addOrder = asynchandler(async(req,res)=>{
     const cart = await Cart.findOne({userId:req.session.userId}).populate('products.productId')
+   
     const items = cart.products.map((product)=>{
         return {productId:product.productId._id,qty:product.qty,pricePerItem:product.productId.price}
     })
@@ -48,13 +49,23 @@ const addOrder = asynchandler(async(req,res)=>{
     res.redirect("/orders/payment")
 })
 
-
-
 const renderPayment = asynchandler((req,res)=>{
     res.render("payment")
 })
 
 
+const cancelProduct = asynchandler(async(req,res)=>{
+    console.log(req.body)
+    const cancelOrder = await Order.updateOne({_id:req.body.order_id},{$set:{ productCancellation:{cancelStatus:true,description:req.body.description}}})
+    console.log('caaaaaaaaannnnnnnnnnccccccccccceeeel',cancelOrder)
+    res.redirect('/orders')
+})
+const returnProduct = asynchandler(async(req,res)=>{
+    console.log(req.body)
+    const returnOrder = await Order.updateOne({_id:req.body.order_id},{$set:{ productReturned:{returnStatus:true,description:req.body.description}}})
+    console.log('reeeeeeeeettttttuuuuurrrrn',returnOrder)
+    res.redirect('/orders')
+})
 
 const renderPlaceOrder = asynchandler(async(req,res)=>{
     const addressesOrder = await Address.find({userId:req.session.userId})
@@ -64,4 +75,4 @@ const renderPlaceOrder = asynchandler(async(req,res)=>{
     res.render("placeOrder",{addressesOrder,products,shippingCharge})
 })
 
-module.exports = {addOrder,renderPayment,renderOrders,renderPlaceOrder}
+module.exports = {returnProduct,cancelProduct,addOrder,renderPayment,renderOrders,renderPlaceOrder}

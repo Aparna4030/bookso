@@ -40,7 +40,7 @@
             <a><tr>
               <td><%= order._id %></td>
               <td><%= order.userId.name%></td><!-- user name -->
-              <td><%= Date(order.createdAt).slice(0,25) %></td> <!-- date -->
+              <td><%= order.createdAt %></td> date
               <td><%= order.totalAmt %></td>
               <td class="position-relative" id="order-status">
                 <select class="form-select" aria-label="Default select example" onchange="handleOnChange(event)" orderId="<%= order._id %>">

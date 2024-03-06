@@ -9,5 +9,6 @@ router.get("/",isLoggedin,orderController.renderOrders)
 router.get("/placeOrder",isLoggedin,orderController.renderPlaceOrder)
 router.get("/payment",isLoggedin,orderController.renderPayment)
 router.post("/addOrder",isLoggedin,orderController.addOrder)
+router.post("/cancel",isLoggedin,orderController.cancelProduct)
 
 module.exports = router

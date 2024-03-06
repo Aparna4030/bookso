@@ -3,8 +3,6 @@ require('dotenv').config()
 const otpGenerator = require('../utils/otpGenerator')
 
 
-
-
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

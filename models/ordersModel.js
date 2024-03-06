@@ -47,8 +47,26 @@ const ordersSchema = new mongoose.Schema({
         type:String,
         enum: ["Placed","Shipped","Delivered","Cancelled", "Returned"],
         default: "Placed",
+    },
+    productCancellation:{
+        cancelStatus:{
+            type:Boolean,
+            default:false
+        },
+        description:{
+            type:String,
+        }
+    },
+    productReturned:{
+        returnStatus:{
+            type:Boolean,
+            default:false,
+        },
+        description:{
+            type:String,
+        }
     }
-
+    
 },{timestamps:true})
 
 const ordersModel = mongoose.model('Orders',ordersSchema)

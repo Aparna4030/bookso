@@ -11,6 +11,7 @@ const renderAdminOrders = asynchandler(async(req,res)=>{
     .populate('items.productId')
     .populate('address')
     .populate('userId')
+    console.log("ordersssssssssssssssssooooooooooofffffffffffff",orders)
     res.render("adminOrders",{orders})
 })
 

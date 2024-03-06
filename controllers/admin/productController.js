@@ -108,16 +108,41 @@ const searchProduct = asynchandler(async (req, res) => {
     res.json(products);
 })
 
-const deleteImage = asynchandler(async (req, res) => {
+
+const fs = require('fs');
+const path = require('path');
+
+const deleteImage = async (req, res) => {
     const index = req.params.index;
     const productId = req.params.productId;
     console.log(index, productId)
     const product = await Product.findOne({ _id: productId });
     console.log('prooooooooooooo', product)
+    const imagePath = product.image[index];
     product.image.splice(index, 1);
     console.log('modifiedddddddddddddddddddddd', product)
     await product.save();
-    res.redirect(`/admin/editProduct/${productId}`);
-})
+
+    const fullPath = path.join(__dirname, '..', '../public/uploads', imagePath);
+    // console.log("fuuuuuulll",fullPath)
+// here it will check the path and deletes from server which uploads folder//
+    if (fs.existsSync(fullPath)) {
+        fs.unlink(fullPath, (err) => {
+            if (err) {
+                console.error('Error deleting image:', err, fullPath);
+                return res.status(500).send('Error deleting image' + fullPath);
+            }
+            console.log('Image deleted successfully');
+            res.redirect(`/admin/editProduct/${productId}`);
+        });
+    } else {
+        console.error('File does not exist:', fullPath);
+        res.status(404).send('File not found');
+    }
+};
+
+
+
+
 
 module.exports = { deleteImage, searchProduct, listProducts, unlistProducts, renderProducts, renderaddProduct, addProduct, renderEditProduct, editProduct }

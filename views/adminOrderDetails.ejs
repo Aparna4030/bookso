@@ -61,6 +61,15 @@
                               <td class="fw-bold">Total Amount</td>
                               <td>₹<%= order.totalAmt + order.deliveryChrg %></td>
                             </tr>
+                            <tr>
+                              <% if (order.productCancellation.cancelStatus === true) { %>
+                                <div class="alert alert-danger" role="alert">Cancel Product: <%= order.productCancellation.description %></div>   
+                              <% } else { %>
+                                <div class="alert alert-danger" role="alert">Return Product</div> 
+                              <% } %>
+                              <button class="btn btn-primary ms-2 me-3">Accept</button>
+                              <button class="btn btn-danger">Decline</button>
+                            </tr>
                            
                           </tbody>
                         </table>
