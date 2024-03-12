@@ -27,7 +27,7 @@ const addCategory = asynchandler( async (req, res) => {
         description: req.body.description
     })
     const data = await category.save()
-    res.redirect("/admin/category")
+    res.redirect("/admin/category") 
 })
 
 const listCategory = asynchandler (async (req, res) => {

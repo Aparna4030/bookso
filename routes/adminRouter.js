@@ -2,6 +2,7 @@ const express = require("express")
 const adminController = require("../controllers/admin/adminController")
 const categoryController = require("../controllers/admin/categoryController")
 const productController = require("../controllers/admin/productController")
+const couponController = require("../controllers/admin/couponController")
 const {adminIsLoggedIn,adminIsLoggedOut} = require("../middlewares/auth_middleware");
 const orderController = require("../controllers/admin/orderController")
 const upload = require('../middlewares/multer')
@@ -47,7 +48,12 @@ router.get("/delete-image/:productId/:index",productController.deleteImage)
 router.get("/orders",orderController.renderAdminOrders)
 router.get("/details/:id",orderController.renderOderDetails)
 
- router.get("/status",orderController.changeStatus)
+router.get("/status",orderController.changeStatus)
+
+router.get("/coupons",couponController.renderaddCoupon)
+router.post("/coupons",couponController.addCoupon)
+
+router.get("/listCoupon",couponController.listCoupon)
 
 
 module.exports = router;
