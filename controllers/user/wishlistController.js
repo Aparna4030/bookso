@@ -14,12 +14,21 @@ console.log(wishlists)
 })
 
 const addToWishlist = asynchandler(async(req,res)=>{
-    const wishlist = new Wishlist({
-        userId:req.session.userId,
-        productId:req.params.id,
-    })
-    await wishlist.save()
+    const userId = req.session.userId;
+    const productId = req.params.id;
+    const existingWishlistItem = await Wishlist.findOne({ userId, productId });
+    if (existingWishlistItem) {
+        return res.status(409).json({ message: "Product already exists in the wishlist" });
+    }else{
+        const wishlist = new Wishlist({
+            userId:req.session.userId,
+            productId:req.params.id,
+        })
+        await wishlist.save()
     res.status(201).json({message:":Added to Wishlist"})
+    }
+   
+    
 })
 
 const removeWishlist = asynchandler(async(req, res) => {

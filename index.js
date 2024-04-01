@@ -72,3 +72,13 @@ app.listen(process.env.PORT, () => {
     console.log("http://localhost:8080")
 })
 
+
+
+
+
+
+
+
+
+// Mastercard	5267 3181 8797 5449	
+// Visa	4111 1111 1111 1111	

@@ -7,12 +7,13 @@
         <% wishlists.forEach(product => { %>
             <div class="card mt-3 me-3" style="width: 16rem;">
                 <a href="/wishlist/delete/<%= product._id %>">
-                    delete</a>
+                    <i class="fa fa-heart fs-5 ms-2 mt-2" style="color: #ff0000;"></i></a> 
+                    <a href="/product/<%= product._id %>">
                 <img src="../uploads/<%=  product.image[0] %>" class="card-img-top w-75" alt="..." style="margin-left: 32px;"></a>
                 <div class="card-body shadow h-25">
                     <h5 class="card-title"><%= product.name %></h5>
                     <p class="card-text text-primary">₹<%= product.price %></p>
-                    <a href=""><i class="fa-regular fa-heart" style="color: #000000;"></i></a>
+                   
                 </div>
                 </div>
         <% }) %>

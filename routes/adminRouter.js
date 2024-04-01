@@ -3,6 +3,7 @@ const adminController = require("../controllers/admin/adminController")
 const categoryController = require("../controllers/admin/categoryController")
 const productController = require("../controllers/admin/productController")
 const couponController = require("../controllers/admin/couponController")
+const salesController = require("../controllers/admin/salesController")
 const {adminIsLoggedIn,adminIsLoggedOut} = require("../middlewares/auth_middleware");
 const orderController = require("../controllers/admin/orderController")
 const upload = require('../middlewares/multer')
@@ -15,6 +16,7 @@ router.post("/login",adminController.adminLogin)
 
 router.use(adminIsLoggedIn)
 router.get("/",adminController.renderAdminPanel)
+
 
 router.get("/customers",adminController.renderCustomers)
 router.get("/block/:id",adminController.block)
@@ -50,10 +52,18 @@ router.get("/details/:id",orderController.renderOderDetails)
 
 router.get("/status",orderController.changeStatus)
 
+router.get("/category/count",adminController.categoryCount)
+
 router.get("/coupons",couponController.renderaddCoupon)
 router.post("/coupons",couponController.addCoupon)
 
 router.get("/listCoupon",couponController.listCoupon)
 
+router.get("/salesreport",salesController.getSalesReport);
 
+router.post("/filterReport",salesController.filterSalesReport);
+
+
+
+// router.get("/salesreport/:payment",salesController.getFilterSalesReport);
 module.exports = router;

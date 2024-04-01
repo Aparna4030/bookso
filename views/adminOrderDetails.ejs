@@ -64,11 +64,12 @@
                             <tr>
                               <% if (order.productCancellation.cancelStatus === true) { %>
                                 <div class="alert alert-danger" role="alert">Cancel Product: <%= order.productCancellation.description %></div>   
-                              <% } else { %>
+                              <% if (order.productCancellation.returnStatus === true) { %>
                                 <div class="alert alert-danger" role="alert">Return Product</div> 
                               <% } %>
-                              <button class="btn btn-primary ms-2 me-3">Accept</button>
-                              <button class="btn btn-danger">Decline</button>
+                              <% } %>
+                              <!-- <button class="btn btn-primary ms-2 me-3">Accept</button>
+                              <button class="btn btn-danger">Decline</button> -->
                             </tr>
                            
                           </tbody>

@@ -17,9 +17,9 @@
         <a class="text-decoration-none text-bookso" href="/admin/customers"><div><i class="fa-solid fa-users pe-2" style="color: #535351;"></i>CUSTOMERS</div></a>
         <a class="text-decoration-none text-bookso" href="/admin/orders"><div><i class="fa-solid fa-cart-shopping pe-2" style="color: #535351;"></i>ORDERS</div></a>
         <a class="text-decoration-none text-bookso" href="/admin/category"><div><i class="fa-solid fa-list pe-2" style="color: #535351;"></i>CATEGORY</div></a>
-        <a class="text-decoration-none text-bookso" href="/admin/report"><div><i class="fa-solid fa-universal-access pe-2" style="color: #535351;"></i>SALES REPORT</div></a>
-        <a class="text-decoration-none text-bookso" href="/admin/banner"><div><i class="fa-regular fa-flag pe-2" style="color: #535351;"></i>BANNER MANAGE</div></a>
-        <a class="text-decoration-none text-bookso" href="/admin/coupons"><div><i class="fa-solid fa-ticket-simple pe-2" style="color: #535351;"></i>MANAGE COUPONS</div></a>
+        <a class="text-decoration-none text-bookso" href="/admin/salesreport"><div><i class="fa-solid fa-universal-access pe-2" style="color: #535351;"></i>SALES REPORT</div></a>
+        <!-- <a class="text-decoration-none text-bookso" href="/admin/banner"><div><i class="fa-regular fa-flag pe-2" style="color: #535351;"></i>BANNER MANAGE</div></a> -->
+        <a class="text-decoration-none text-bookso" href="/admin/listCoupon"><div><i class="fa-solid fa-ticket-simple pe-2" style="color: #535351;"></i>MANAGE COUPONS</div></a>
     </div>
   </div>
   <div class="col-9 px-4">
@@ -46,10 +46,10 @@
                     <td><%= user.phone %></td>
                     <td><%= user.email %></td>
                     <td><% if (user.isBlocked) { %>
-                        <a class="btn btn-success" href="/admin/unblock/<%= user._id %>">
+                      <button class="btn btn-success" onclick="unblock(event,'<%= user._id %>')">
                           UNBLOCK
                         <% }else{ %> 
-                          <a class="btn btn-danger" href="/admin/block/<%= user._id %>">
+                          <button class="btn btn-danger" onclick="block(event,'<%= user._id %>')">
                             BLOCK
                         <% } %> 
                       </a>
@@ -77,37 +77,59 @@
 <script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>">
 
 <script>
-const searchInput = document.querySelector("#search")
-const button = document.querySelector("#searchButton")
-const tableData = document.querySelector("#tableData")
+  const searchInput = document.querySelector("#search");
+  const button = document.querySelector("#searchButton");
+  const tableData = document.querySelector("#tableData");
 
-button.addEventListener("click",async()=>{
-  const string = searchInput.value;
-  if(!string)return;
-
-  const response = await fetch(`/admin/users?search=${string}`)
-  const users = await response.json()
-  console.log(users)
-
-let inner = ""
-let i = 1
-  users.forEach(user => {
-    let button = " ";
-    if(user.isBlocked){
-      button = `<a class="btn btn-success" href="/admin/unblock/${user._id}">UNBLOCK</a>`
-    }else{
-      button = `<a class="btn btn-danger" href="/admin/block/${user._id}">BLOCK</a>`                     
+  const unblock = async (event, userId) => {
+    console.log(event.target);
+    console.log('clicked');
+    const jsonData = await fetch(`/admin/unblock/${userId}`);
+    const data = await jsonData.json();
+    if (data.success) {
+      console.log('successsss');
+      const button = `<button class="btn btn-danger" onclick="block(event, '${userId}')">BLOCK</button>`;
+      event.target.outerHTML = button;
     }
-    inner += `<tr>
-      <th scope="row">${i}</th>
-      <td>${user.name}</td>
-      <td>${user.phone}</td>
-      <td>${user.email}</td>
-      <td>${button}</td>
-    </tr>`
-    i++
-  });
+  };
 
-  tableData.innerHTML = inner;
-})
+  const block = async (event, userId) => {
+
+    const jsonData = await fetch(`/admin/block/${userId}`);
+    const data = await jsonData.json();
+    if (data.success) {
+      const button = `<button class="btn btn-success" onclick="unblock(event, '${userId}')">UNBLOCK</button>`;
+      event.target.outerHTML = button;
+    }
+  };
+
+  button.addEventListener("click", async () => {
+    const string = searchInput.value;
+    if (!string) return;
+
+    const response = await fetch(`/admin/users?search=${string}`);
+    const users = await response.json();
+    console.log(users);
+
+    let inner = "";
+    let i = 1;
+    users.forEach(user => {
+      let button = " ";
+      if (user.isBlocked) {
+        button = `<button class="btn btn-success" onclick="unblock('${user._id}')">UNBLOCK</button>`;
+      } else {
+        button = `<button class="btn btn-danger" onclick="block('${user._id}')">BLOCK</button>`;                     
+      }
+      inner += `<tr>
+        <th scope="row">${i}</th>
+        <td>${user.name}</td>
+        <td>${user.phone}</td>
+        <td>${user.email}</td>
+        <td>${button}</td>
+      </tr>`;
+      i++;
+    });
+
+    tableData.innerHTML = inner;
+  });
 </script>

@@ -63,7 +63,7 @@
           </div>
           <hr />
 
-          <div class="row mb-4">
+          <!-- <div class="row mb-4">
             <div class="col-md-4 col-6">
               <label class="mb-2">Format</label>
               <select
@@ -75,7 +75,7 @@
                 <option>Kindle</option>
                 <option>AudioBook</option>
               </select>
-            </div>
+            </div> -->
             <!-- col.// -->
             <% if (cartQty) { %>
             <div class="alert alert-warning mt-2" role="alert">
@@ -90,7 +90,7 @@
             <!--  -->
             
             <!--  -->
-            <div class="container mt-2">
+            <div class="container mt-4 mb-4">
               <div class="quantity-selector d-flex">
                 <button
                   class="btn quantity-btn border-warning bg-bookso"
@@ -117,7 +117,7 @@
             <span style="color: red">Only <%= product.stock %> Items Left</span>
             <% } %>
           </div>
-          <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+          <!-- <a href="#" class="btn btn-warning shadow-0"> Buy now </a> -->
             <button onclick="addToCart()" class="btn btn-primary shadow-0">
               <i class="me-1 fa fa-shopping-basket"></i> Add to cart
             </button> 
@@ -192,8 +192,13 @@ const addToWishlist = async () =>{
   const res = await fetch(`/wishlist/${productId}`,{
     method:"post",
   })
-
-  res.status===201? window.showToast("Added to Wishlist"):window.showToast("Something went Wrong")
+if(res.status===201){
+  window.showToast("Added to Wishlist")
+}else if(res.status===409){
+  showToast("Already Added To Wishlist")
+}else{
+  window.showToast("Something went Wrong")
+}
   
 }
 

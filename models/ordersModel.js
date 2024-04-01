@@ -28,7 +28,7 @@ const ordersSchema = new mongoose.Schema({
     },
     paymentMethod:{
         type:String,
-        enum:["COD","Card"],
+        enum:["COD","Card","Wallet"],
         required:true,
     },
     deliveryChrg:{

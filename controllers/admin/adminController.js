@@ -1,5 +1,9 @@
 const asynchandler = require("express-async-handler")
 const User = require("../../models/userModel")
+const Order = require("../../models/ordersModel")
+const Product = require("../../models/productModel")
+const Category = require("../../models/categoryModel")
+
 
 
 const renderLogin = asynchandler( (req, res) => {
@@ -22,8 +26,64 @@ const adminLogin = asynchandler((req, res) => {
     }
 })
 
-const renderAdminPanel = asynchandler( (req, res) => {
-    res.render("adminpanel")
+const renderAdminPanel = asynchandler(async (req, res) => {
+    const customersCount = await User.find().count()
+    const orders = await Order.find().count()
+
+    
+  
+
+    const orderGraph = await Order.find()
+    const createdAtValues = orderGraph.map(order => order.createdAt.getMonth())
+    const counts ={}
+    createdAtValues.forEach(number=>{
+        if(counts[number]){
+            counts[number]++;
+        }else{
+            counts[number]=1;
+        }
+    })
+    const countsArray = [];
+    for(let key in counts){
+        countsArray[(key*1)] = counts[key]
+    }
+    // console.log({countsArray})
+
+    // console.log({counts})
+    // console.log("hhhhhhheeeeeeellllloooo",createdAtValues)
+
+    // console.log("oooooooooooooooooo",orders)
+    const category = await Category.find().count()
+    const productsCount = await Product.find().count()
+    res.render("adminpanel",{customersCount,orders,category,productsCount,counts,countsArray})
+})
+
+const categoryCount = asynchandler(async(req,res)=>{
+    let categoryProductCount = await Product.aggregate([
+        {
+            $group:{_id:"$category_id",count:{$sum:1}}
+        },
+        {
+            $lookup:{
+                from:"categories",
+                as: "category",
+                localField:"_id",
+                foreignField:"_id"
+            }
+        },
+        {
+            $unwind:"$category"
+        },
+        {
+            $addFields:{category:"$category.name"}
+        },
+        {
+            $project:{category:1,count:1}
+        }
+    ])
+
+    res.status(200).json(categoryProductCount)
+
 })
 
 const renderCustomers = asynchandler( async (req, res) => {
@@ -34,13 +94,13 @@ const renderCustomers = asynchandler( async (req, res) => {
 const block = asynchandler( async (req, res) => {
     const userId = req.params.id
     const userData = await User.updateOne({ _id: userId }, { $set: { isBlocked: true } })
-    res.redirect("/admin/customers")
+    res.status(200).json({success:true})
 })
 
 const unblock = asynchandler( async (req, res) => {
     const userId = req.params.id
     const userData = await User.updateOne({ _id: userId }, { $set: { isBlocked: false } })
-    res.redirect("/admin/customers")
+    res.status(200).json({success:true})
 })
 
 const searchUser = asynchandler(async(req,res)=>{
@@ -57,4 +117,5 @@ module.exports = {
     block,
     unblock,
     searchUser,
+    categoryCount
 }

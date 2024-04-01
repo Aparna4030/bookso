@@ -5,18 +5,16 @@ const asynchandler = require("express-async-handler")
 
 const renderCart = asynchandler(async (req, res) => {
     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId')
-    console.log(cart)
+    // console.log("oooooooo",cart)
     const shippingCharge = 0.05
-    res.render("cart", { shippingCharge, products: cart ? cart.products : [] });
+    res.render("cart", {shippingCharge, products: cart ? cart.products : [] });
 })
 
 const addToCart = asynchandler(async (req, res) => {
 if(!req.session.userId){
-    console.log('no userrrrrrrrrrrrrrrrrrrrrrr')
     res.status(401).json({status:401,message:"User Dosen't Exist"})
 }
     const product = await Product.findOne({_id:req.body.productId})
-    // console.log(product)
 
     //req.body => {productId, qty}
     const cart = await Cart.findOne({ userId: req.session.userId})
@@ -42,7 +40,7 @@ if(!req.session.userId){
         await newCart.save()
     }
 
-    res.status(200).message("successful")
+    res.status(200).json({success:true,message:"Added to Cart"})
 
 
 })

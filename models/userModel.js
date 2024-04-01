@@ -21,7 +21,12 @@ const userSchema = new mongoose.Schema({
     isBlocked:{
         type:Boolean,
         default:false,
+    },
+    wallet:{
+        type:Number,
+        default:0
     }
+
 
 
 },{timestamps:true})

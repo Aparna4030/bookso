@@ -21,18 +21,26 @@
             <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
           </li>
         </ul>
-        <!-- <form class="d-flex px-3 ">
-          <input class="form-control mx-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="d-flex px-3" action="/search">
+          <input class="form-control mx-2" type="search" placeholder="Search" aria-label="Search" name="q">
           <button class="btn btn-outline-success mx-auto"  type="submit">Search</button>
-        </form> -->
+        </form>
       </div>
       
 
       <% if (isLoggedin) { %>
-        <a href="/cart" class="position-relative"><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      
+         
+  
+        <a href="/cart" class="position-relative">
+          <% if (cartQty) { %>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
           <%= cartQty %>
           <span class="visually-hidden">unread messages</span>
-        </span><i class="fa-solid fa-cart-shopping pe-2" style="color: #000000;font-size: 24px;"></i></a> 
+        </span>
+        <% } %>
+        
+        <i class="fa-solid fa-cart-shopping pe-2" style="color: #000000;font-size: 24px;"></i></a> 
         <a href="/Profile"><i class="fa-solid fa-user pe-2" style="color: #000000;font-size: 24px;"></i></a>
         <a class="btn-global-secondary ms-2 text-decoration-none" href="/logout">Logout</a>
       <% }else{ %>

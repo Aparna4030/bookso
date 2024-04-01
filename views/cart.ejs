@@ -11,9 +11,8 @@
   <div class="d-flex">
     <div class="ms-4 col-6 mt-4" id="product-container">
       <% if (products.length === 0) { %>
-       <h2>No items in cart</h2>
-      <% } %>
-      <% products.forEach(product => { %>
+      <h2>No items in cart</h2>
+      <% } %> <% products.forEach(product => { %>
 
       <div class="w-100 d-flex border rounded m-2 shadow" id="product-card">
         <div class="col-2 ms-2">
@@ -72,120 +71,214 @@
       >
         <div class="ms-4 fw-bold mb-2">APPLY COUPON</div>
         <div class="row g-3 align-items-center mb-3">
-          <div class="col-auto ms-4 w-50">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter coupon code"
-            />
-          </div>
-          <button class="btn-global-primary">CHECK</button>
+          <form id="couponForm" class="d-flex">
+            <div class="col-auto ms-4 w-50 me-2">
+              <input
+                type="text"
+                name="couponCode"
+                class="form-control me-2"
+                placeholder="Enter coupon code"
+              />
+            </div>
+            <button type="submit" class="btn-global-primary">CHECK</button>
+          </form>
         </div>
       </div>
 
-      <div class="w-100 border shadow shadow-rounded rounded m-2">
+      <div class="w-100 border shadow shadow-rounded rounded m-2 ">
         <div class="container text-bookso text-center fs-4 fw-bold mt-2">
           PRICE DETAILS
         </div>
         <hr />
         <div class="ms-2 text-secondary fw-bold">
-          PRICE:<span style="color: blue">₹<%=totalPrice %></span>
-          <br>
-          DISCOUNT: 
-          <br>
-          DELIVERY CHARGES:<span style="color: blue"><%= totalPrice*shippingCharge %></span>
+          PRICE:<span id="price" style="color: blue">₹<%=totalPrice %></span>
+          <br />
+          DISCOUNT:<span id="discount" style="color: blue">₹</span>
+          <br />
+          DELIVERY CHARGES:<span id="delivery" style="color: blue"
+            ><%= totalPrice*shippingCharge %></span
+          >
         </div>
-        <hr />
-        <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= totalPrice*(1+shippingCharge) %></span>
-        <hr />
+        <hr/>
+        <span class="fw-bold ms-2">TOTAL AMOUNT:</span>
+        <span id="total" class="fw-bold"><%= Math.floor(totalPrice*(1+shippingCharge))%></span>
+        <hr/>
       </div>
-      <a class="text-decoration-none" href="/orders/placeOrder"
-        ><div
-          class="container bg-bookso text-center text-light fs-4 fw-bold mt-4 ms-2"
-        >
-          PLACE ORDER
-        </div></a
+      <% if (products.length === 0) { %>
+      <div
+        class="container bg-bookso text-center text-secondary fs-4 fw-bold mt-4 ms-2"
       >
+        NO ITEMS
+      </div>
+      <% } else { %>
+        <div class="container d-flex justify-content-around">
+          <div class="col-6">
+          <button class="text-decoration-none border-0" id="submit-btn" >
+            <div
+            class="container bg-bookso text-center text-light w-100 fs-4 fw-bold"
+            >
+            PLACE ORDER
+          </div>
+
+        </button>
+      </div>
+    </div>
+      <% } %>
     </div>
   </div>
 
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
   <script>
-const quantityAll = document.querySelectorAll(".quantity-selector");
+    const quantityAll = document.querySelectorAll(".quantity-selector");
 
-quantityAll.forEach((quantity) => {
-  const qtyVal = quantity.querySelector(".qty");
-  const qtyInc = quantity.querySelector(".qty-inc");
-  const qtyDec = quantity.querySelector(".qty-dec");
+    quantityAll.forEach((quantity) => {
+      const qtyVal = quantity.querySelector(".qty");
+      const qtyInc = quantity.querySelector(".qty-inc");
+      const qtyDec = quantity.querySelector(".qty-dec");
 
-  const productId = qtyVal.getAttribute("productId");
+      const productId = qtyVal.getAttribute("productId");
 
-  // Event listener for increasing quantity
-  qtyInc.addEventListener("click", async () => {
-    const jsonData = await fetch(
-      `/cart/increaseQty/${productId}/${qtyVal.innerHTML}`
-    );
-    const outOfStockMessageDiv = document.querySelector(
-      ".out-of-stock-message"
-    );
-
-    if (jsonData.status == 406) {
-      if (!outOfStockMessageDiv) {
-        // Create and append a new "Out of Stock" message div
-        const newOutOfStockMessageDiv = document.createElement("div");
-        newOutOfStockMessageDiv.textContent = "Out of Stock";
-        newOutOfStockMessageDiv.classList.add(
-          "ps-2",
-          "text-danger",
-          "out-of-stock-message"
+      // Event listener for increasing quantity
+      qtyInc.addEventListener("click", async () => {
+        const jsonData = await fetch(
+          `/cart/increaseQty/${productId}/${qtyVal.innerHTML}`
         );
-        quantity.appendChild(newOutOfStockMessageDiv);
-      }
-    } else {
-      if (outOfStockMessageDiv) {
-        outOfStockMessageDiv.remove();
-      }
-      
-      const response = await jsonData.json();
-      qtyVal.innerHTML = response.message;
-      window.location.reload()
-    }
-    
-  });
-
-  // Event listener for decreasing quantity
-  qtyDec.addEventListener("click", async () => {
-    const jsonData = await fetch(
-      `/cart/decreaseQty/${productId}/${qtyVal.innerHTML}`
-    );
-    const outOfStockMessageDiv = document.querySelector(
-      ".out-of-stock-message"
-    );
-
-    if (jsonData.status == 406) {
-      if (!outOfStockMessageDiv) {
-        // Create and append a new "Out of Stock" message div
-        const newOutOfStockMessageDiv = document.createElement("div");
-        newOutOfStockMessageDiv.textContent = "Out of Stock";
-        newOutOfStockMessageDiv.classList.add(
-          "ps-2",
-          "text-danger",
-          "out-of-stock-message"
+        const outOfStockMessageDiv = document.querySelector(
+          ".out-of-stock-message"
         );
-        quantity.appendChild(newOutOfStockMessageDiv);
-      }
-    } else {
-      if (outOfStockMessageDiv) {
-        outOfStockMessageDiv.remove();
-      }
 
-      const response = await jsonData.json();
-      qtyVal.innerHTML = response.message;
-      window.location.reload()
-    }
-  });
-});
+        if (jsonData.status == 406) {
+          if (!outOfStockMessageDiv) {
+            // Create and append a new "Out of Stock" message div
+            const newOutOfStockMessageDiv = document.createElement("div");
+            newOutOfStockMessageDiv.textContent = "Out of Stock";
+            newOutOfStockMessageDiv.classList.add(
+              "ps-2",
+              "text-danger",
+              "out-of-stock-message"
+            );
+            quantity.appendChild(newOutOfStockMessageDiv);
+          }
+        } else {
+          if (outOfStockMessageDiv) {
+            outOfStockMessageDiv.remove();
+          }
 
+          const response = await jsonData.json();
+          qtyVal.innerHTML = response.message;
+          window.location.reload();
+        }
+      });
+
+      // Event listener for decreasing quantity
+      qtyDec.addEventListener("click", async () => {
+        const jsonData = await fetch(
+          `/cart/decreaseQty/${productId}/${qtyVal.innerHTML}`
+        );
+        const outOfStockMessageDiv = document.querySelector(
+          ".out-of-stock-message"
+        );
+
+        if (jsonData.status == 406) {
+          if (!outOfStockMessageDiv) {
+            // Create and append a new "Out of Stock" message div
+            const newOutOfStockMessageDiv = document.createElement("div");
+            newOutOfStockMessageDiv.textContent = "Out of Stock";
+            newOutOfStockMessageDiv.classList.add(
+              "ps-2",
+              "text-danger",
+              "out-of-stock-message"
+            );
+            quantity.appendChild(newOutOfStockMessageDiv);
+          }
+        } else {
+          if (outOfStockMessageDiv) {
+            outOfStockMessageDiv.remove();
+          }
+
+          const response = await jsonData.json();
+          qtyVal.innerHTML = response.message;
+          window.location.reload();
+        }
+      });
+    });
+
+    const price = document.querySelector("#price");
+    const discountElt = document.querySelector("#discount");
+    const delivery = document.querySelector("#delivery");
+    const total = document.querySelector("#total");
+    const couponFormElt = document.getElementById("couponForm");
+    console.log(couponFormElt);
+    let discountedPrice = 0;
+    let deliveryCharg = 0;
+    let priceValue = 0;
+    let discountPercentage = 0;
+    let discount = "";
+
+    couponFormElt.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const couponCode = formData.get("couponCode");
+      console.log(couponCode);
+
+      const couponData = await fetch(`/addCoupon/${couponCode}`);
+      const res = await couponData.json();
+      console.log(res);
+      if (res.success == false) {
+        alert("Invalid Coupon");
+      } else if (res.success == true) {
+        alert("Apply");
+        console.log("laamoa");
+        console.log({ price }, price.innerHTML);
+        discountPercentage = res.discount * 1;
+        priceValue = price.innerHTML?.split("₹")[1] * 1;
+        deliveryCharg = delivery.innerHTML * 1;
+        discountedPrice = priceValue * (1 - discountPercentage / 100);
+        console.log({ deliveryCharg, discountedPrice });
+        total.innerHTML = `₹ ${Math.round(discountedPrice + deliveryCharg)}`;
+        discount = ` -₹${
+          discountPercentage * 0.01 * priceValue
+        } (${discountPercentage}%)`;
+        console.log({ discount });
+        discountElt.innerHTML = discount;
+      }
+    });
+
+    const submitBtn = document.querySelector("#submit-btn");
+    let placeOrderForm;
+    submitBtn.addEventListener("click", async () => {
+      console.log("clicked");
+      const body = await JSON.stringify({
+        totalPrice: discountedPrice + deliveryCharg,
+        deliveryCharg,
+        price: priceValue,
+        discountedPrice,
+        discountPercentage,
+        discount,
+        coupon: discountPercentage ? true : false,
+      });
+
+      console.log({ body });
+      fetch("/orders/placeOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      })
+        .then((res) => {
+          return res.text();
+        })
+        .then((html) => {
+          console.log({ html });
+          document.body.innerHTML = html;
+          placeOrderForm = document.querySelector("#placeOrderForm");
+          console.log({ placeOrderForm });
+        });
+    });
   </script>
+ 
 
   <%- include('partials/closingHead.ejs') %>
 </div>

@@ -1,7 +1,7 @@
 <%- include('partials/head.ejs') %> <%- include('partials/navbar.ejs') %> <%-
 include('partials/userSidebar.ejs') %>
 
-<div class="col-9">
+<div class="col-9 ">
   <% if (orders !== null) { %>
   <div class="text-center text-bookso fs-4 fw-bold py-3 mx-3 shadow">
     ORDERS
@@ -94,9 +94,8 @@ include('partials/userSidebar.ejs') %>
                 </div>
               </div>
               
-  <div class="py-3 mx-3 shadow custom-box-shadow">
-    <div class="mx-3 border rounded border-2 h-75 p-4 shadow">
-      <div class="">
+  <div class="py-3 mx-3 shadow custom-box-shadow mb-3">
+    <div class="mx-3 border rounded border-2 h-75 p-4 shadow mt-3">
         <div>
           <table class="table">
             <tbody>
@@ -150,27 +149,17 @@ include('partials/userSidebar.ejs') %>
                   Return Request Initiated
                 </div>
                 <% } else if (order.status === 'Delivered') { %>
-                <button
-                  type="button"
-                  class="btn btn-warning"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal<%=index%>"
-                >
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal<%=index%>">
                   Return
                 </button>
                 <% } else { %>
-                <button
-                  type="button"
-                  class="btn btn-warning"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal<%=index%>"
-                >
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal<%=index%>">
                   Cancel
                 </button>
                 <% } %>
               </tr>
-
-              
+          </div>
+         </div> 
             </tbody>
           </table>
 
@@ -202,11 +191,11 @@ include('partials/userSidebar.ejs') %>
           </div>
         </div>
       </div>
-    </div>
+ </div>
     <% })%> <% }else { %>
     <h2>No orders</h2>
     <% } %>
   </div>
 
   <%- include('partials/closingHead.ejs') %>
-</div>
+

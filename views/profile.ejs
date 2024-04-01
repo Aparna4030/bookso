@@ -1,28 +1,105 @@
-<%- include('partials/head.ejs') %> 
-<%- include('partials/navbar.ejs') %>
-<%- include('partials/userSidebar.ejs') %>
-
-
+<%- include('partials/head.ejs') %> <%- include('partials/navbar.ejs') %> <%-
+include('partials/userSidebar.ejs') %>
 
 <div class="col-9">
-    <div class="py-3 ml-3 mx-3 shadow rounded custom-box-shadow">
-        <div class="container px-2 ml-3 text-dark text-center mt-4 fs-3 fw-bold"><%= user.name %></div>
-        <div class="container text-dark text-center"><%= user.email %></div>
-        <a class="text-decoration-none" href="/userDetails"><div class="container text-light btn-global-primary text-center mt-4 mb-3 fw-bold" style="width: 25vh;"><i class="fa-solid fa-pen pe-1" style="color: #ffffff;"></i>Edit profile</div></a>
+  <div class="py-3 ml-3 mx-3 shadow rounded custom-box-shadow">
+    <div class="container px-2 ml-3 text-dark text-center mt-4 fs-3 fw-bold">
+      <%= user.name %>
     </div>
-    <div class="row d-flex justify-content-between py-3 ml-3 mx-2 ">
-        <div class="col-4" >
-            <a href="/orders"><div class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3" style="height:100%; font-family: jomhuria; text-decoration: none; "><i class="fa-solid fa-list-ul mt-3" style="color: #f6ef38; font-size: 40px;"></i><br>Orders</div>
-       </a> </div>
-        <div class="col-4">
-         <a href="/wishlist">  <div class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3" style="height:100%; font-family: jomhuria; text-decoration: none; "><i class="fa-solid fa-heart mt-3" style="color: #f6ef38;font-size: 40px;"></i><br>Wish List</div>
-         </a> </div>
-        <div class="col-4">
-           <a href="/cart">  <div class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3" style="height:100%; font-family: jomhuria; text-decoration: none; "><i class="fa-solid fa-cart-shopping mt-3" style="color: #f6ef38;font-size: 40px;"></i><br>Cart</div>
-           </a> </div>
+    <div class="container text-dark text-center"><%= user.email %></div>
+    <a class="text-decoration-none" href="/userDetails"
+      ><div
+        class="container text-light btn-global-primary text-center mt-4 mb-3 fw-bold"
+        style="width: 25vh"
+      >
+        <i class="fa-solid fa-pen pe-1" style="color: #ffffff"></i>Edit profile
+      </div></a
+    >
+  </div>
+  <div class="row d-flex justify-content-between py-3 ml-3 mx-2">
+    <div class="col-4">
+      <a 
+        ><div
+          class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3"
+          style="height: 100%; font-family: jomhuria; text-decoration: none"
+        >
+          <i
+            class="fa-solid fa-list-ul mt-3"
+            style="color: #f6ef38; font-size: 40px"
+          ></i
+          ><br />
+          <span>Wallet balance <%= Math.round(user?.wallet) %></span>
+          <br>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add money
+          </button>
+        </div>
+      </a>
     </div>
+    <div class="col-4">
+      <a href="/wishlist">
+        <div
+          class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3"
+          style="height: 100%; font-family: jomhuria; text-decoration: none"
+        >
+          <i
+            class="fa-solid fa-heart mt-3"
+            style="color: #f6ef38; font-size: 40px"
+          ></i
+          ><br />Wish List
+        </div>
+      </a>
+    </div>
+    <div class="col-4">
+      <a href="/cart">
+        <div
+          class="shadow shadow-rounded text-center mt-3 fs-2 text border border-warning border-3"
+          style="height: 100%; font-family: jomhuria; text-decoration: none"
+        >
+          <i
+            class="fa-solid fa-cart-shopping mt-3"
+            style="color: #f6ef38; font-size: 40px"
+          ></i
+          ><br />Cart
+        </div>
+      </a>
+    </div>
+  </div>
 </div>
 
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/wallet/razorpay">
+            <input class="form-control" name="amount" type="number" placeholder="Default input" aria-label="default input example">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
+            <button type="submit" class="btn btn-primary">Add Money</button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
-   
 <%- include('partials/closingHead.ejs') %>

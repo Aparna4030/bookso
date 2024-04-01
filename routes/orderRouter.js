@@ -6,7 +6,8 @@ const router = express.Router();
 
 
 router.get("/",isLoggedin,orderController.renderOrders)
-router.get("/placeOrder",isLoggedin,orderController.renderPlaceOrder)
+router.post("/placeOrder",isLoggedin,orderController.renderPlaceOrder)
+router.post("/razorpay/success",orderController.rzpyCallback)
 router.get("/payment",isLoggedin,orderController.renderPayment)
 router.post("/addOrder",isLoggedin,orderController.addOrder)
 router.post("/cancel",isLoggedin,orderController.cancelProduct)

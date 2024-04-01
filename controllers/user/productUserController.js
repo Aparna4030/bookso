@@ -21,7 +21,7 @@ const { render } = require("express/lib/response")
 
 const renderProduct = asynchandler(async (req, res) => {
     let cartQty = null
-    const product = await Product.findOne({ _id: req.params.id })
+    const product = await Product.findOne({ _id: req.params.id },)
 
     if (req.session.userId) {
         const cart = await Cart.findOne({ userId: req.session.userId })
