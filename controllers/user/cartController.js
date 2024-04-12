@@ -78,7 +78,7 @@ const decreaseQuantity = asynchandler(async (req, res) => {
     const userId = req.session.userId;
     const { stock } = await Product.findOne({ _id: productId }, { stock: 1 });
 
-    if (updatedQty < 0) { // Prevent quantity from going below 0
+    if (updatedQty < 1) { // Prevent quantity from going below 0
         res.status(406).json({ message: "Quantity cannot be less than 0" });
         return;
     }

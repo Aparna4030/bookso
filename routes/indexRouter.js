@@ -32,8 +32,9 @@ router.post("/user/edit",userController.editUser)
 router.get("/bookShop",userController.renderBook)
 router.get("/wishlist/delete/:id",wishlistController.removeWishlist)
 router.get("/wishlist",wishlistController.renderWishlist)
-router.post("/wishlist/:id",wishlistController.addToWishlist)
+router.post("/wishlist/:id",isLoggedin,wishlistController.addToWishlist)
 router.get("/addCoupon/:couponCode",couponController.availCoupon)
+router.get("/transactions",isLoggedin,orderController.transactionList)
 
 router.use(isLoggedOut)
 

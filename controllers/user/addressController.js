@@ -21,12 +21,12 @@ const addAddress = asynchandler(async (req, res) => {
         landmark: req.body.landmark,
     })
     await address.save()
-    res.redirect("/address")
+        res.redirect("/address")
 })
+
 
 const renderEditAddress = asynchandler(async(req,res)=>{
     const address = await Address.findOne({_id: req.params.id})
-    // console.log("AddddddRrrrrrrrrreeeeeeesssssssss",address)
     res.render("editAddress",{address})
 })
 
@@ -41,4 +41,4 @@ const deleteAddress = asynchandler(async (req, res) => {
     const deleteAdd = await Address.deleteOne({ _id: req.params.id })
     res.redirect("/address")
 })
-module.exports = { renderEditAddress,editAddress,renderaddAddress, addAddress, deleteAddress }
+module.exports = {  renderEditAddress,editAddress,renderaddAddress, addAddress, deleteAddress }

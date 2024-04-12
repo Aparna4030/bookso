@@ -12,4 +12,5 @@ router.get("/payment",isLoggedin,orderController.renderPayment)
 router.post("/addOrder",isLoggedin,orderController.addOrder)
 router.post("/cancel",isLoggedin,orderController.cancelProduct)
 
+
 module.exports = router

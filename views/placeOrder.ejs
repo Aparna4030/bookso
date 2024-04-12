@@ -25,7 +25,7 @@
       aria-hidden="true"
     >
       <div class="modal-dialog">
-        <form action="/address" method="POST">
+        <form id="addressForm">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">NEW ADDRESS</h5>
@@ -183,6 +183,7 @@
 </div>
 
 <script>
+ 
   let quantity = 1;
 
   function increaseQuantity() {
@@ -208,10 +209,40 @@ button.addEventListener("Click",()=>{
 })
 
 
+
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('addressForm');
+  console.log({form})
+  
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    console.log("form submitting")
+    // const formData = new FormData(form);
+    // const jsonData = {};
+    // formData.forEach((value, key) => {
+    //   jsonData[key] = value;
+    // });
+    
+
+    fetch('/address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+});
+
+
+
 </script>
-
-
-
-
 
 <%- include('partials/closingHead.ejs') %>
