@@ -46,5 +46,9 @@ const listCoupon = asynchandler(async(req,res)=>{
     res.render("couponAdminList",{coupons})
 })
 
+const deleteCoupon = asynchandler(async (req, res) => {
+    const deleteCoupo = await Coupon.deleteOne({ _id: req.params.id })
+    res.redirect("/admin/listCoupon")
+})
 
-module.exports = {renderaddCoupon,addCoupon,listCoupon}
+module.exports = {deleteCoupon,renderaddCoupon,addCoupon,listCoupon}

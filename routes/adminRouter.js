@@ -56,6 +56,7 @@ router.get("/category/count",adminController.categoryCount)
 
 router.get("/coupons",couponController.renderaddCoupon)
 router.post("/coupons",couponController.addCoupon)
+router.get("/delete/:id",couponController.deleteCoupon)
 
 router.get("/listCoupon",couponController.listCoupon)
 

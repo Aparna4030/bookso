@@ -225,11 +225,11 @@ const editUser = asynchandler(async (req, res) => {
 
 
 const renderBook = asynchandler(async (req, res) => {
-    const products = await Product.find({ isListed: true }).populate('category_id')
-    // console.log("prrrrrrrrooooooooduuucccccccccts",products)
-    const filteredProducts = products.filter(product => {
-        return product.category_id.isListed && product.stock > 0
-
+    const products = await Product.find({isListed:true}).populate('category_id')
+    console.log("prrrrrrrrooooooooduuucccccccccts",products)
+    const filteredProducts = products.filter(product=>{
+      return product.category_id.isListed && product.stock > 0
+        
     })
     console.log(filteredProducts)
     res.render("book", { products: filteredProducts })

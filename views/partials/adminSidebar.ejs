@@ -1,0 +1,47 @@
+<style>
+  .active-tab {
+      background-color: #fffb00;
+      color: rgb(255, 255, 255);
+      height: 45px;
+      display: flex;
+      align-items: center;
+  }
+</style>
+<body>
+<Link rel="stylesheet" href="css/adminpanel.css">
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+  crossorigin="anonymous"/>
+
+<div class="container ml-2 p-4 d-flex">
+  
+  <div class="col-3 bg-light shadow rounded" style="height: 70vh; width: 35vh">
+    <div class="w-100 bg-bookso text-center py-2 fw-bold font-color-secondary rounded-top" >ADMIN PANEL</div>
+    <div class="w-100 h-75 d-flex flex-column justify-content-around text-bookso fw-bold mt-3 custom-text-shadow">
+      <a id="dashboard" class="text-decoration-none text-bookso tab ps-4 " href="/admin"><div><i class="fa-solid fa-layer-group pe-2 " style="color: #535351;"></i>DASHBOARD</div></a>
+      <a id="products" class="text-decoration-none text-bookso tab ps-4" href="/admin/products"><div><i class="fa-solid fa-cubes-stacked pe-2 " style="color: #535351;"></i>PRODUCTS</div></a>
+      <a id="customers" class="text-decoration-none text-bookso tab ps-4 " href="/admin/customers"><div><i class="fa-solid fa-users pe-2 " style="color: #535351;"></i>CUSTOMERS</div></a>
+      <a id="orders" class="text-decoration-none text-bookso tab ps-4" href="/admin/orders"><div><i class="fa-solid fa-cart-shopping pe-2 " style="color: #535351;"></i>ORDERS</div></a>
+      <a id="category" class="text-decoration-none text-bookso tab ps-4" href="/admin/category"><div><i class="fa-solid fa-list pe-2 " style="color: #535351;"></i>CATEGORY</div></a>
+      <a id="salesreport" class="text-decoration-none text-bookso tab ps-4" href="/admin/salesreport"><div><i class="fa-solid fa-universal-access pe-2 " style="color: #535351;"></i>SALES REPORT</div></a>
+      <a id="listCoupon" class="text-decoration-none text-bookso tab ps-4" href="/admin/listCoupon"><div><i class="fa-solid fa-ticket-simple pe-2 " style="color: #535351;"></i>MANAGE COUPONS</div></a>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const currentURL = window.location.pathname;
+
+    tabs.forEach(tab => {
+        if (tab.getAttribute('href') === currentURL) {
+            tab.classList.add('active-tab');
+        }
+      tab.addEventListener('click',()=>{
+        tabs.forEach(t=> t.classList.remove('active-tab'))
+        tab.classList.add('active-tab')
+      })
+    })
+  </script>
+  

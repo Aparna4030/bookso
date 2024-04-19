@@ -168,7 +168,7 @@ const addOrder = asynchandler(async (req, res) => {
         });
 
         await order.save();
-
+        
         if (order.paymentMethod !== 'COD') {
             const transaction = new Transaction({
                 userId: req.session.userId,
