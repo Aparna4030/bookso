@@ -55,7 +55,18 @@ const renderAdminPanel = asynchandler(async (req, res) => {
     // console.log("oooooooooooooooooo",orders)
     const category = await Category.find().count()
     const productsCount = await Product.find().count()
-    res.render("adminpanel",{customersCount,orders,category,productsCount,counts,countsArray})
+    const bestProducts = await Order.aggregate([{ $unwind: "$items" }, { $group: { _id: "$items.productId", count: { $sum: 1 } } }, { $project: { "items.productId": 1, count: 1 } }, { $lookup: { from: "products", localField: '_id', foreignField: '_id', as: 'product' } }, { $sort: { count: -1 } }])
+    const bestSellingProducts = bestProducts.map(product =>{
+      return {...product.product[0],count:product.count}
+    })
+    console.log("heeeeeeeeellll",bestSellingProducts)
+    const bestCatIds = bestSellingProducts.map(product => product.category_id);
+    const bestSellingCats = await Category.find({_id:{$in:bestCatIds}},{name:1});
+    
+    console.log(bestSellingCats);
+    console.log({bestProducts
+    })
+    res.render("adminpanel",{customersCount,orders,category,productsCount,counts,countsArray,bestSellingProducts,bestSellingCats})
 })
 
 const categoryCount = asynchandler(async(req,res)=>{

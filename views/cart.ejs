@@ -1,5 +1,5 @@
 <%- include('partials/head.ejs') %> 
-<%-include('partials/navbar.ejs') %>
+<%- include('partials/navbar.ejs') %>
 
 <% let totalPrice = 0 %>
 
@@ -8,129 +8,187 @@
     CART
   </div>
 
-  <div class="d-flex">
+  <div class="d-flex justify-content-center">
     <div class="ms-4 col-6 mt-4" id="product-container">
       <% if (products.length === 0) { %>
-      <h2>No items in cart</h2>
-      <% } %> <% products.forEach(product => { %>
-
-      <div class="w-100 d-flex border rounded m-2 shadow" id="product-card">
-        <div class="col-2 ms-2">
-          <img
-            src="../uploads/<%= product.productId.image[0] %>"
-            class="w-100"
-            style="width: 100%; height: 100%; object-fit: contain"
-          />
-        </div>
-
-        <div class="col-10 d-flex flex-column py-2 ps-2">
-          <div class="fw-bold mt-1"><%= product.productId.name %></div>
-
-          <div class="fw-bold text-primary mt-1">
-            <%totalPrice = totalPrice+(product.productId.price*product.qty)%>
-            price: ₹<%= product.productId.price %>
+        <h2>No items in cart</h2>
+      <% } %> 
+      
+      <% products.forEach(product => { %>
+        <div class="w-100 d-flex border rounded m-2 shadow product-card">
+          <div class="col-2 ms-2">
+            <img src="../uploads/<%= product.productId.image[0] %>" class="w-100" style="width: 100%; height: 100%; object-fit: contain" />
           </div>
-          <!-- <div class="fw-bold text-success mt-1">Delivered on 17th Aug</div> -->
-          <!-- <div class="fw-bold text-primary mt-1">discount: ₹<%=// product.productId.discount %></div> -->
-          <div class="container mt-2">
-            <div class="quantity-selector d-flex">
-              <!-- <span id="quantity" class="ms-1 me-1 qty" productId="<%= product.productId._id %>"></span> -->
-              <button class="btn quantity-btn border-warning bg-bookso qty-dec">
-                -
-              </button>
-              <span
-                id="quantity"
-                class="ms-1 me-1 qty"
-                productId="<%= product.productId._id %>"
-                ><%= product.qty %></span
-              >
-              <button class="btn quantity-btn border-warning bg-bookso qty-inc">
-                +
-              </button>
+
+          <div class="col-10 d-flex flex-column py-2 ps-2">
+            <div class="fw-bold mt-1"><%= product.productId.name %></div>
+            <div class="fw-bold text-primary mt-1"> 
+              <% totalPrice = totalPrice + (product.productId.price * product.qty) %>
+              price: ₹<span class="itemPrice"><%= product.productId.price %></span>
             </div>
-            <div class="d-flex align-items-center justify-content-end">
-              <form>
-                <a
-                  href="/cart/delete/<%= product.productId._id %>"
-                  class="btn btn-danger fw-bold me-2"
-                  >Delete</a
-                >
-              </form>
+            <!-- <div class="fw-bold text-success mt-1">Delivered on 17th Aug</div> -->
+            <!-- <div class="fw-bold text-primary mt-1">discount: ₹<%=// product.productId.discount %></div> -->
+            <div class="container mt-2">
+              <div class="quantity-selector d-flex">
+                <!-- <span id="quantity" class="ms-1 me-1 qty" productId="<%=// product.productId._id %>"></span> -->
+                <button class="btn quantity-btn border-warning bg-bookso qty-dec">-</button>
+                <span id="quantity" class="ms-1 me-1 qty" productId="<%= product.productId._id %>"><%= product.qty %></span>
+                <button class="btn quantity-btn border-warning bg-bookso qty-inc" productId="<%= product.productId %>" qty="<%= product.qty %>">+</button>
+              </div>
+              <div class="d-flex align-items-center justify-content-end">
+                <form>
+                  <a href="/cart/delete/<%= product.productId._id %>" class="btn btn-danger fw-bold me-2">Delete</a>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
       <% }) %>
     </div>
 
     <div class="ms-4 col-5 mt-4">
-      <div
-        class="w-100 border border-3 rounded m-2"
-        style="background-color: #d3dbee"
-      >
+      <div class="w-100 border border-3 rounded m-2" style="background-color: #d3dbee">
         <div class="ms-4 fw-bold mb-2">APPLY COUPON</div>
         <div class="row g-3 align-items-center mb-3">
+
           <form id="couponForm" class="d-flex">
             <div class="col-auto ms-4 w-50 me-2">
-              <input
-                type="text"
-                name="couponCode"
-                class="form-control me-2"
-                placeholder="Enter coupon code"
-              />
+              <input type="text" name="couponCode" class="form-control me-2" placeholder="Enter coupon code" />
             </div>
             <button type="submit" class="btn-global-primary">CHECK</button>
           </form>
+
+        </div>
+        <div class="alert alert-success m-1 hidden" id="coupon-success-alert" role="alert">
+          Coupon applied successfully
         </div>
       </div>
-
-      <div class="w-100 border shadow shadow-rounded rounded m-2 ">
-        <div class="container text-bookso text-center fs-4 fw-bold mt-2">
-          PRICE DETAILS
-        </div>
-        <hr />
+    <form action="/orders/placeOrder" method="post">
+      <div class="w-100 border shadow shadow-rounded rounded m-2">
+        <div class="container text-bookso text-center fs-4 fw-bold mt-2">PRICE DETAILS</div>
+        <hr/>
         <div class="ms-2 text-secondary fw-bold">
-          PRICE:<span id="price" style="color: blue">₹<%=totalPrice %></span>
-          <br />
-          DISCOUNT:<span id="discount" style="color: blue">₹</span>
-          <br />
-          DELIVERY CHARGES:<span id="delivery" style="color: blue"
-            ><%= totalPrice*shippingCharge %></span
-          >
-        </div>
+          PRICE: <input class="border-0" name="initialPrice" id="price" value="<%= totalPrice %>"></input>
+          <br/>
+          DISCOUNT: <input class="border-0" name="discountValue" id="discount" value="0"></input>
+          <br/>
+          DELIVERY CHARGES: <input class="border-0" name="deliveryCharge" id="delivery" value="<%= totalPrice * shippingCharge %>"></input>
+        </div> 
+        <!-- <input style="display: none;" id="coupon" type="number" name="coupon" class="form-control me-2" value="0"/> -->
+        <input  style="display: none;" class="border-0" name="discountPercentage" id="percentage" value="0"></input>
+        <input  style="display: none;" class="border-0" name="totalpriceDiscount" id="discount-price" value="0"></input>
         <hr/>
         <span class="fw-bold ms-2">TOTAL AMOUNT:</span>
-        <span id="total" class="fw-bold"><%= Math.floor(totalPrice*(1+shippingCharge))%></span>
+        <input name="totalPrice" id="total" class="fw-bold border-0" value="<%= Math.floor(totalPrice * (1 + shippingCharge)) %>"></input>
         <hr/>
       </div>
-      <% if (products.length === 0) { %>
-      <div
-        class="container bg-bookso text-center text-secondary fs-4 fw-bold mt-4 ms-2"
-      >
-        NO ITEMS
-      </div>
-      <% } else { %>
-        <div class="container d-flex justify-content-around">
-          <div class="col-6">
-          <button class="text-decoration-none border-0" id="submit-btn" >
-            <div
-            class="container bg-bookso text-center text-light w-100 fs-4 fw-bold"
-            >
-            PLACE ORDER
-          </div>
+    
 
-        </button>
-      </div>
-    </div>
+      <% if (products.length === 0) { %>
+        <div class="container bg-bookso text-center text-secondary fs-4 fw-bold mt-4 ms-2">NO ITEMS</div>
+      <% } else { %>
+        <div class="container d-flex justify-content-end">
+          <div class="col-12">
+            <button class="text-decoration-none border-0 w-100" id="submit-btn" style="width: 450px;">
+              <div class="container bg-bookso text-center text-light w-100 fs-4 fw-bold">PLACE ORDER</div>
+            </button>
+          </div>
+        </div>
       <% } %>
+    </form>
     </div>
   </div>
+</div>
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  
-  <script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+   const priceElement = document.querySelector("#price");
+    const discountChargesElement = document.querySelector("#discount");
+    const deliveryChargesElement = document.querySelector("#delivery");
+    const totalAmountElement = document.querySelector("#total");
+    const discouPercentage = document.querySelector("#percentage");
+    const totalPriceDiscount = document.querySelector("#discount-price");
+    const couponFormElt = document.getElementById("couponForm");
+    const couponData = document.getElementById("coupon")
+    
     const quantityAll = document.querySelectorAll(".quantity-selector");
+    const cards = document.querySelectorAll(".product-card")
+    const couponAlertElt = document.querySelector('#coupon-success-alert')
+    
+  console.log(cards)
+
+  const couponSuccessAlertShow = ()=>{
+    couponAlertElt.classList.remove('hidden')
+  }
+  const couponSuccessAlertHide = ()=>{
+    couponAlertElt.classList.add('hidden')
+  }
+
+   const priceControls = {
+      setPrice(price) {
+      priceElement.value = price
+    },
+      getPrice(){
+      return Number(priceElement.value);
+    },
+
+      setDiscount(discount){
+      discountChargesElement.value = discount
+    },
+      getDiscount(){
+      return Number(discountChargesElement.value);
+    },
+
+      setDelivery(delivery){
+      deliveryChargesElement.value = delivery
+    },
+      getDelivery(){
+      return Number(deliveryChargesElement.value);
+    },
+
+      setTotalAmount(totalAmount){
+      totalAmountElement.value = totalAmount
+    },
+      getTotalAmount(){
+      return Number(totalAmountElement.value)
+    },
+
+      setDiscountPercentage(percentage){
+      discouPercentage.value = percentage
+    },
+      getDiscountPercentage(){
+      return Number(discouPercentage.value)
+    },
+
+      settotalPriceDiscount(){
+      totalPriceDiscount.value = discountPrice
+    },
+      gettotalPriceDiscount(){
+      return Number(totalPriceDiscount.value)
+    },
+     
+  }
+   
+  const updatePrice = ()=>{
+   
+      let totalPrice = 0
+      cards.forEach(card => {
+        const quantity = card.querySelector("#quantity").innerHTML * 1;
+        console.log(quantity)
+        const itemPrice = card.querySelector(".itemPrice").innerHTML* 1;
+        console.log(itemPrice)
+         totalPrice = totalPrice +(quantity * itemPrice);
+         console.log(totalPrice)
+      });
+      priceControls.setPrice(totalPrice)
+      priceControls.setTotalAmount(totalPrice+priceControls.getDelivery())
+      priceControls.setDiscount(0);
+      priceControls.setDiscountPercentage(0);
+      document.querySelector('[name=couponCode]').value = '';
+      couponSuccessAlertHide()
+      
+    }
+  
 
     quantityAll.forEach((quantity) => {
       const qtyVal = quantity.querySelector(".qty");
@@ -166,8 +224,8 @@
           }
 
           const response = await jsonData.json();
-          qtyVal.innerHTML = response.message;
-          window.location.reload();
+          qtyVal.innerHTML = response.message; 
+          updatePrice()
         }
       });
 
@@ -199,49 +257,40 @@
 
           const response = await jsonData.json();
           qtyVal.innerHTML = response.message;
-          window.location.reload();
+          updatePrice()
         }
       });
     });
 
-    const price = document.querySelector("#price");
-    const discountElt = document.querySelector("#discount");
-    const delivery = document.querySelector("#delivery");
-    const total = document.querySelector("#total");
-    const couponFormElt = document.getElementById("couponForm");
-    console.log(couponFormElt);
-    let discountedPrice = 0;
-    let deliveryCharg = 0;
-    let priceValue = 0;
-    let discountPercentage = 0;
-    let discount = "";
+   
+    // let discountPrice = 0;
+    // let deliveryCharg = 0;
+    // let priceValue = 0;
+    // let discountPercentage = 0;
+    // let discount = "";
+
+  
+    //price details controlling functions
+   
 
     couponFormElt.addEventListener("submit", async (event) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const couponCode = formData.get("couponCode");
-      console.log(couponCode);
 
       const couponData = await fetch(`/addCoupon/${couponCode}`);
       const res = await couponData.json();
-      console.log(res);
+   
       if (res.success == false) {
         alert("Invalid Coupon");
       } else if (res.success == true) {
         alert("Apply");
-        console.log("laamoa");
-        console.log({ price }, price.innerHTML);
-        discountPercentage = res.discount * 1;
-        priceValue = price.innerHTML?.split("₹")[1] * 1;
-        deliveryCharg = delivery.innerHTML * 1;
-        discountedPrice = priceValue * (1 - discountPercentage / 100);
-        console.log({ deliveryCharg, discountedPrice });
-        total.innerHTML = `₹ ${Math.round(discountedPrice + deliveryCharg)}`;
-        discount = ` -₹${
-          discountPercentage * 0.01 * priceValue
-        } (${discountPercentage}%)`;
-        console.log({ discount });
-        discountElt.innerHTML = discount;
+        
+        priceControls.setDiscount(res.discount*priceControls.getPrice()/100);
+        priceControls.setTotalAmount((priceControls.getPrice()+priceControls.getDelivery())-priceControls.getDiscount())
+        priceControls.setDiscountPercentage(res.discount);
+        couponSuccessAlertShow();
+       
       }
     });
 
@@ -260,25 +309,28 @@
       });
 
       console.log({ body });
-      fetch("/orders/placeOrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
-      })
-        .then((res) => {
-          return res.text();
-        })
-        .then((html) => {
-          console.log({ html });
-          document.body.innerHTML = html;
-          placeOrderForm = document.querySelector("#placeOrderForm");
-          console.log({ placeOrderForm });
-        });
+      // fetch("/orders/placeOrder", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body,
+      // })
+      //   .then((res) => {
+      //     return res.text();
+      //   })
+      //   .then((html) => {
+      //     console.log({ html });
+      //     document.body.innerHTML = html;
+      //     placeOrderForm = document.querySelector("#placeOrderForm");
+      //     console.log({ placeOrderForm });
+      //   });
     });
   </script>
- 
+
+
+
+
 
   <%- include('partials/closingHead.ejs') %>
 </div>

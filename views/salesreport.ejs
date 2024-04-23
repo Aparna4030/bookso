@@ -5,21 +5,6 @@
     <div class="col-9 px-4">
         <div class="container col-md-12" style="display: flex;justify-content: center;align-items: center;">
         
-            <!-- <div class="content  col-md-11 ">
-                <div class="col">
-                  <h5 class="mb-3 fw-bold">Filter Sales Report</h5>
-                  <div class="d-flex mb-3">
-                    <div class=" me-3 mb-2">
-                      <button class="btn btn-secondary dropdown-toggle"type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Payment Method
-                      </button>
-                      <ul class="dropdown-menu">
-                        <button id="cod" class="dropdown-item payment-method-btn" href="#">COD</button>
-                        <button id="Razorpay" class="dropdown-item payment-method-btn" href="#">Card</button>
-                        <button id="Razorpay" class="dropdown-item payment-method-btn" href="#">Wallet</button>
-                        <li><a id="all" class="dropdown-item" href="">All</a></li>
-                      </ul>
-                    </div> -->
 
                     <div class="d-flex flex-column border p-2 mx-1">
                       <h6>Payment method</h6>
@@ -45,35 +30,6 @@
                     </div>
                   
             
-                    <!-- <div class=" me-3 mb-2">
-                      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Order Time
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><button id="today" class="dropdown-item" href="#">Today</button></li>
-                        <li><button id="week" class="dropdown-item" href="#">Last 7 days</button></li>
-                        <li><button id="month" class="dropdown-item">Last 30 days</button></li>
-                        <li><button id="year" class="dropdown-item">Last 365 days</button></li>
-                      </ul>
-                    </div>
-                    <div>
-                      <div class=" mb-2">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Select Date
-                        </button>
-                        <ul class="dropdown-menu">
-                          <form action="#" id="dateForm">
-                            <li class="dropdown-item text-muted" href="#">From</li>
-                            <li> <input type="date" name="startDate" id="EndDate" class="mb-3 dropdown-item"></li>
-                            <li class="dropdown-item text-muted" href="#">To</li>
-                            <li> <input type="date" name="endDate" id="endDate" class="mb-3 dropdown-item"></li>
-                            <li class="dropdown-item"><button type="submit" class="btn btn-dark ">Get Report</button></li>
-                          </form>
-                        </ul>
-                        <p id="dateErr" class="mb-3 text-danger"></p>
-                      </div>
-                    </div> -->
-                   
                       <div class="ms-auto">
                         <!-- <button  id="downloadPdf" onclick="downloadPdf()">Download PDF</button> -->
                         <button class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
@@ -177,6 +133,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <script>
+  
     const downloadExcel = () => {
         const table = document.getElementById('salesReport');
         const ws = XLSX.utils.table_to_sheet(table);

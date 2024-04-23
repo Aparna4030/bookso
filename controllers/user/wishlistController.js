@@ -8,7 +8,7 @@ const Wishlist = require("../../models/wishlistModel")
 
 const renderWishlist = asynchandler(async(req,res)=>{
 const wishlists =(await Wishlist.find({userId:req.session.userId}).populate('productId')).map(item => item.productId);
-console.log(wishlists)
+// console.log(wishlists)
 
     res.render("wishlist",{wishlists})
 })
@@ -32,12 +32,12 @@ const addToWishlist = asynchandler(async(req,res)=>{
 })
 
 const removeWishlist = asynchandler(async(req, res) => {
-    console.log("incontrrrrrrrrrrrrrroler")
+    // console.log("incontrrrrrrrrrrrrrroler")
     const removedItem = await Wishlist.deleteOne({
         userId: req.session.userId,
         productId: req.params.id
     });
-    console.log(removedItem)
+    // console.log(removedItem)
     res.redirect('/wishlist')
 });
 

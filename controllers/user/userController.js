@@ -128,7 +128,7 @@ const resendOtp = asynchandler(async (req, res) => {
 })
 
 const renderRazorPay = asynchandler(async(req,res)=>{
-    console.log('hahahahhakjfhkehfhabelll')
+    // console.log('hahahahhakjfhkehfhabelll')
     const amount = req.query.amount;
     const callback = `http://localhost:8080/wallet/add/${amount}`
     res.render('razorpay',{amount,callback});
@@ -166,7 +166,7 @@ const validateOtp = asynchandler(async (req, res) => {
         }
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         req.session.message = "Something went wrong"
         res.redirect("/signup")
     }
@@ -180,7 +180,7 @@ const renderProfile = asynchandler(async (req, res) => {
 
 const renderUserDetails = asynchandler(async (req, res) => {
     const user = await User.findOne({ _id: req.session.userId })
-    console.log(user)
+    // console.log(user)
     let message = null;
     if (req.session.message) {
         message = req.session.message
@@ -191,7 +191,7 @@ const renderUserDetails = asynchandler(async (req, res) => {
 
 
 const editUser = asynchandler(async (req, res) => {
-    console.log("ediiiiiiiiiittttttttt", req.body)
+    // console.log("ediiiiiiiiiittttttttt", req.body)
     const { name, email, phone, password, newPassword, confirmPassword } = req.body
     const user = await User.findOne({ _id: req.session.userId })
     // console.log("usssseeeeeeeerrrrrr",user)
@@ -226,12 +226,12 @@ const editUser = asynchandler(async (req, res) => {
 
 const renderBook = asynchandler(async (req, res) => {
     const products = await Product.find({isListed:true}).populate('category_id')
-    console.log("prrrrrrrrooooooooduuucccccccccts",products)
+    // console.log("prrrrrrrrooooooooduuucccccccccts",products)
     const filteredProducts = products.filter(product=>{
       return product.category_id.isListed && product.stock > 0
         
     })
-    console.log(filteredProducts)
+    // console.log(filteredProducts)
     res.render("book", { products: filteredProducts })
 })
 
@@ -260,7 +260,7 @@ const renderBook = asynchandler(async (req, res) => {
 
 const renderSearch = asynchandler(async (req, res) => {
     const { q: searchString, cat: category, sort, lang } = req.query;
-    console.log({ searchString, category, sort });
+    // console.log({ searchString, category, sort });
 
     const categories = await Category.find();
     let searchResults = await Product.find({ $or: [{ name: { $regex: new RegExp(searchString, 'i') } }, { description: { $regex: new RegExp(searchString, 'i') } }] });
@@ -288,7 +288,7 @@ const renderSearch = asynchandler(async (req, res) => {
         searchResults = searchResults.filter(pro => pro.language === lang);
 
     const wishlistProducts = await wishlist.find({ userId: req.session.userId });
-    console.log("Search Results:", searchResults);
+    // console.log("Search Results:", searchResults);
     res.render("searchPage", { searchResults, wishlistProducts, categories, q: searchString, cat: category, sort, lang });
 });
 

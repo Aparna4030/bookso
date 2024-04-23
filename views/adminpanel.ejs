@@ -54,7 +54,72 @@
       
     </div>
   </div>
-</body>
+  <div class="container col-6 border rounded border-2 h-75 p-4 shadow mt-3">
+    <h1 id="landing-text-color">BEST SELLING PRODUCTS</h1>
+    <div class="row d-flex" style="padding-top: 20px;">  
+      <% bestSellingProducts.forEach(product => { %>
+        <div class="col-md-3">
+          <div class="text-primary" style="font-size: 20px; font-weight: 600;"> SOLD: <%= product.count %></div>
+            <a href="/product/<%= product._id %>">
+            <img class="img-1" style="height: 200px; width: 140px;" src="../uploads/<%= product.image[0] %>">
+          </a>
+          <div class="landing-name mb-3"><%= product.name %></div>
+          
+          </div>
+      <% }) %>
+    </div>
+  </div>
+
+
+  <div class="container col-6 border rounded border-2 h-75 p-4 shadow mt-3">
+    <h1 id="landing-text-color" class="text-bookso">BEST SELLING CATEGORY</h1>
+    <div class="card ms-5" style="width: 18rem;">
+      <div class="card-body">
+        <% bestSellingCats.forEach(category => { %>
+        <h5 class="card-title text-danger"><%= category.name %></h5>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="container col-6 border rounded border-2 h-75 p-4 shadow mt-3">
+    <h1 id="landing-text-color" class="text-bookso">BEST SELLING BRAND</h1>
+    <div class="card ms-5" style="width: 18rem;">
+      <div class="card-body">
+        <% bestSellingProducts.forEach(product=> { %>
+        <h5 class="card-title text-danger"><%= product.publication %></h5>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -105,13 +170,15 @@
         datasets: [{
             label: 'My First Dataset',
             data: categoryCount.map(elt =>elt.count),
+            //Download Stunning Pie Chart color scheme consisting of #FFF1C9, #F7B7A3, #EA5F89, #9B3192, #57167E and #2B0B3F. This 6 colors palette has been categorised in Pink, Purple and Violet color categories.
+
             backgroundColor: [
-                '#000000',
-                '#00ffff',
-                '#ff00ff',
-                '#',
-                'rgba(160, 204, 160, 0.9)',
-                'rgba(255, 0, 0, 0.2)'
+                '#FFF1C9',
+                '#F7B7A3',
+                '#EA5F89',
+                '#9B3192',
+                '#57167E',
+                '#2B0B3F'
             ],
             hoverOffset: 6  
         }]
@@ -121,6 +188,8 @@
         data: data,
     });
   })
+
+  
 
 </script>
 

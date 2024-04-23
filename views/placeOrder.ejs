@@ -25,11 +25,12 @@
       aria-hidden="true"
     >
       <div class="modal-dialog">
-        <form id="addressForm">
+        <form id="addressForm" action="/address?redirect=" method="POST">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">NEW ADDRESS</h5>
             <button
+            id="modal-close-btn"
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
@@ -38,6 +39,7 @@
           </div>
           <!--//input fields-//-->
           <div class="modal-body">
+            
             <div class="g-3 align-items-center">
               <div class="col-auto">
                 <label class="col-form-label">Name</label>
@@ -85,13 +87,6 @@
           </div>
           <!-- input field -->
           <div class="modal-footer">
-            <button
-              type="submit"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
             <button type="submit" class="btn btn-primary">Save changes</button>
           </div>
         </div>
@@ -100,10 +95,12 @@
     </div>
   </div>
   </div>
-  <% let totalPrice = 0 %>
+   
   <form action="/orders/addOrder" id="placeOrderForm" method="post">
     <div class="d-flex">
     <div class="ms-4 col-6 mt-4">
+      <div id="address-container">
+
       <% addressesOrder.forEach((address,index) => { %>
         <div class="w-100 d-flex border rounded m-2 shadow">
           <div class="col-10 d-flex flex-column py-2 ps-2">
@@ -125,62 +122,63 @@
       </div>
     </div>
     <% }) %>
+  </div>
+
     <% products.forEach(item => { %>
     <div class="w-100 d-flex border rounded m-2 shadow">   
     <div class="col-2 ms-2" ><img src="../uploads/<%= item?.productId?.image[0] %>"  class="w-100" style="width: 100%; height: 100%; object-fit: contain;"/></div>
     <div class="col-10 d-flex flex-column py-2 ps-2"><div class="fw-bold mt-1"><%= item?.productId?.name %></div>  
     <div class="fw-bold text-primary mt-1">₹<%= item?.productId?.price %></div>
     <div class="fw-bold text-secondary mt-1">qty:<%= item?.qty %></div>
-    <div class="fw-bold text-success mt-1">* Delivered on 17th Aug</div>
     </div>
     </div>
-    <%totalPrice = totalPrice+(item?.productId?.price*item?.qty)%>
     <% }) %>
 </div>
 <div class="ms-4 col-5 mt-4 ">
-
-        <div class="w-100 border shadow shadow-rounded rounded m-2">
-                    <div class="container text-bookso text-center fs-4 fw-bold mt-2">
-                        PRICE DETAILS
+  
+  <div class="w-100 border shadow shadow-rounded rounded m-2">
+    <div class="container text-bookso text-center fs-4 fw-bold mt-2">
+      PRICE DETAILS
                     </div>
                     <hr>
-                      <div class=" ms-2 text-secondary fw-bold">
-                        PRICE:
-                        <span style="color: rgb(21, 85, 224)"><%= totalPrice %></span><br>
-                        DISCOUNT: <%= coupon ?cDiscount :0 %><br>
-                        DELIVERY CHARGES:<span style="color: rgb(21, 85, 224)"><%= totalPrice*shippingCharge %></span>
-                      </div>
+                     <hr/>
+        <div class="ms-2 text-secondary fw-bold">
+          PRICE: <input class="border-0" name="initialPrice" id="price" value="<%= initialPrice %>"></input>
+          <br/>
+          DISCOUNT: <input class="border-0" name="discountValue" id="discount" value="<%= discountValue %>"></input>
+          <br/>
+          DELIVERY CHARGES: <input class="border-0" name="deliveryCharge" id="delivery" value="<%= deliveryCharge %>"></input>
+        </div> 
                     <hr>
-                    <span class="fw-bold ms-2">TOTAL AMOUNT:</span><span class="fw-bold"><%= Math.round(coupon? cTotalPrice : totalPrice*(1+shippingCharge)) %></span>
+                    <span class="fw-bold ms-2">TOTAL AMOUNT:</span>
+                    <input name="totalPrice" id="total" class="fw-bold border-0" value="<%= totalPrice %>"></input>
                     <hr>
-        </div>
+                  </div>
         <span>
           <div class="form-check fs-5" >
           <div  class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="option" id="one" value="COD" checked>
+            <input class="form-check-input" type="radio" name="option" id="one" value="COD"  <%= totalPrice>=1000?"disabled":null %>>
             <label  class="form-check-label" for="one">COD</label>
           </div>
           <div  class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="option" id="three" value="Card">
+            <input class="form-check-input" type="radio" name="option" id="three" value="Card" checked>
             <label class="form-check-label" for="three">Card</label>
           </div>
           <div  class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="option" id="two" value="Wallet" <%= totalPrice*(1+shippingCharge) <= wallet ? null: "disabled" %>>
             <label class="form-check-label" for="two">Wallet (Bal: <%= wallet %>)</label>
           </div>
-      </span>
+        </span>
       
-      <input type="text" value="<%= cTotalPrice %>" name="cTotalAmount" style="display: none;">
-      <input type="text" value="<%= discountPercentage %>" name="discountPercentage" style="display: none;">
-
-  <button type="submit" class="btn-global-primary mt-4 fw-bold" href="/orders/payment"><div class=""> PROCEED TO PAY</div></button>
+        <input type="text" value="<%= initialPrice %>" name="cartInitialAmount" style="display: none;">
+        <input type="text" value="<%= discountPercentage %>" name="discountPercentage" style="display: none;">
+        
+        <button type="submit" class="btn-global-primary mt-4 fw-bold"><div class=""> PROCEED TO PAY</div></button>
+        
+      </div>
+    </div>
 </form> 
 
-
-         
-        </div>
-</div>
-</div>
 
 <script>
  
@@ -208,32 +206,58 @@ button.addEventListener("Click",()=>{
   console.log("chheeecccckOUT")
 })
 
-
+const addressContainer = document.querySelector('#address-container');
 
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('addressForm');
   console.log({form})
   
-  form.addEventListener('submit', function (event) {
+  form.addEventListener('submit', function async(event) {
     event.preventDefault();
     console.log("form submitting")
-    // const formData = new FormData(form);
-    // const jsonData = {};
-    // formData.forEach((value, key) => {
-    //   jsonData[key] = value;
-    // });
+    const formData = new FormData(form);
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+ 
     
 
     fetch('/address', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: formData
+      body: JSON.stringify(jsonData)
     })
-    .then(response => response.text())
-    .then(data => {
-      console.log(data);
+    .then(response => response.json())
+    .then(addresses => {
+      let cards = ``;
+      addresses.forEach((address, index) => {
+        
+       cards += `<div class="w-100 d-flex border rounded m-2 shadow">
+          <div class="col-10 d-flex flex-column py-2 ps-2">
+            <div class="container mt-2">
+              <div class="quantity-selector d-flex">
+                <div class="form-check ">
+                  <input class="form-check-input" name="address" type="radio" id="${address._id}" value="${ address._id }" ${ index===0? "checked":null }>
+                  <label class="form-check-label" for="${ address._id }"> 
+                    <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark"> DELIVER TO:</span>
+                  <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark">${ address.name }</span>
+                  <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark">${ address.pincode }</span><br>
+                  <span class="container px-2 text-bookso-products">${ address.locality }</span>
+                  <span class="container px-2 text-bookso-products">${ address.city }</span>
+                  <span class="container px-2 text-bookso-products">${ address.landmark} %>
+                    </label> 
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>`
+                  });
+                  addressContainer.innerHTML = cards;
+                  document.querySelector('#modal-close-btn').click()
+      
     })
     .catch(error => {
       console.error('Error:', error);

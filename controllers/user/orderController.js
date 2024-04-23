@@ -3,6 +3,7 @@ const Product = require("../../models/productModel")
 const Cart = require("../../models/cartModel")
 const Order = require("../../models/ordersModel")
 const User = require("../../models/userModel")
+const Coupon = require("../../models/couponModel")
 const asynchandler = require("express-async-handler")
 const addressModel = require("../../models/addressModel")
 const Transaction = require("../../models/transactionModel")
@@ -15,6 +16,7 @@ const renderOrders = asynchandler(async (req, res) => {
     let orders = await Order.find({ userId: req.session.userId }).sort({ createdAt: -1 })
         .populate('items.productId')
         .populate('address')
+        console.log("ooooooooo888888888899999999999",orders)
     res.render("orders", { orders })
 })
 
@@ -29,7 +31,7 @@ const rzpyCallback = asynchandler(async (req,res) =>{
 
         const transaction = new Transaction({
             userId: req.session.userId,
-            amount:order.deliveryChrg + order.totalAmt,
+            amount:order.totalAmount,
             paymentMethod: order.paymentMethod,
             description: 'Amount Paid',
             type: 'Debit'
@@ -39,122 +41,60 @@ const rzpyCallback = asynchandler(async (req,res) =>{
     res.redirect('/')
 })
 
-// const addOrder = asynchandler(async (req, res) => {
-//     const cTotalAmount = req.body.cTotalAmount * 1;
-//     const {discountPercentage} = req.body;
-//     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId')
-
-//     const items = cart.products.map((product) => {
-//         return { productId: product.productId._id, qty: product.qty, pricePerItem: product.productId.price }
-//     })
-
-//     const totalAmt = cart.products.reduce((acc, product) => {
-//         return acc + (product.qty * product.productId.price);
-//     }, 0);
-
-
-//     const deliveryChrg = 0.05;
-//     const totalAmount = totalAmt * deliveryChrg;
-//     const { products } = cart;
-
-//     console.log({ totalAmount })
-
-
-//     if (req.body.option === 'Card') {
-//         const order = new Order({
-//             userId: req.session.userId,
-//             items: items,
-//             address: req.body.address,
-//             paymentMethod: req.body.option,
-//             discount:discountPercentage? discountPercentage:0,
-//             totalAmt: cTotalAmount? cTotalAmount-totalAmount : totalAmt,
-//             deliveryChrg: totalAmount,
-//         })
-//         const callback = "http://localhost:8080/orders/razorpay/success";
-//         orders.push(order);
-//         res.render('razorpay',{amount:cTotalAmount?cTotalAmount:totalAmount+totalAmt,callback})
-//     } else {
-
-//         const amount = cTotalAmount? cTotalAmount : totalAmount+totalAmt;
-
-//         if(req.body.option === 'Wallet'){
-//             const user = await User.findOne({_id:req.session.userId});
-//             if(user.wallet >= amount){
-//                 await User.updateOne({_id:req.session.userId},{$inc:{wallet:-(totalAmount+totalAmt)}})
-//             }
-//         }
-
-//         const order = new Order({
-//             userId: req.session.userId,
-//             items: items,
-//             address: req.body.address,
-//             paymentMethod: req.body.option,
-//             totalAmt: cTotalAmount? cTotalAmount-totalAmount : totalAmt,
-//             deliveryChrg: totalAmount,
-//         })
-
-//         await order.save()
-//         if(order.paymentMethod !== 'COD'){
-
-//             const transaction = new Transaction({
-//                 userId: req.session.userId,
-//                 amount: totalAmount + totalAmt,
-//                 order:req.body.order,
-//                 paymentMethod:req.body.option,
-//                 description: 'Payment for order',
-//                 type: 'debit'
-//             });
-//             await transaction.save();
-//         }
-
-//         await Cart.deleteOne({ userId: req.session.userId });
-
-//         items.forEach(async (item) => {
-//             await Product.updateOne({ _id: item.productId }, { $inc: { stock: -1 * item.qty } })
-//         })
-
-//         res.redirect("/orders/payment")
-//     } 
-// })
-
-
 
 const addOrder = asynchandler(async (req, res) => {
-    const cTotalAmount = req.body.cTotalAmount * 1;
-    const { discountPercentage } = req.body;
-    const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId');
+    const initialAmount = req.body.cartInitialAmount * 1;
+    const discount = req.body.discountValue * 1;
+    const totalAmount = req.body.totalPrice * 1;
+    // console.log("///////////////////////////////////////",req.body)
+//     address: '6618dd341b91104c3b12561b',
+//     initialPrice: '1000',        
+//     discountValue: '200',        
+//     deliveryCharge: '50',        
+//     totalPrice: '850',
+//     option: 'COD',
+//     cartInitialAmount: '1000',   
+//     discountPercentage: '20'     
 
+
+    // console.log("00000000000000000000000000000000000000",initialAmount)
+//   00000000000000000000000000000000000000 1000
+    const { discountPercentage,discountValue,totalPrice} = req.body;
+
+    const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId');
     const items = cart.products.map((product) => {
         return { productId: product.productId._id, qty: product.qty, pricePerItem: product.productId.price };
     });
 
-    const totalAmt = cart.products.reduce((acc, product) => {
+    const cartTotalAmount = cart.products.reduce((acc, product) => {
         return acc + (product.qty * product.productId.price);
     }, 0);
-
-    const deliveryChrg = 0.05;
-    const totalAmount = totalAmt * deliveryChrg;
-
+ 
+    const  deliveryCharge = 0.05;
+    const totalDeliveryCharge = cartTotalAmount *  deliveryCharge;
+   
     if (req.body.option === 'Card') {
         const order = new Order({
             userId: req.session.userId,
             items: items,
             address: req.body.address,
             paymentMethod: req.body.option,
-            discount: discountPercentage ? discountPercentage : 0,
-            totalAmt: cTotalAmount ? cTotalAmount - totalAmount : totalAmt,
-            deliveryChrg: totalAmount,
+            discount: discount? discount:0,
+            amount: initialAmount ? initialAmount : 0,
+            totalAmount: totalPrice ? totalPrice : 0,
+            deliveryCharge: totalDeliveryCharge,
         });
         const callback = "http://localhost:8080/orders/razorpay/success";
         orders.push(order);
-        res.render('razorpay', { amount: cTotalAmount ? cTotalAmount : totalAmount + totalAmt, callback });
+        console.log({totalAmount})
+        res.render('razorpay', { amount: totalAmount, callback });
     } else {
-        const amount = cTotalAmount ? cTotalAmount : totalAmount + totalAmt;
+        const amount = initialAmount ? initialAmount : totalDeliveryCharge + cartTotalAmount;
 
         if (req.body.option === 'Wallet') {
             const user = await User.findOne({ _id: req.session.userId });
             if (user.wallet >= amount) {
-                await User.updateOne({ _id: req.session.userId }, { $inc: { wallet: -(totalAmount + totalAmt) } });
+                await User.updateOne({ _id: req.session.userId }, { $inc: { wallet: -(totalDeliveryCharge + cartTotalAmount) } });
             }
         }
 
@@ -163,8 +103,10 @@ const addOrder = asynchandler(async (req, res) => {
             items: items,
             address: req.body.address,
             paymentMethod: req.body.option,
-            totalAmt: cTotalAmount ? cTotalAmount - totalAmount : totalAmt,
-            deliveryChrg: totalAmount,
+            discount: discount? discount:0,
+            amount: initialAmount? initialAmount:0,
+            totalAmount: totalPrice? totalPrice:0,
+            deliveryCharge: totalDeliveryCharge,
         });
 
         await order.save();
@@ -172,7 +114,7 @@ const addOrder = asynchandler(async (req, res) => {
         if (order.paymentMethod !== 'COD') {
             const transaction = new Transaction({
                 userId: req.session.userId,
-                amount: totalAmount + totalAmt,
+                amount: totalPrice,
                 order: order._id, 
                 paymentMethod: req.body.option,
                 description: 'Amount Paid',
@@ -202,28 +144,24 @@ const  transactionList = asynchandler(async(req,res)=>{
 })
 
 
-const cancelProduct = asynchandler(async (req, res) => {
-    console.log(req.body)
+const cancelProduct = asynchandler(async (req, res) => { 
     const cancelOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productCancellation: { cancelStatus: true, description: req.body.description } } })
-    console.log('caaaaaaaaannnnnnnnnnccccccccccceeeel', cancelOrder)
     res.redirect('/orders')
 })
 const returnProduct = asynchandler(async (req, res) => {
-    console.log(req.body)
-    const returnOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productReturned: { returnStatus: true, description: req.body.description } } })
-    console.log('reeeeeeeeettttttuuuuurrrrn', returnOrder)
+    const returnOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productReturned: { returnStatus: true, description: req.body.description } } }) 
     res.redirect('/orders')
 })
 
 const renderPlaceOrder = asynchandler(async (req, res) => {
-    console.log(req.body)
-    const { totalPrice: cTotalPrice, deliveryCharg: cDeliveryCharge, discount: cDiscount, coupon,discountPercentage } = req.body;
+    // console.log("tttttttiiiiiiiiiii",req.body)
+    const { initialPrice: initialPrice, totalPrice: totalPrice, discountValue: discountValue, deliveryCharge: deliveryCharge, discountPercentage: discountPercentage, totalpriceDiscount: totalpriceDiscount} = req.body;
     const addressesOrder = await Address.find({ userId: req.session.userId })
     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId')
     const products = cart.products;
     const shippingCharge = 0.05
     const user = await User.findOne({_id:req.session.userId},{wallet:1});
-    res.render("placeOrder", { addressesOrder, products, shippingCharge, cTotalPrice, cDeliveryCharge, cDiscount, coupon,discountPercentage,wallet:user.wallet })
+    res.render("placeOrder", { addressesOrder, totalPrice, products, shippingCharge, initialPrice, discountValue, deliveryCharge, discountPercentage, totalpriceDiscount, wallet:user.wallet })
 })
 
 module.exports = { transactionList,returnProduct, cancelProduct, addOrder, renderPayment, renderOrders, renderPlaceOrder,rzpyCallback }

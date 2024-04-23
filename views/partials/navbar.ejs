@@ -22,9 +22,9 @@
           </li>
         </ul>
         <form class="d-flex px-3" action="/search">
-          <input class="form-control mx-2" type="search" placeholder="Search" aria-label="Search" name="q">
-          <button class="btn btn-outline-success mx-auto"  type="submit">Search</button>
-        </form>
+          <input class="form-control mx-2" id="search" type="search" placeholder="Search" aria-label="Search" name="q" value="">
+          <button class="btn btn-outline-success mx-auto" type="submit">Search</button>
+      </form>
       </div>
       
 
@@ -60,4 +60,20 @@
           // window.location.href = "/search?q=" + encodeURIComponent(query);
       }
   </script> -->
+
+  <script>
+    // Get the query string from the current URL
+    const queryString = window.location.search;
+    
+    // Create a new URLSearchParams object with the query string
+    const urlParams = new URLSearchParams(queryString);
+    
+    // Get the value of the "q" parameter
+    const searchTerm = urlParams.get('q');
+    
+    // Now you have the value of the "q" parameter
+    console.log(searchTerm);
+    const searchInput = document.querySelector('#search')
+    searchInput.value = searchTerm;
+    </script>
   </nav>

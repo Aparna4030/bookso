@@ -1,11 +1,16 @@
 <%- include('partials/head.ejs') %> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 <%- include('partials/navbar.ejs') %>
  <%-include('partials/userSidebar.ejs') %>
 
  <div class="col-9 px-4">
     <div class="d-flex mt-3 ">
     </div>
-    <table class="table">
+    <div>
+    <button class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
+    <button class="btn btn-success" onclick="downloadPdf()">Download PDF</button>
+    </div>
+    <table class="table" id="transactions">
         <thead>
           <tr>
             <th scope="col">No</th>
@@ -34,5 +39,25 @@
         </tbody>
       </table>
   </div>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+<script>
+  
+    const downloadExcel = () => {
+        const table = document.getElementById('transactions');
+        const ws = XLSX.utils.table_to_sheet(table);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'transactions');
+        XLSX.writeFile(wb, 'transactions.xlsx');
+    }
+    const downloadPdf = () => {
+        const element = document.getElementById('transactions');
+        html2pdf().from(element).save('transactions.pdf');
+    }
+</script>
+
 
 <%- include('partials/closingHead.ejs') %>

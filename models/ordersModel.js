@@ -31,15 +31,19 @@ const ordersSchema = new mongoose.Schema({
         enum:["COD","Card","Wallet"],
         required:true,
     },
-    deliveryChrg:{
+    deliveryCharge:{
+        type:Number,
+        required:true,
+    },
+    amount:{
         type:Number,
         required:true,
     },
     discount:{
         type:Number,
-        // required:true,
+        default:0,
     },
-    totalAmt:{
+    totalAmount:{
         type:Number,
         required:true,
     },

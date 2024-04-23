@@ -47,8 +47,6 @@ if(!req.session.userId){
 
 
 const increaseQuantity = asynchandler(async (req, res) => {
-
-    console.log('hello')
     // /update qty
     const productId = req.params.productId;
     const currentQty = parseInt(req.params.qty);
@@ -65,13 +63,13 @@ const increaseQuantity = asynchandler(async (req, res) => {
             product.qty = updatedQty
     });
     await cart.save();
-
     res.status(206).json({ message: updatedQty });
 
 })
 
 
 const decreaseQuantity = asynchandler(async (req, res) => {
+    console.log("helllllllooooooooooo",req.params)
     const productId = req.params.productId;
     const currentQty = parseInt(req.params.qty);
     const updatedQty = currentQty - 1; // Decrease the quantity by 1
@@ -91,9 +89,10 @@ const decreaseQuantity = asynchandler(async (req, res) => {
     });
 
     await cart.save();
-
     res.status(206).json({ message: updatedQty });
 });
+
+
 
 const deleteCartItem = asynchandler(async (req, res) => {
     const cart = await Cart.findOne({ userId: req.session.userId })
