@@ -2,7 +2,7 @@ const mongoose = require ('mongoose')
 const asynchandler = require("express-async-handler")
 const Coupon=require("../../models/couponModel")
 const formatDate = require('../../utils/formatDate')
-const convertToDate = require('../../utils/converttoDate')
+const convertToDate = require('../../utils/convertToDate')
 
 
 
