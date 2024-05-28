@@ -139,7 +139,7 @@
       </form>
     </center>
 
-    <script>
+<script>
         const imageInput = document.querySelector("#img-input");
         const imageContainer = document.querySelector('#image-container');
         const addProductform = document.querySelector("#add-product")
@@ -147,28 +147,10 @@
         const priceInput = document.querySelector("#price")
         const discountInput = document.querySelector("#discount")
         const deleteButtons = document.querySelectorAll(".delete")
-
         const existingImages = imageContainer.querySelectorAll('img');
-
-
-
-
-        
-
-
-
         imageInput.addEventListener("input", (event) => {
-      
-          // imageContainer.innerHTML = "";
-
-      
           const images = event.target.files;
-          console.log(images);
-      
           for (let i = 0; i < images.length; i++) {
-      
-            console.log(images[i]);
-      
             const img = document.createElement("img");
             img.classList.add("image");
             img.src = URL.createObjectURL(images[i]);
@@ -177,17 +159,21 @@
           }
         });
         
-  addProductform.addEventListener("submit",(event)=>{
-    if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
-      event.preventDefault()
-      stockInput.value = " "
-      priceInput.value = " "
-      discountInput.value = " "
-      alert("Invalid Input")
-    }
+  addProductform.addEventListener("submit",(event)=>{ 
+  if (!(stockInput.value > -1)) {
+  event.preventDefault();
+  stockInput.value = "";
+  alert("Invalid Stock Input");
+} else if (!(priceInput.value > 0)) {
+  event.preventDefault();
+  priceInput.value = "";
+  alert("Invalid Price Input");
+} else if (!(discountInput.value > 0)) {
+  event.preventDefault();
+  discountInput.value = "";
+  alert("Invalid Discount Input");
+} 
 });
-    
-
 </script>      
 
 

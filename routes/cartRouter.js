@@ -8,8 +8,8 @@ router.get("/",isLoggedin,cartController.renderCart)
 router.post("/",cartController.addToCart)
 router.get("/delete/:id",isLoggedin,cartController.deleteCartItem)
 
-router.get("/decreaseQty/:productId/:qty",cartController.decreaseQuantity)
-router.get("/increaseQty/:productId/:qty",cartController.increaseQuantity)
+router.get("/decreaseQty/:productId/:qty",isLoggedin,cartController.decreaseQuantity)
+router.get("/increaseQty/:productId/:qty",isLoggedin,cartController.increaseQuantity)
 
 
 

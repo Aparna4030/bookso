@@ -6,10 +6,8 @@ const convertToDate = require('../../utils/converttoDate')
 
 
 const availCoupon = asynchandler(async(req,res)=>{
-    // console.log(req.params.couponCode)
 
     const coupon = await Coupon.findOne({couponCodes:req.params.couponCode})
-    // console.log({coupon})
     if(!coupon){
         return res.status(404).json({success:false,message:"Coupon does not exist"})
     }else if(coupon.PurchaseLimit <= 0){

@@ -4,6 +4,7 @@ const express = require('express')
 const session = require("express-session")
 const path = require("path")
 const app = express()
+const cookieParser = require("cookie-parser")
 
 // all the routers files are imported here//
 const indexRouter = require('./routes/indexRouter')
@@ -26,6 +27,8 @@ connectdb()
 
 app.set("views", path.join(__dirname, "/views"))
 app.set("view engine", "ejs")
+app.use(cookieParser())
+
 
 
 app.use(session({
@@ -61,7 +64,6 @@ app.use("/", indexRouter)
 // error handling middleware //
 
 app.use((err, req, res, next) => {
-    console.error(err);
     res.render('errorpage')
 });
 

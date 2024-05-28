@@ -29,10 +29,6 @@ const adminLogin = asynchandler((req, res) => {
 const renderAdminPanel = asynchandler(async (req, res) => {
     const customersCount = await User.find().count()
     const orders = await Order.find().count()
-
-    
-  
-
     const orderGraph = await Order.find()
     const createdAtValues = orderGraph.map(order => order.createdAt.getMonth())
     const counts ={}
@@ -47,25 +43,14 @@ const renderAdminPanel = asynchandler(async (req, res) => {
     for(let key in counts){
         countsArray[(key*1)] = counts[key]
     }
-    // console.log({countsArray})
-
-    // console.log({counts})
-    // console.log("hhhhhhheeeeeeellllloooo",createdAtValues)
-
-    // console.log("oooooooooooooooooo",orders)
     const category = await Category.find().count()
     const productsCount = await Product.find().count()
     const bestProducts = await Order.aggregate([{ $unwind: "$items" }, { $group: { _id: "$items.productId", count: { $sum: 1 } } }, { $project: { "items.productId": 1, count: 1 } }, { $lookup: { from: "products", localField: '_id', foreignField: '_id', as: 'product' } }, { $sort: { count: -1 } }])
     const bestSellingProducts = bestProducts.map(product =>{
       return {...product.product[0],count:product.count}
     })
-    console.log("heeeeeeeeellll",bestSellingProducts)
     const bestCatIds = bestSellingProducts.map(product => product.category_id);
     const bestSellingCats = await Category.find({_id:{$in:bestCatIds}},{name:1});
-    
-    console.log(bestSellingCats);
-    console.log({bestProducts
-    })
     res.render("adminpanel",{customersCount,orders,category,productsCount,counts,countsArray,bestSellingProducts,bestSellingCats})
 })
 
@@ -98,7 +83,7 @@ const categoryCount = asynchandler(async(req,res)=>{
 })
 
 const renderCustomers = asynchandler( async (req, res) => {
-    const users = await User.find({}, { password: 0 })
+    const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 })
     res.render("customers", { users })
 })
 

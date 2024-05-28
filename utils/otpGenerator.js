@@ -3,6 +3,4 @@ const generateOtp = ()=>{
     
 }
 
-// console.log(generateOtp())
-
 module.exports = generateOtp

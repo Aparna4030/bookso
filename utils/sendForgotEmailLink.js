@@ -20,14 +20,10 @@ const sendForgotPasswordLink = (email) => {
             subject: 'OTP',
             html: `http://${process.env.DOMAIN_NAME}/resetPassword/${secret}`,
         };
-
-        // Send the email
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.error(error);
                 reject(error);
             } else {
-                console.log('Email sent: ' + info.response);
                 resolve(secret);
 
             }

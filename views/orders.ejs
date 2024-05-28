@@ -10,6 +10,92 @@
     <hr style="color: #f6ef38; height: 6px" />
   </div>
   <% orders.forEach((order, index) => { %>
+    <div
+    class="modal fade"
+    id="exampleModal<%=index%>"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Reason</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form action="/orders/cancel" method="post">
+          <div class="modal-body">
+            <input
+              type="text"
+              name="order_id"
+              style="display: none"
+              value="<%= order._id %>"
+            />
+            <textarea
+              name="description"
+              cols="60"
+              rows="5"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div
+    class="modal fade"
+    id="exampleModal<%=index%>"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Reason</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form action="/orders/return" method="post">
+          <div class="modal-body">
+            <input
+              type="text"
+              name="order_id"
+              style="display: none"
+              value="<%= order._id %>"
+            />
+            <textarea
+              name="description"
+              cols="60"
+              rows="5"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
   <div class="py-3 mx-3 shadow custom-box-shadow mb-3">
     <div class="mx-3">
     <button class="btn btn-success" onclick="downloadPdf()">Download PDF</button>

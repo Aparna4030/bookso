@@ -13,7 +13,6 @@ const renderAdminOrders = asynchandler(async(req,res)=>{
     .populate('items.productId')
     .populate('address')
     .populate('userId')
-    console.log("ordersssssssssssssssssooooooooooofffffffffffff",orders)
     res.render("adminOrders",{orders})
 })
 
@@ -23,31 +22,25 @@ const renderOderDetails = asynchandler(async(req,res)=>{
     .populate('items.productId')
     .populate('address')
     .populate('userId')
-    console.log("orderssssssss",orders)
-    console.log("itemsssssssssssssssssssssssssss",orders[0].items)
     res.render("adminOrderDetails",{orders})
 })
 
 const changeStatus = asynchandler(async(req,res)=>{
-    console.log(req.query)
-    // const order = await Order.updateOne({_id:req.query.orderId},{$set:{status:req.query.newStatus}});
     const order = await Order.findOneAndUpdate(
         { _id: req.query.orderId },
         { $set: { status: req.query.newStatus } },
         { new: true } 
     );
-    // console.log("hiiiiishhhhhhhhhhhhhhhhhhhhhhhh",order)
     if((order.status === 'Cancelled'|| order.status === 'Returned') && order.paymentMethod!== 'COD'){
         const transaction = new Transaction({
             userId: req.session.userId,
-            amount:order.deliveryChrg + order.totalAmt,
+            amount: order.totalAmount,
             paymentMethod: order.paymentMethod,
             description: 'payment Cancelled',
             type: 'Credit'
         });
         await transaction.save();
        const walletblnc = await User.updateOne({ _id: req.session.userId }, { $inc: { wallet: transaction.amount} });
-        console.log("waaaaaaaallllllwttttt",walletblnc)
         order.items.forEach(async(item)=>{
             await Product.updateOne({_id:item.productId},{$inc:{stock:item.qty}})
         })

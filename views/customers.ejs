@@ -2,6 +2,7 @@
 <%- include('partials/navbar.ejs') %>
 <%-include('partials/adminSidebar.ejs') %>
 
+
   <div class="col-9 px-4">
     <div class="d-flex mt-3 ">
       <input class="form-control mx-2" id="search" type="search" placeholder="Search Product" aria-label="Search">
@@ -40,40 +41,26 @@
         </tbody>
       </table>
   </div>
-
-
-
-
-
-
 </div>
-<div class="col-12"></div>
 
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-  crossorigin="anonymous"
-></script>
-<script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>">
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/9160c00447.js" crossorigin="anonymous"></script>
 <script>
-  const searchInput = document.querySelector("#search");
+  const searchInputELt = document.querySelector("#search");
   const button = document.querySelector("#searchButton");
   const tableData = document.querySelector("#tableData");
 
   const unblock = async (event, userId) => {
-    console.log(event.target);
-    console.log('clicked');
     const jsonData = await fetch(`/admin/unblock/${userId}`);
     const data = await jsonData.json();
     if (data.success) {
-      console.log('successsss');
+
       const button = `<button class="btn btn-danger" onclick="block(event, '${userId}')">BLOCK</button>`;
       event.target.outerHTML = button;
     }
   };
 
-  const block = async (event, userId) => {
+  async function block (event, userId) {
 
     const jsonData = await fetch(`/admin/block/${userId}`);
     const data = await jsonData.json();
@@ -84,12 +71,11 @@
   };
 
   button.addEventListener("click", async () => {
-    const string = searchInput.value;
+    const string = searchInputELt.value;
     if (!string) return;
 
     const response = await fetch(`/admin/users?search=${string}`);
     const users = await response.json();
-    console.log(users);
 
     let inner = "";
     let i = 1;
@@ -113,3 +99,4 @@
     tableData.innerHTML = inner;
   });
 </script>
+

@@ -7,7 +7,6 @@ const convertToDate = require('../../utils/converttoDate')
 
 
 const renderaddCoupon = asynchandler((req,res)=>{
-
     res.render('couponAdmin')
 })
 
@@ -17,32 +16,24 @@ const addCoupon = asynchandler(async(req,res)=>{
     if(existingCoupon){
         return res.redirect('/admin/listCoupon')
     }
-    const startDate = convertToDate(req.body.start_date)
-    const endDate = convertToDate(req.body.expiry_date)
     const coupon = new Coupon({
-        startDate,
-        endDate,
+        startDate:req.body.start_date,
+        endDate:req.body.expiry_date,
         discount_value:req.body.discount,
         usedUserCount:req.body.used_coupon,
         couponCodes:req.body.coupon_code,
         PurchaseLimit:req.body.max_count,
     })
     const couponAdded = await coupon.save()
-    if(couponAdded)
-    {
-        console.log('success');
-    }
     res.redirect("/admin/listCoupon")
 })
 
 const listCoupon = asynchandler(async(req,res)=>{   
-    const coupons = await Coupon.find({}).lean()
-    // console.log("ooooooooooooooookkkkkkkkkkkkkkkeeeeeeeeeeeeee",coupons)
+    const coupons = await Coupon.find({}).lean().sort({ createdAt: -1 })
    coupons.forEach(coupon=>{
    coupon.startDate=formatDate(coupon.startDate)
    coupon.endDate=formatDate(coupon.endDate)
    })
-    // console.log("hellllllllloooooooo",coupons)
     res.render("couponAdminList",{coupons})
 })
 

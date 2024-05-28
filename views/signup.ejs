@@ -38,7 +38,7 @@
                         />
                       </div>
                       <div class="form-outline mb-2">
-                        <!-- <label class="form-label" for="form2Example11">Username</label> -->
+                       
                         <input
                           type="email"
                           id="email"
@@ -49,7 +49,7 @@
                       </div>
 
                       <div class="form-outline mb-2">
-                        <!-- <label class="form-label" for="form2Example11">Username</label> -->
+                     
                         <input
                           type="password"
                           id="password"
@@ -60,7 +60,6 @@
                       </div>
 
                       <div class="form-outline mb-2">
-                        <!-- <label class="form-label" for="form2Example11">Username</label> -->
                         <input
                           type="password"
                           id="confirmPassword"
@@ -85,7 +84,6 @@
                         <% } %>
 
                       <div class="text-center pt-1 mb-5 pb-1">
-                        <!-- <a class="text-muted mb" href="#!">Forgot your password?</a><br> -->
                         <button class="btn-global-primary mt-4 fw-bold" type="submit">
                           CREATE ACCOUNT
                         </button>
@@ -136,7 +134,7 @@
       const ValidateName = () => {
         if (!nameRegex.test(nameInput.value)) {
           erromsg.innerHTML =
-            "Name needed atleast 2 charcters without number and special characters";
+            "Please provide names for at least two characters, without including numbers or special characters, and I'll help craft a good sentence with them.";
           erromsg.classList.remove("hide");
           return false;
         } else {
@@ -148,12 +146,6 @@
       nameInput.addEventListener("blur", () => {
         ValidateName();
       });
-
-      // if(!`${nameInput.value}.length`>=2 && `${nameInput.value}`.length<=30){
-      //   erromsg.innerHTML="Name need atleast 2 charcters"
-      //   erromsg.classList.add("hide");
-      // }
-
       const ValidatePhone = () => {
         if (
           `${phoneInput.value}`.length > 9 &&
@@ -175,7 +167,7 @@
       const ValidatePassword = () => {
         if (!passwordRegex.test(passwordInput.value)) {
           erromsg.innerHTML =
-            "Require atleast 8 characters,including one uppercase,special Charcter and a number.";
+            "Require atleast 8 characters,including one uppercase,special Character and a number.";
           erromsg.classList.remove("hide");
           return false;
         } else {

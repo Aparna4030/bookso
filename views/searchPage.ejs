@@ -1,12 +1,63 @@
 <%- include('partials/head.ejs') %> 
   <%- include('partials/navbar.ejs') %>
+<style>
+  .checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+  .checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  .checkbox-container input:checked ~ .checkmark {
+    background-color: #2196F3;
+  }
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+</style>
+<form action="/search">
 
   <div class="container ml-2 p-4 d-flex">
 
     <div class="col-3 bg-light shadow rounded" style="height: 70vh; width: 35vh">
       <div class=" w-100 bg-bookso text-center py-2 fw-bold rounded-top" >FILTER PRODUCTS</div>
-      <div class="mt-4 w-100 h-50 d-flex flex-column ps-2 pe-2  justify-content-around ">
+      <div class="w-100 h-50 d-flex flex-column ps-2 pe-2  justify-content-around ">
         <div class="accordion" id="accordionExample">
+          <button class="btn btn-secondary  mb-3" id="clearFiltersBtn">Clear Filters</button>
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingTwo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -15,10 +66,14 @@
               </h2>
               <div id="collapseTwo" class="accordion-collapse collapse " aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                 <div class="accordion-body d-flex flex-column">
-                <% categories.forEach(element => { %>
-                  <a href="/search?q=<%= q %>&cat=<%= element._id %>&sort=<%= sort %>&lang=<%= lang %>"><%= element.name %></a>      
-                <% }) %>
+                  <% categories.forEach(element => { %>
+                    <label>
+                      <input type="checkbox" name="categories" value="<%= element._id %>">
+                      <%= element.name %>
+                    </label>
+                  <% }) %>
                 </div>
+                
               </div>
             </div>
             <div class="accordion-item">
@@ -26,16 +81,16 @@
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 Language
                 </button>
-              </h2>
+              </h2>           
               <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body d-flex flex-column">
-                  
-                    <a href="/search?q=<%= q %>&cat=<%= cat %>&sort=<%= sort %>&lang=English">English</a>      
-                    <a href="/search?q=<%= q %>&cat=<%= cat %>&sort=<%= sort %>&lang=Malayalam">Malayalam</a>      
-                  
+                <div class="accordion-body d-flex flex-column"> 
+                  <label><input type="checkbox" value="English" name="languages">English </label>
+                  <label> <input type="checkbox" value="Malayalam" name="languages">Malayalam</label>
+                              
                 </div>
               </div>
             </div>
+            <a id="filterBtn" style="cursor: pointer; text-decoration: none;" class="hidden">Filter</a>
           </div>
     </div>
       </div>
@@ -45,14 +100,14 @@
             Sort
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="/search?q=<%= q %>&cat=<%= cat %>&sort=lth&lang=<%= lang %>">Price: Low to High</a></li>
-            <li><a class="dropdown-item" href="/search?q=<%= q %>&cat=<%= cat %>&sort=htl&lang=<%= lang %>">Price: High to Low</a></li>
-            <li><a class="dropdown-item" href="/search?q=<%= q %>&cat=<%= cat %>&sort=az&lang=<%= lang %>">Alphabetical: A-Z</a></li>
-            <li><a class="dropdown-item" href="/search?q=<%= q %>&cat=<%= cat %>&sort=za&lang=<%= lang %>">Alphabetical: Z-A</a></li>
+            <li><span class="dropdown-item sort-items" value="lth">Price: Low to High</span></li>
+            <li><span class="dropdown-item sort-items" value="htl">Price: High to Low</span></li>
+            <li><span class="dropdown-item sort-items" value="az">Alphabetical: A-Z</span></li>
+            <li><span class="dropdown-item sort-items" value="za">Alphabetical: Z-A</span></li>
           </ul>
         </div>
         
-<div class="container d-flex flex-wrap ">
+<div class="container d-flex flex-wrap product-cards-container">
     <% searchResults.forEach(product => { %>
         <div class="card mt-3 me-3" style="width: 16rem;">
             <a href="/product/<%= product._id %>">
@@ -63,7 +118,6 @@
                 <% if (wishlistProducts && wishlistProducts.find(obj=>obj.productId.toString() == product._id.toString())) { %>
                   <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                 <% }else{ %>
-                  <!-- <a href="#"><i class="fa-regular fa-heart" style="color: #000000;"></i></a> -->
                   <% } %>
             </div>
             </div>
@@ -71,19 +125,174 @@
 </div>
 </div>
 </div>
+</form>
+
+  
+<script>
+  
+  const state = {
+    categories:[],
+    language:[],
+    sort: "",
+    query: "<%= q %>",
+    sort:""
+  };
+
+  const container = document.querySelector('.product-cards-container');
   
 
-<!-- <script>
-// Get the query string from the current URL
-const queryString = window.location.search;
+  const clearFiltersButton = document.getElementById('clearFiltersBtn');
 
-// Create a new URLSearchParams object with the query string
-const urlParams = new URLSearchParams(queryString);
+clearFiltersButton.addEventListener('click', () => {
+    state.categories = [];
+    state.language = [];
+    state.sort = "";
+    categoryInputs.forEach(input => {
+        input.checked = false;
+    });
+    languageInputs.forEach(input => {
+        input.checked = false;
+    });
+    fetchProducts();
+});
 
-// Get the value of the "q" parameter
-const searchTerm = urlParams.get('q');
 
-// Now you have the value of the "q" parameter
-console.log(searchTerm);
-</script> -->
+  const categoryInputs = document.querySelectorAll('[name=categories]')
+  const languageInputs = document.querySelectorAll('[name=languages]')
+  const sortInputs = document.querySelectorAll('.sort-items')
+  const filterButton = document.getElementById('filterBtn')
+
+  sortInputs.forEach(elt => elt.addEventListener('click',(event)=>{
+    
+    state.sort = event.target.getAttribute('value')
+    fetchProducts();
+  }))
+
+  categoryInputs.forEach(elt=>{
+    elt.addEventListener('click',(event)=>{
+      if(event.target.checked){
+        state.categories.push(event.target.value);
+      }else{
+          const index = state.categories.findIndex(val => val === event.target.value);
+          state.categories.splice(index,1);
+      }
+      fetchProducts();
+
+      
+    })
+  })
+  languageInputs.forEach(elt=>{
+    elt.addEventListener('click',(event)=>{
+      if(event.target.checked){
+        state.language.push(event.target.value);
+      }else{
+          const index = state.language.findIndex(val => val === event.target.value);
+          state.language.splice(index,1);
+      }
+      fetchProducts();
+
+    })
+  })
+
+
+
+   function fetchProducts() {
+    fetch("/search",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify(state)
+    }).then(res=>res.text())
+      .then(res=>{
+        container.innerHTML = res
+      })
+
+
+};
+
+  
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!-- <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Category
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div class="accordion-body d-flex flex-column">
+                    <% //categories.forEach(element => { %>
+                      <label class="checkbox-container">
+                        <%=// element.name %>
+                        <input type="checkbox" name="categories" value="<%= //element._id %>" <% //if(cat && cat.includes(element._id)) { %> checked <%// } %>>
+                        <span class="checkmark"></span>
+                      </label>
+                    <%// }) %>
+                  </div>
+                </div>
+              </div>
+               -->
+              <!-- <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Language
+                  </button>
+                </h2> -->
+                <!-- <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                  <div class="accordion-body d-flex flex-column">
+                    <label class="checkbox-container">
+                      English
+                      <input type="checkbox" name="languages" value="English" <% if(lang && lang.includes('English')) { %> checked <% } %>>
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="checkbox-container">
+                      Malayalam
+                      <input type="checkbox" name="languages" value="Malayalam" <% if(lang && lang.includes('Malayalam')) { %> checked <% } %>>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
+              </div> -->
+
+
 <%- include('partials/closingHead.ejs') %>

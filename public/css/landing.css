@@ -1,12 +1,12 @@
 
 @font-face {
     font-family: 'Inter';
-    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    src: url('../fonts/Inter/Inter-VariableFont_slnt\,wght.ttf') format('woff2'); 
     font-style:normal;
 }
 @font-face {
     font-family: 'Jomhuria';
-    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); /* Adjust the path and font format as needed */
+    src: url('../fonts/Jomhuria/Jomhuria-Regular.ttf') format('woff2'); 
     font-weight: normal;
     font-style:normal;
 }

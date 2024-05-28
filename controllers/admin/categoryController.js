@@ -4,7 +4,7 @@ const Category = require("../../models/categoryModel")
 
 
 const renderCategory = asynchandler( async (req, res) => {
-    const categories = await Category.find()
+    const categories = await Category.find().sort({ createdAt: -1 })
     let message = null
     if(req.session.message){
         message=req.session.message;

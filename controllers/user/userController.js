@@ -4,6 +4,8 @@ const User = require("../../models/userModel")
 const Product = require("../../models/productModel")
 const wishlist = require("../../models/wishlistModel")
 const Category = require("../../models/categoryModel")
+const Transaction = require("../../models/transactionModel")
+const Order = require("../../models/ordersModel")
 const sendOTPemail = require("../../utils/sendEmail")
 const sendForgotPasswordLink = require("../../utils/sendForgotEmailLink")
 const bcrypt = require("bcrypt")
@@ -46,7 +48,7 @@ const userLogin = asynchandler(async (req, res) => {
     }
 })
 
-// just rendering the page of email to send the forgot password otp //
+
 const renderForgotPasswordEmail = asynchandler((req, res) => {
     res.render("forgotPasswordEmail")
 })
@@ -127,16 +129,24 @@ const resendOtp = asynchandler(async (req, res) => {
     res.redirect("/otp")
 })
 
-const renderRazorPay = asynchandler(async(req,res)=>{
-    // console.log('hahahahhakjfhkehfhabelll')
+const renderRazorPay = asynchandler(async (req, res) => {
     const amount = req.query.amount;
     const callback = `http://localhost:8080/wallet/add/${amount}`
-    res.render('razorpay',{amount,callback});
+    res.render('razorpay', { amount, callback });
 })
 
-const addWalletMoney = asynchandler(async(req,res)=>{
+const addWalletMoney = asynchandler(async (req, res) => {
     const amount = req.params.amount;
-    await User.updateOne({_id:req.session.userId},{$inc:{wallet:amount*1}})
+    await User.updateOne({ _id: req.session.userId }, { $inc: { wallet: amount * 1 } })
+    const transaction = new Transaction({
+        userId: req.session.userId,
+        amount: amount,
+        paymentMethod: 'Card',
+        status: 'paid',
+        description: 'Amount Credited',
+        type: 'Credit'
+    });
+    await transaction.save();
     res.redirect('/profile')
 })
 
@@ -152,7 +162,7 @@ const validateOtp = asynchandler(async (req, res) => {
             const newUser = new User({
                 name: req.session.user.name,
                 email: req.session.user.email,
-                phone: req.session.user.phone * 1, //multiplying by one to change the type string to number in this case.
+                phone: req.session.user.phone * 1,
                 password: hashedPassword
             })
 
@@ -162,11 +172,9 @@ const validateOtp = asynchandler(async (req, res) => {
         } else {
             req.session.message = "Invalid OTP"
             res.redirect("/otp")
-            // res.redirect("/signup")
         }
     }
     catch (error) {
-        // console.log(error)
         req.session.message = "Something went wrong"
         res.redirect("/signup")
     }
@@ -180,7 +188,6 @@ const renderProfile = asynchandler(async (req, res) => {
 
 const renderUserDetails = asynchandler(async (req, res) => {
     const user = await User.findOne({ _id: req.session.userId })
-    // console.log(user)
     let message = null;
     if (req.session.message) {
         message = req.session.message
@@ -191,10 +198,8 @@ const renderUserDetails = asynchandler(async (req, res) => {
 
 
 const editUser = asynchandler(async (req, res) => {
-    // console.log("ediiiiiiiiiittttttttt", req.body)
     const { name, email, phone, password, newPassword, confirmPassword } = req.body
     const user = await User.findOne({ _id: req.session.userId })
-    // console.log("usssseeeeeeeerrrrrr",user)
     user.name = name;
     user.email = email;
     user.phone = phone;
@@ -205,7 +210,6 @@ const editUser = asynchandler(async (req, res) => {
             res.redirect('/userDetails')
         }
         if (!await bcrypt.compare(password, user.password)) {
-            // console.log("helloooooo")
             req.session.message = "Invalid Password"
             res.redirect('/userDetails')
         }
@@ -219,67 +223,58 @@ const editUser = asynchandler(async (req, res) => {
     }
     await user.save()
     res.redirect('/userDetails')
-    // console.log("Usssssseeeeeeeerrrr", user)
 
 })
 
 
 const renderBook = asynchandler(async (req, res) => {
-    const products = await Product.find({isListed:true}).populate('category_id')
-    // console.log("prrrrrrrrooooooooduuucccccccccts",products)
-    const filteredProducts = products.filter(product=>{
-      return product.category_id.isListed && product.stock > 0
-        
+    let currentPage = req.query.pg ?? 1;
+    if(currentPage<1){
+        currentPage = 1;
+    }
+
+    const products = await Product.find({ isListed: true }).skip((currentPage-1)*8).limit(8).populate('category_id')
+    const filteredProducts = products.filter(product => {
+        return product.category_id.isListed && product.stock > 0
+
     })
-    // console.log(filteredProducts)
-    res.render("book", { products: filteredProducts })
+    res.render("book", { products: filteredProducts,currentPage })
 })
 
 
-// const renderSearch = asynchandler(async (req, res) => {
-//     // const searchString = req.query.q;
-//     const { q: searchString, cat: category, sort, lang } = req.query;
-//     console.log({ searchString, category, sort })
-//     console.log({ searchString })
-//     const categories = await Category.find()
-//     let searchResults = await Product.find({ $or: [{ name: { $regex: new RegExp(searchString, 'i') } }, { description: { $regex: new RegExp(searchString, 'i') } }] });
-//     if (category)
-//         searchResults = searchResults.filter(prdct => prdct.category_id.toString() === category?.toString())
-//     if (sort)
-//         searchResults = searchResults.sort((a, b) => {
-//             if (sort === 'lth') return a.price - b.price
-//             return b.price - a.price
-//         })
-//     if(lang)
-//         searchResults = searchResults.filter(pro => pro.language === lang)    
-//     const wishlistProducts = await wishlist.find({ userId: req.session.userId })
-//     console.log("ssssssseeeeeeeaaaaaaaaaarrrrrrrccccccchh", searchResults)
-//     res.render("searchPage", { searchResults, wishlistProducts, categories, q: searchString, cat: category, sort,lang })
-// })
-
-
 const renderSearch = asynchandler(async (req, res) => {
+    let currentPage = req.query.pg ?? 1;
+    if(currentPage<1){
+        currentPage = 1;
+    }
     const { q: searchString, cat: category, sort, lang } = req.query;
-    // console.log({ searchString, category, sort });
-
+    let splitCategoryArray = []
+    let splitLangArr = []
+    if (req.query.categories) {
+        splitCategoryArray = req.query.categories.split(',');
+    }
+    if (req.query.languages) {
+        splitLangArr = req.query.languages.split(',');
+    }
     const categories = await Category.find();
     let searchResults = await Product.find({ $or: [{ name: { $regex: new RegExp(searchString, 'i') } }, { description: { $regex: new RegExp(searchString, 'i') } }] });
 
-    if (category)
-        searchResults = searchResults.filter(prdct => prdct.category_id.toString() === category?.toString());
+    if (splitCategoryArray.length > 0) {
+        searchResults = searchResults.filter(prdct => splitCategoryArray.includes(prdct.category_id.toString()));
+    }
 
     if (sort) {
         if (sort === 'lth') {
-           
+
             searchResults.sort((a, b) => a.price - b.price);
         } else if (sort === 'htl') {
-            
+
             searchResults.sort((a, b) => b.price - a.price);
         } else if (sort === 'az') {
-            
+
             searchResults.sort((a, b) => a.name.localeCompare(b.name));
         } else if (sort === 'za') {
-           
+
             searchResults.sort((a, b) => b.name.localeCompare(a.name));
         }
     }
@@ -288,10 +283,46 @@ const renderSearch = asynchandler(async (req, res) => {
         searchResults = searchResults.filter(pro => pro.language === lang);
 
     const wishlistProducts = await wishlist.find({ userId: req.session.userId });
-    // console.log("Search Results:", searchResults);
-    res.render("searchPage", { searchResults, wishlistProducts, categories, q: searchString, cat: category, sort, lang });
+    res.render("searchPage", { searchResults,currentPage, wishlistProducts, categories, q: searchString, cat: category, sort, lang });
 });
 
+const renderFilterSearch = asynchandler(async (req, res) => {
+    let currentPage = req.query.pg ?? 1;
+    if(currentPage<1){
+        currentPage = 1;
+    }
+
+    const categories = await Category.find();
+    const { query: searchString, categories: sCategories, language, sort } = req.body;
+    let searchResults = await Product.find({ $or: [{ name: { $regex: new RegExp(searchString, 'i') } }, { description: { $regex: new RegExp(searchString, 'i') } }] }).skip((currentPage-1)*8).limit(8);
+
+    if (sCategories.length > 0) {
+        searchResults = searchResults.filter(prdct => sCategories.includes(prdct.category_id.toString()));
+    }
+
+    if (sort) {
+        if (sort === 'lth') {
+
+            searchResults.sort((a, b) => a.price - b.price);
+        } else if (sort === 'htl') {
+
+            searchResults.sort((a, b) => b.price - a.price);
+        } else if (sort === 'az') {
+
+            searchResults.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sort === 'za') {
+
+            searchResults.sort((a, b) => b.name.localeCompare(a.name));
+        }
+    }
+
+    if (language?.length > 0)
+        searchResults = searchResults.filter(pro => {
+            return language.includes(pro.language)
+        });
+    const wishlistProducts = await wishlist.find({ userId: req.session.userId });
+    res.render('partials/productCards', { searchResults, wishlistProducts, currentPage })
+});
 
 
 
@@ -302,4 +333,23 @@ const logout = asynchandler((req, res) => {
     res.redirect("/")
 })
 
-module.exports = { renderSearch, editUser, renderBook, renderUserDetails, renderProfile, updatePassword, renderResetPassword, renderLogin, sendForgotLink, renderForgotPasswordEmail, renderSignup, register, validateOtp, userLogin, logout, renderEmailOtp, resendOtp,renderRazorPay,addWalletMoney }
+module.exports = { renderSearch, 
+    editUser, 
+    renderBook, 
+    renderUserDetails, 
+    renderProfile, 
+    updatePassword, 
+    renderResetPassword, 
+    renderLogin, 
+    sendForgotLink, 
+    renderForgotPasswordEmail, 
+    renderSignup, 
+    register, 
+    validateOtp, 
+    userLogin, 
+    logout, 
+    renderEmailOtp, 
+    resendOtp, 
+    renderRazorPay, 
+    addWalletMoney, 
+    renderFilterSearch }

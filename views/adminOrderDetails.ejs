@@ -23,6 +23,9 @@
       <a class="text-decoration-none text-bookso" href="/admin/coupons"><div><i class="fa-solid fa-ticket-simple pe-2" style="color: #535351;"></i>MANAGE COUPONS</div></a>
   </div>
     </div>
+
+
+    
     <div class="col-9 px-4">
       <div class="py-3 mx-3 shadow custom-box-shadow">
         <div class="text-center text-bookso fs-4 fw-bold">ORDERS</div>
@@ -42,24 +45,28 @@
                               <td><%= `${order?.address?.name}, ${order?.address?.address}, ${order?.address?.phone}` %></td>
                             </tr>
                             <tr>
-                              <td class="fw-bold">Payment:</td>
+                              <td class="fw-bold">Payment Method:</td>
                               <td><%= order.paymentMethod %></td>
+                            </tr>
+                            <tr>
+                              <td class="fw-bold">Amount:</td>
+                              <td>₹<%= order.amount %></td>
+                            </tr>
+                            <tr>
+                              <td class="fw-bold">Delivery Charges:</td>
+                              <td>₹<%= order.deliveryCharge %></td>
+                            </tr>
+                            <tr>
+                              <td class="fw-bold">Discount</td>
+                              <td>₹<%= order.discount %></td>
+                            </tr>
+                            <tr>
+                              <td class="fw-bold">Total Amount</td>
+                              <td>₹<%= order.totalAmount %></td>
                             </tr>
                             <tr>
                               <td class="fw-bold">Status:</td>
                               <td><%= order.status %></td>
-                            </tr>
-                            <tr>
-                                <td class="fw-bold">Net Amount:</td>
-                                <td>₹<%= order.totalAmt %></td>
-                              </tr>
-                              <tr>
-                                <td class="fw-bold">Delivery Charges:</td>
-                                <td>₹<%= order.deliveryChrg %></td>
-                              </tr>
-                            <tr>
-                              <td class="fw-bold">Total Amount</td>
-                              <td>₹<%= order.totalAmt + order.deliveryChrg %></td>
                             </tr>
                             <tr>
                               <% if (order.productCancellation.cancelStatus === true) { %>
@@ -68,8 +75,6 @@
                                 <div class="alert alert-danger" role="alert">Return Product</div> 
                               <% } %>
                               <% } %>
-                              <!-- <button class="btn btn-primary ms-2 me-3">Accept</button>
-                              <button class="btn btn-danger">Decline</button> -->
                             </tr>
                            
                           </tbody>

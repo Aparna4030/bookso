@@ -38,7 +38,6 @@
           </div></a>
       </div>
     </div>
-    <!-- <form method="post" action="/admin/Product"> -->
 
     <div class="col-6">
       <div class="row mb-1 ms-4">
@@ -160,7 +159,6 @@
         ></textarea>
       </div>
       <button  class="btn-global-primary ms-4 mt-3" type="submit">ADD</button>
-      <!-- <div name="description" class="w-100 mt-3"><textarea class="w-100 h-100" placeholder="Description"></textarea></div> -->
     </div>
     <div class="col-3 ms-4 d-flex flex-column">
       <div id="image-container" class="mb-3 w-100 border border-warning">
@@ -182,7 +180,6 @@
   crossorigin="anonymous"
 ></script>
 
-<!-- //image need to be seen inside the box  for the visibility of image in the product page -->
 <script>
   const nameInput = document.querySelector("#name")
   const imageInput = document.querySelector("#img-input");
@@ -193,43 +190,13 @@
   const discountInput = document.querySelector("#discount")
   const imageDisplay = document.querySelector(".image-display-container")
 
-  
-  // function validateImages(files) {
-  //   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  //   const maxSize = 1024 * 1024; // 1MB
-
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-
-  //     // Check file type
-  //     if (!allowedTypes.includes(file.type)) {
-  //       alert('Only JPG, PNG, or GIF files are allowed');
-  //       return false;
-  //     }
-
-  //     // Check file size
-  //     if (file.size > maxSize) {
-  //       alert('Image size exceeds 1MB limit');
-  //       return false;
-  //     }
-  //   }
-
-  //   return true;
-  // }
-
-
-
 
   imageInput.addEventListener("input", (event) => {
 
     imageDisplay.innerHTML = "";
     const images = event.target.files;
-    console.log(images);
 
     for (let i = 0; i < images.length; i++) {
-
-      console.log(images[i]);
-
       const img = document.createElement("img");
       img.classList.add("image");
       img.src = URL.createObjectURL(images[i]);
@@ -238,18 +205,8 @@
     }
   });
 
-  // addProductform.addEventListener("submit",(event)=>{
-  //   if(!(stockInput.value>0 && priceInput.value>0 && discountInput.value>0)){
-  //     event.preventDefault()
-  //     stockInput.value = " "
-  //     priceInput.value = " "
-  //     discountInput.value = " "
-  //     alert("Invalid Input")
-  //   }
-
-  // })
+ 
   addProductform.addEventListener("submit", (event) => {
-    // Trim whitespace from input values and check if they are empty
     const isInvalidInput = [nameInput,imageInput,stockInput, priceInput, discountInput].some(input => input.value.trim() === '');
 
     if (isInvalidInput) {

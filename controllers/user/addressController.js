@@ -4,7 +4,7 @@ const asynchandler = require("express-async-handler")
 
 
 const renderaddAddress = asynchandler(async (req, res) => {
-    const addresses = await Address.find({ userId: req.session.userId })
+    const addresses = await Address.find({ userId: req.session.userId }).sort({ createdAt: -1 })
     res.render("addAddress", { addresses })
 })
 
@@ -21,7 +21,6 @@ const addAddress = asynchandler(async (req, res) => {
     })
     await address.save()
     if(req.query.redirect){
-        console.log(req.body)
         res.redirect("/address")
         return;
     }else{
@@ -29,7 +28,6 @@ const addAddress = asynchandler(async (req, res) => {
         res.status(201).json(addresses);
         return;
     }
-    res.status(500).json("something went wrong")
 })
 
 
@@ -41,7 +39,6 @@ const renderEditAddress = asynchandler(async(req,res)=>{
 
 const editAddress = asynchandler(async(req,res)=>{
     const {name,phone,pincode,locality,address,city,landmark} = req.body
-    // console.log("AddddddRrrrrrrrrreeeeeeesssssssss",req.body)
     const addrss = await Address.updateOne({ _id:req.params.id }, { $set: { name,phone,pincode,locality,address,city,landmark } })
     res.redirect("/address")
 })
@@ -50,4 +47,9 @@ const deleteAddress = asynchandler(async (req, res) => {
     const deleteAdd = await Address.deleteOne({ _id: req.params.id })
     res.redirect("/address")
 })
-module.exports = { renderEditAddress,editAddress,renderaddAddress, addAddress, deleteAddress }
+module.exports = { 
+    renderEditAddress,
+    editAddress,
+    renderaddAddress, 
+    addAddress, 
+    deleteAddress }

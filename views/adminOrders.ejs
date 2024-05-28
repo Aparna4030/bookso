@@ -18,9 +18,9 @@
             <% orders.forEach(order => { %>
             <a><tr>
               <td><%= order._id %></td>
-              <td><%= order.userId.name%></td>
+              <td><%= order.userId?.name%></td>
               <td><%= order.createdAt.toString().slice(0,16) %></td> 
-              <td><%= order.totalAmt %></td>
+              <td><%= order.totalAmount %></td>
               <td class="position-relative" id="order-status">
                 <select class="form-select" aria-label="Default select example" onchange="handleOnChange(event)" orderId="<%= order._id %>">
                   <option class="text-primary" value="Placed" <%= order.status === 'Placed' ? 'selected' : '' %>>Placed</option>
@@ -50,8 +50,6 @@
 <script>
   const handleOnChange = (event) => {
     const orderId = event.target.getAttribute('orderId');
-    console.log(orderId);
-
     fetch(`/admin/status?orderId=${orderId}&newStatus=${event.target.value}`)
   }
 </script>

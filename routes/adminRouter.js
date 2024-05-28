@@ -12,7 +12,12 @@ const router = express.Router()
 
 
 router.get("/login",adminIsLoggedOut,adminController.renderLogin)
-router.post("/login",adminController.adminLogin)
+router.post("/login",adminIsLoggedOut,adminController.adminLogin)
+
+
+
+
+
 
 router.use(adminIsLoggedIn)
 router.get("/",adminController.renderAdminPanel)
@@ -64,7 +69,6 @@ router.get("/salesreport",salesController.getSalesReport);
 
 router.post("/filterReport",salesController.filterSalesReport);
 
-
-
-// router.get("/salesreport/:payment",salesController.getFilterSalesReport);
 module.exports = router;
+
+

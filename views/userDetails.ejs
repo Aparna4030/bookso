@@ -50,43 +50,6 @@
 </div>
 
 <script>
-  // document.getElementById('profileForm').addEventListener('submit', async (event) => {
-  //   event.preventDefault();
-
-  //   const name = document.getElementById('name').value;
-  //   const email = document.getElementById('email').value;
-  //   const phone = document.getElementById('phone').value;
-  //   const currentPassword = document.getElementById('currentPassword').value;
-  //   const newPassword = document.getElementById('newPassword').value;
-
-  //   try {
-  //     const response = await fetch('/editProfile', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         name,
-  //         email,
-  //         phone,
-  //         currentPassword,
-  //         newPassword
-  //       })
-  //     });
-
-  //     if (response.ok) {
-  //       alert('Profile updated successfully!');
-  //       // Optionally, redirect the user to another page
-  //       // window.location.href = '/profile';
-  //     } else {
-  //       const errorData = await response.json();
-  //       alert(errorData.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     alert('An error occurred while updating your profile. Please try again later.');
-  //   }
-  // });
 const passwordBtn = document.getElementById('change-Password-btn');
 const passwords = document.querySelectorAll('.editPassword');
 const passwordFields = document.getElementById('passwordFields');

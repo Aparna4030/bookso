@@ -28,10 +28,21 @@
                         </label>
                       </div>
                     </div>
+                    <div class="d-flex flex-column border p-2 mx-1">
+                      <h6>Date Range</h6>
+                      <div class="form-group">
+                          <label for="startDate">Start Date</label>
+                          <input type="date" class="form-control date-input" name="startDate" placeholder="DD-MM-YYYY" onchange="handleChange(event)">
+                      </div>
+                      <div class="form-group">
+                          <label for="endDate">End Date</label>
+                          <input type="date" class="form-control date-input" name="endDate" placeholder="DD-MM-YYYY" onchange="handleChange(event)">
+                      </div>
+                  </div>
                   
             
                       <div class="ms-auto">
-                        <!-- <button  id="downloadPdf" onclick="downloadPdf()">Download PDF</button> -->
+
                         <button class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
                         <button class="btn btn-success" onclick="downloadPdf()">Download PDF</button>
                         <div>
@@ -43,7 +54,7 @@
                     <table class="table" id="salesReport">
                       <thead>
                         <tr>
-                          <!-- <th scope="col">Order Id</th> -->
+                          <th scope="col">Order Id</th>
                           <th scope="col">User</th>
                           <th scope="col">Date</th>
                           <th scope="col">Total No of Items</th>
@@ -55,11 +66,11 @@
                         <tbody class="table-group-divider" id="table-body">
                           <% salesReport.forEach(order => { %>      
                               <tr>
-                                <!-- <td><%=// order._id %></td> -->
+                                <td><%=order._id %></td>
                                 <td><%= order.userId?.name%></td>
-                                <td><%= order.createdAt.toString().slice(0, 16)%></td>
+                                <td ><%= order.createdAt.toString().slice(0,10)%></td>
                                 <td><%= order.items.length %></td>
-                                <td><%= order.totalAmt %></td>
+                                <td><%= order.totalAmount %></td>
                                 <td><%= order.paymentMethod %></td>
                               </tr>
                           <% }); %>
@@ -87,12 +98,16 @@
 
         <script>
           const table =document.querySelector('#table-body');
-          window.values = {COD:true,Wallet:true,Card:true}
+          window.values = {COD:true,Wallet:true,Card:true,startDate:null,endDate:null}
          const handleChange = (event) =>{
           
           const values = window.values;
-          values[event.target.name] = event.target.checked;
-          console.log(values)
+          if(event.target.getAttribute('type') === 'date'){
+            values[event.target.name] = event.target.value;
+          }else{
+            values[event.target.name] = event.target.checked;
+
+          }
           const body = JSON.stringify(window.values);
           fetch('/admin/filterReport',{
             method:"POST",
@@ -107,9 +122,9 @@
               orderRows += `<tr>
                                 <td>${ order._id }</td>
                                 <td>${ order.userId?.name}</td>
-                                <td>${ order.createdAt.toString().slice(0, 24) }</td>
+                                <td>${ order.createdAt.toString().slice(0, 24)}</td>
                                 <td>${ order.items.length }</td>
-                                <td>${ order.totalAmt }</td>
+                                <td>${ order.totalAmount }</td>
                                 <td>${ order.paymentMethod }</td>
                               </tr>`
             });
@@ -117,17 +132,6 @@
           })
          }
         </script>
-
-        <!-- <script>
-
-          const downloadPdf = ()=>{
-            const pdf = new jsPDF();
-            pdf.autoTable({ html: '#salesReport' })
-            window.open(URL.createObjectURL(pdf.output("blob")))
-          }
-
-        </script>
-         -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -147,6 +151,7 @@
         pdf.save('sales_report.pdf');
     }
 </script>
+
 
 
 <%- include('partials/closingHead.ejs') %>

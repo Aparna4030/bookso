@@ -1,0 +1,36 @@
+<%- include('partials/head.ejs') %> 
+<%- include('partials/navbar.ejs') %> <%-
+include('partials/userSidebar.ejs') %>
+<div class="col-9 px-4">
+    <table class="table">
+      <thead>
+        <a><tr>
+          <th scope="col">OrderNo</th>
+          <th scope="col">User</th>
+          <th scope="col">Date</th>
+          <th scope="col">Total Amt</th>
+          <th scope="col">Status</th>
+          <th scope ='col'>Payment Status</th>
+          <th scope="col">Action</th>
+        </tr></a>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+        <a><tr>
+          <td><%= order._id %></td>
+          <td><%= order.userId?.name%></td>
+          <td><%= order.createdAt.toString().slice(0,16) %></td> 
+          <td><%= order.totalAmount %></td>
+          <td><%= order.status %></td>
+          <td><%= order.paymentStatus %></td>
+          <td><a class="btn btn-warning" href="/userOrderDetails/<%= order._id %>">Details</a></td> 
+        </tr></a>
+        <% }) %>
+      </tbody>
+    </table>
+        <% if (!orders.length) { %>
+          <h2>No Orders</h2>
+        <% } %>
+  </div>
+</div>
+<%- include('partials/closingHead.ejs') %>

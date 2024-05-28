@@ -1,5 +1,4 @@
 const convertToDate = (string)=>{
-    //"dd/mm/yy"  --> Date(year,month,day)
 
     const convert = string.split("/")
     const year = parseInt(convert[2])

@@ -26,11 +26,8 @@
               <% totalPrice = totalPrice + (product.productId.price * product.qty) %>
               price: ₹<span class="itemPrice"><%= product.productId.price %></span>
             </div>
-            <!-- <div class="fw-bold text-success mt-1">Delivered on 17th Aug</div> -->
-            <!-- <div class="fw-bold text-primary mt-1">discount: ₹<%=// product.productId.discount %></div> -->
             <div class="container mt-2">
               <div class="quantity-selector d-flex">
-                <!-- <span id="quantity" class="ms-1 me-1 qty" productId="<%=// product.productId._id %>"></span> -->
                 <button class="btn quantity-btn border-warning bg-bookso qty-dec">-</button>
                 <span id="quantity" class="ms-1 me-1 qty" productId="<%= product.productId._id %>"><%= product.qty %></span>
                 <button class="btn quantity-btn border-warning bg-bookso qty-inc" productId="<%= product.productId %>" qty="<%= product.qty %>">+</button>
@@ -45,6 +42,10 @@
         </div>
       <% }) %>
     </div>
+
+    <% if (products.length > 0) { %>
+     
+ 
 
     <div class="ms-4 col-5 mt-4">
       <div class="w-100 border border-3 rounded m-2" style="background-color: #d3dbee">
@@ -74,7 +75,6 @@
           <br/>
           DELIVERY CHARGES: <input class="border-0" name="deliveryCharge" id="delivery" value="<%= totalPrice * shippingCharge %>"></input>
         </div> 
-        <!-- <input style="display: none;" id="coupon" type="number" name="coupon" class="form-control me-2" value="0"/> -->
         <input  style="display: none;" class="border-0" name="discountPercentage" id="percentage" value="0"></input>
         <input  style="display: none;" class="border-0" name="totalpriceDiscount" id="discount-price" value="0"></input>
         <hr/>
@@ -97,8 +97,10 @@
       <% } %>
     </form>
     </div>
+    <% } %>
   </div>
 </div>
+
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -114,8 +116,6 @@
     const quantityAll = document.querySelectorAll(".quantity-selector");
     const cards = document.querySelectorAll(".product-card")
     const couponAlertElt = document.querySelector('#coupon-success-alert')
-    
-  console.log(cards)
 
   const couponSuccessAlertShow = ()=>{
     couponAlertElt.classList.remove('hidden')
@@ -174,11 +174,8 @@
       let totalPrice = 0
       cards.forEach(card => {
         const quantity = card.querySelector("#quantity").innerHTML * 1;
-        console.log(quantity)
         const itemPrice = card.querySelector(".itemPrice").innerHTML* 1;
-        console.log(itemPrice)
          totalPrice = totalPrice +(quantity * itemPrice);
-         console.log(totalPrice)
       });
       priceControls.setPrice(totalPrice)
       priceControls.setTotalAmount(totalPrice+priceControls.getDelivery())
@@ -196,8 +193,6 @@
       const qtyDec = quantity.querySelector(".qty-dec");
 
       const productId = qtyVal.getAttribute("productId");
-
-      // Event listener for increasing quantity
       qtyInc.addEventListener("click", async () => {
         const jsonData = await fetch(
           `/cart/increaseQty/${productId}/${qtyVal.innerHTML}`
@@ -208,7 +203,6 @@
 
         if (jsonData.status == 406) {
           if (!outOfStockMessageDiv) {
-            // Create and append a new "Out of Stock" message div
             const newOutOfStockMessageDiv = document.createElement("div");
             newOutOfStockMessageDiv.textContent = "Out of Stock";
             newOutOfStockMessageDiv.classList.add(
@@ -229,7 +223,6 @@
         }
       });
 
-      // Event listener for decreasing quantity
       qtyDec.addEventListener("click", async () => {
         const jsonData = await fetch(
           `/cart/decreaseQty/${productId}/${qtyVal.innerHTML}`
@@ -240,7 +233,6 @@
 
         if (jsonData.status == 406) {
           if (!outOfStockMessageDiv) {
-            // Create and append a new "Out of Stock" message div
             const newOutOfStockMessageDiv = document.createElement("div");
             newOutOfStockMessageDiv.textContent = "Out of Stock";
             newOutOfStockMessageDiv.classList.add(
@@ -261,17 +253,6 @@
         }
       });
     });
-
-   
-    // let discountPrice = 0;
-    // let deliveryCharg = 0;
-    // let priceValue = 0;
-    // let discountPercentage = 0;
-    // let discount = "";
-
-  
-    //price details controlling functions
-   
 
     couponFormElt.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -297,7 +278,6 @@
     const submitBtn = document.querySelector("#submit-btn");
     let placeOrderForm;
     submitBtn.addEventListener("click", async () => {
-      console.log("clicked");
       const body = await JSON.stringify({
         totalPrice: discountedPrice + deliveryCharg,
         deliveryCharg,
@@ -308,29 +288,8 @@
         coupon: discountPercentage ? true : false,
       });
 
-      console.log({ body });
-      // fetch("/orders/placeOrder", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body,
-      // })
-      //   .then((res) => {
-      //     return res.text();
-      //   })
-      //   .then((html) => {
-      //     console.log({ html });
-      //     document.body.innerHTML = html;
-      //     placeOrderForm = document.querySelector("#placeOrderForm");
-      //     console.log({ placeOrderForm });
-      //   });
     });
   </script>
-
-
-
-
 
   <%- include('partials/closingHead.ejs') %>
 </div>

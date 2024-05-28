@@ -107,7 +107,7 @@
             <div class="container mt-2">
               <div class="quantity-selector d-flex">
                 <div class="form-check ">
-                  <input class="form-check-input" name="address" type="radio" id="<%= address._id %>" value="<%= address._id %>" <%= index===0? "checked":null %>>
+                  <input class="form-check-input user-address-elt" name="address" type="radio" id="<%= address._id %>" value="<%= address._id %>" <%= index===0? "checked":null %>>
                   <label class="form-check-label" for="<%= address._id %>"> 
                   <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark"> DELIVER TO:</span>
                   <span class="container px-2 text-bookso-product fs-6 fw-bold text-dark"><%= address.name %></span>
@@ -203,18 +203,24 @@
 
 const button = document.querySelector("button")
 button.addEventListener("Click",()=>{
-  console.log("chheeecccckOUT")
 })
 
 const addressContainer = document.querySelector('#address-container');
 
+const submissionForm = document.querySelector('#placeOrderForm');
+submissionForm.addEventListener('submit',(e)=>{
+const addressElts = document.querySelectorAll('.user-address-elt')
+  if(!addressElts.length)
+  e.preventDefault();
+  window.showToast('Please add address')
+
+})
+
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('addressForm');
-  console.log({form})
   
   form.addEventListener('submit', function async(event) {
     event.preventDefault();
-    console.log("form submitting")
     const formData = new FormData(form);
     const jsonData = {};
     formData.forEach((value, key) => {
@@ -235,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
       let cards = ``;
       addresses.forEach((address, index) => {
         
-       cards += `<div class="w-100 d-flex border rounded m-2 shadow">
+       cards += `<div class="w-100 d-flex border rounded m-2 shadow user-address-elt">
           <div class="col-10 d-flex flex-column py-2 ps-2">
             <div class="container mt-2">
               <div class="quantity-selector d-flex">
@@ -260,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
       
     })
     .catch(error => {
-      console.error('Error:', error);
     });
   });
 });

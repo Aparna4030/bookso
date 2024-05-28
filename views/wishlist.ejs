@@ -4,6 +4,9 @@
     <div class="text-center text-bookso fs-4 fw-bold">WISHLIST</div>
     <hr style="color: #f6ef38; height: 6px"></div>
        <div class="container d-flex flex-wrap ">
+        <% if (wishlists?.length === 0) { %>
+       <div class="container pt-4"><h3>ADD PRODUCT TO WISHLIST</h3></div>
+        <% } %>
         <% wishlists.forEach(product => { %>
             <div class="card mt-3 me-3" style="width: 16rem;">
                 <a href="/wishlist/delete/<%= product._id %>">
@@ -18,8 +21,4 @@
                 </div>
         <% }) %>
     </div>
-
-
-
-    
 <%- include('partials/closingHead.ejs') %>

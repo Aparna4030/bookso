@@ -12,6 +12,7 @@ const router = express.Router();
 const Order = require("../models/ordersModel")
 
 router.get("/search", userController.renderSearch)
+router.post("/search", userController.renderFilterSearch)
 
 
 router.get("/", async (req, res) => {
@@ -21,21 +22,25 @@ router.get("/", async (req, res) => {
   })
   res.render("landing", { products: filteredProducts })
 })
-router.get("/logout", userController.logout)
-router.get("/wallet/razorpay", userController.renderRazorPay)
-router.post("/wallet/add/:amount", userController.addWalletMoney)
-router.get("/product/:id", productUserController.renderProduct)
+router.get("/logout",isLoggedin,userController.logout)
+router.get("/wallet/razorpay",isLoggedin,userController.renderRazorPay)
+router.post("/wallet/add/:amount",isLoggedin,userController.addWalletMoney)
+
+router.get("/product/:id",productUserController.renderProduct)
 
 router.get("/profile", isLoggedin, userController.renderProfile)
 router.get("/userDetails", isLoggedin, userController.renderUserDetails)
-router.post("/user/edit", userController.editUser)
+router.post("/user/edit",  isLoggedin,userController.editUser)
 
 router.get("/bookShop", userController.renderBook)
-router.get("/wishlist/delete/:id", wishlistController.removeWishlist)
-router.get("/wishlist", wishlistController.renderWishlist)
+router.get("/wishlist/delete/:id",  isLoggedin,wishlistController.removeWishlist)
+router.get("/wishlist",  isLoggedin,wishlistController.renderWishlist)
 router.post("/wishlist/:id", isLoggedin, wishlistController.addToWishlist)
-router.get("/addCoupon/:couponCode", couponController.availCoupon)
+router.get("/addCoupon/:couponCode",  isLoggedin,couponController.availCoupon)
 router.get("/transactions", isLoggedin, orderController.transactionList)
+router.get("/userOrders",isLoggedin,orderController.renderUserOrders)
+router.get("/userOrderDetails/:id", isLoggedin,orderController.renderUserOderDetails)
+
 
 router.use(isLoggedOut)
 

@@ -67,8 +67,6 @@
 
   const response = await fetch(`/admin/product/search?search=${string}`)
   const products = await response.json()
-  console.log(products)
-
   let inner = ""
   let i = 1
   products.forEach(product => {

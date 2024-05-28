@@ -3,13 +3,12 @@ const Category = require("../../models/categoryModel")
 const asynchandler = require("express-async-handler")
 
 const renderProducts = asynchandler(async (req, res) => {
-    const products = await Product.find().populate('category_id')
+    const products = await Product.find().populate('category_id').sort({ createdAt: -1 })
     let message = null
     if (req.session.message) {
         message = req.session.message;
         req.session.message = null
     }
-    console.log(products)
     const filteredProducts = products.filter(pro => {
         return pro?.category_id?.isListed;
     })
@@ -25,9 +24,6 @@ const renderaddProduct = asynchandler(async (req, res) => {
 
 
 const addProduct = asynchandler(async (req, res) => {
-
-    console.log(req.files)
-
     const product = new Product({
         name: req.body.name,
         publication: req.body.Publisher,
@@ -51,14 +47,10 @@ const addProduct = asynchandler(async (req, res) => {
 const renderEditProduct = asynchandler(async (req, res) => {
     const product = await Product.findOne({ _id: req.params.id })
     const categories = await Category.find()
-    console.log(product);
-    console.log(categories)
     res.render("editProduct", { product, categories })
 })
 
 const editProduct = asynchandler(async (req, res) => {
-    //  const { name, description,} = req.body
-    console.log(req.body)
     let product = await Product.findOne({_id: req.params.id});
 
     let images;
@@ -69,11 +61,6 @@ const editProduct = asynchandler(async (req, res) => {
         })
         product.image.push(...images)
     }
-
-
-
-    console.log(req.files)
-
     product.name = req.body.name;
     product.publication = req.body.Publisher;
     product.category_id = req.body.category;
@@ -112,37 +99,39 @@ const searchProduct = asynchandler(async (req, res) => {
 const fs = require('fs');
 const path = require('path');
 
-const deleteImage = async (req, res) => {
+
+const deleteImage = asynchandler(async(req, res) => {
     const index = req.params.index;
     const productId = req.params.productId;
-    console.log(index, productId)
     const product = await Product.findOne({ _id: productId });
-    console.log('prooooooooooooo', product)
     const imagePath = product.image[index];
     product.image.splice(index, 1);
-    console.log('modifiedddddddddddddddddddddd', product)
     await product.save();
 
     const fullPath = path.join(__dirname, '..', '../public/uploads', imagePath);
-    // console.log("fuuuuuulll",fullPath)
-// here it will check the path and deletes from server which uploads folder//
     if (fs.existsSync(fullPath)) {
         fs.unlink(fullPath, (err) => {
             if (err) {
-                console.error('Error deleting image:', err, fullPath);
                 return res.status(500).send('Error deleting image' + fullPath);
             }
-            console.log('Image deleted successfully');
             res.redirect(`/admin/editProduct/${productId}`);
         });
     } else {
-        console.error('File does not exist:', fullPath);
         res.status(404).send('File not found');
     }
-};
+});
 
 
 
 
 
-module.exports = { deleteImage, searchProduct, listProducts, unlistProducts, renderProducts, renderaddProduct, addProduct, renderEditProduct, editProduct }
+module.exports = {
+    deleteImage, 
+    searchProduct, 
+    listProducts, 
+    unlistProducts, 
+    renderProducts, 
+    renderaddProduct, 
+    addProduct, 
+    renderEditProduct, 
+    editProduct }

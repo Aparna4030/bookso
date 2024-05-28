@@ -1,0 +1,15 @@
+
+    <% searchResults.forEach(product => { %>
+        <div class="card mt-3 me-3" style="width: 16rem;">
+            <a href="/product/<%= product._id %>">
+            <img src="../uploads/<%=  product.image[0] %>" class="card-img-top w-50" alt="..." style="margin-left: 60px"></a>
+            <div class="card-body shadow h-25">
+                <h5 class="card-title"><%= product.name %></h5>
+                <p class="card-text text-primary">₹<%= product.price %></p>
+                <% if (wishlistProducts && wishlistProducts.find(obj=>obj.productId.toString() == product._id.toString())) { %>
+                  <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                <% }else{ %>
+                  <% } %>
+            </div>
+            </div>
+    <% }) %>

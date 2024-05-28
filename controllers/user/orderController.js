@@ -9,36 +9,31 @@ const addressModel = require("../../models/addressModel")
 const Transaction = require("../../models/transactionModel")
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const Razorpay = require('razorpay');
+const checkStockExist = require("../../utils/checkStockExist")
+const checkListedStatus = require("../../utils/checkListedStatus")
 
 const orders = [];
 
-const renderOrders = asynchandler(async (req, res) => {
-    let orders = await Order.find({ userId: req.session.userId }).sort({ createdAt: -1 })
-        .populate('items.productId')
-        .populate('address')
-        console.log("ooooooooo888888888899999999999",orders)
-    res.render("orders", { orders })
-})
+const rzpyCallback = asynchandler(async (req, res) => {
+    const order = await Order.findOne({ _id: req.params.id })
+    order.paymentStatus = "successful";
+    order.status ="Placed"
 
-const rzpyCallback = asynchandler(async (req,res) =>{
-    const orderIndex = orders.findIndex(order => order.userId.toString() === req.session.userId.toString())
-    const order =await orders[orderIndex].save();
-    const items = orders[orderIndex].items;
-    items.forEach(async (item) => {
-    await Product.updateOne({ _id: item.productId }, { $inc: { stock: -1 * item.qty } })
+    await order.save();
+    order.items.forEach(async (item) => {
+        await Product.updateOne({ _id: item.productId }, { $inc: { stock: -1 * item.qty } })
     })
-    orders.splice(orderIndex,1);
 
-        const transaction = new Transaction({
-            userId: req.session.userId,
-            amount:order.totalAmount,
-            paymentMethod: order.paymentMethod,
-            description: 'Amount Paid',
-            type: 'Debit'
-        });
-        await transaction.save();
+    const transaction = new Transaction({
+        userId: req.session.userId,
+        amount: order.totalAmount,
+        paymentMethod: order.paymentMethod,
+        description: 'Amount Paid',
+        type: 'Debit'
+    });
+    await transaction.save();
     await Cart.deleteOne({ userId: req.session.userId });
-    res.redirect('/')
+    res.redirect('/orders/payment')
 })
 
 
@@ -46,47 +41,48 @@ const addOrder = asynchandler(async (req, res) => {
     const initialAmount = req.body.cartInitialAmount * 1;
     const discount = req.body.discountValue * 1;
     const totalAmount = req.body.totalPrice * 1;
-    // console.log("///////////////////////////////////////",req.body)
-//     address: '6618dd341b91104c3b12561b',
-//     initialPrice: '1000',        
-//     discountValue: '200',        
-//     deliveryCharge: '50',        
-//     totalPrice: '850',
-//     option: 'COD',
-//     cartInitialAmount: '1000',   
-//     discountPercentage: '20'     
-
-
-    // console.log("00000000000000000000000000000000000000",initialAmount)
-//   00000000000000000000000000000000000000 1000
-    const { discountPercentage,discountValue,totalPrice} = req.body;
-
+    
+    const { discountPercentage, discountValue, totalPrice } = req.body;
+    
     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId');
+    
+    if(req.session.cartLastUpdatedAt){
+        const lastUpdated = req.session.cartLastUpdatedAt;
+        req.session.cartLastUpdatedAt = null;
+        if(lastUpdated.toString() !== cart.updatedAt.toISOString() ){
+
+            res.cookie("notify","Cart Updated")
+            res.redirect('/cart')
+            return;
+        }
+    }
     const items = cart.products.map((product) => {
+        if(product.productId.stock < product.qty)throw new Error("No stock available")
         return { productId: product.productId._id, qty: product.qty, pricePerItem: product.productId.price };
     });
 
     const cartTotalAmount = cart.products.reduce((acc, product) => {
         return acc + (product.qty * product.productId.price);
     }, 0);
- 
-    const  deliveryCharge = 0.05;
-    const totalDeliveryCharge = cartTotalAmount *  deliveryCharge;
-   
+
+    const deliveryCharge = 0.05;
+    const totalDeliveryCharge = cartTotalAmount * deliveryCharge;
+
     if (req.body.option === 'Card') {
         const order = new Order({
             userId: req.session.userId,
             items: items,
             address: req.body.address,
             paymentMethod: req.body.option,
-            discount: discount? discount:0,
+            discount: discount ? discount : 0,
             amount: initialAmount ? initialAmount : 0,
             totalAmount: totalPrice ? totalPrice : 0,
             deliveryCharge: totalDeliveryCharge,
+            paymentStatus: "pending",
+            status:"pending"
         });
-        const callback = "http://localhost:8080/orders/razorpay/success";
-        orders.push(order);
-        console.log({totalAmount})
+        const savedOrder = await order.save();
+        const callback = `http://localhost:8080/orders/razorpay/success/${savedOrder._id}`;
         res.render('razorpay', { amount: totalAmount, callback });
     } else {
         const amount = initialAmount ? initialAmount : totalDeliveryCharge + cartTotalAmount;
@@ -103,19 +99,20 @@ const addOrder = asynchandler(async (req, res) => {
             items: items,
             address: req.body.address,
             paymentMethod: req.body.option,
-            discount: discount? discount:0,
-            amount: initialAmount? initialAmount:0,
-            totalAmount: totalPrice? totalPrice:0,
+            discount: discount ? discount : 0,
+            amount: initialAmount ? initialAmount : 0,
+            totalAmount: totalPrice ? totalPrice : 0,
             deliveryCharge: totalDeliveryCharge,
+            paymentStatus: "successful"
         });
 
         await order.save();
-        
+
         if (order.paymentMethod !== 'COD') {
             const transaction = new Transaction({
                 userId: req.session.userId,
                 amount: totalPrice,
-                order: order._id, 
+                order: order._id,
                 paymentMethod: req.body.option,
                 description: 'Amount Paid',
                 type: 'Debit'
@@ -138,30 +135,126 @@ const renderPayment = asynchandler((req, res) => {
     res.render("payment")
 })
 
-const  transactionList = asynchandler(async(req,res)=>{
-    const transactions = await Transaction.find().populate('userId', 'name')
-    res.render("transactions",{transactions})
+const transactionList = asynchandler(async (req, res) => {
+    const transactions = await Transaction.find({ userId: req.session.userId }).populate('userId', 'name').sort({ createdAt: -1 })
+    res.render("transactions", { transactions })
 })
 
 
-const cancelProduct = asynchandler(async (req, res) => { 
+const cancelProduct = asynchandler(async (req, res) => {
     const cancelOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productCancellation: { cancelStatus: true, description: req.body.description } } })
     res.redirect('/orders')
 })
 const returnProduct = asynchandler(async (req, res) => {
-    const returnOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productReturned: { returnStatus: true, description: req.body.description } } }) 
+    const returnOrder = await Order.updateOne({ _id: req.body.order_id }, { $set: { productReturned: { returnStatus: true, description: req.body.description } } })
     res.redirect('/orders')
 })
 
 const renderPlaceOrder = asynchandler(async (req, res) => {
-    // console.log("tttttttiiiiiiiiiii",req.body)
-    const { initialPrice: initialPrice, totalPrice: totalPrice, discountValue: discountValue, deliveryCharge: deliveryCharge, discountPercentage: discountPercentage, totalpriceDiscount: totalpriceDiscount} = req.body;
+    const { initialPrice: initialPrice, totalPrice: totalPrice, discountValue: discountValue, deliveryCharge: deliveryCharge, discountPercentage: discountPercentage, totalpriceDiscount: totalpriceDiscount } = req.body;
     const addressesOrder = await Address.find({ userId: req.session.userId })
     const cart = await Cart.findOne({ userId: req.session.userId }).populate('products.productId')
     const products = cart.products;
+    req.session.cartLastUpdatedAt = cart.updatedAt;
+
+    let productAvailability = true;
+
+    await Promise.all(cart.products.map(async (pro) => {
+        const listed = await checkListedStatus(pro.productId._id);
+        const stockAvailable = await checkStockExist(pro.productId._id, pro.qty);
+        if (!listed || !stockAvailable) {
+            productAvailability = false;
+        }
+    }));
+    
+    if(!productAvailability){
+        res.cookie("notify","Some products are not available")
+        res.redirect("/cart");
+    }
+
     const shippingCharge = 0.05
-    const user = await User.findOne({_id:req.session.userId},{wallet:1});
-    res.render("placeOrder", { addressesOrder, totalPrice, products, shippingCharge, initialPrice, discountValue, deliveryCharge, discountPercentage, totalpriceDiscount, wallet:user.wallet })
+    const user = await User.findOne({ _id: req.session.userId }, { wallet: 1 });
+    res.render("placeOrder", { addressesOrder, totalPrice, products, shippingCharge, initialPrice, discountValue, deliveryCharge, discountPercentage, totalpriceDiscount, wallet: user.wallet })
 })
 
-module.exports = { transactionList,returnProduct, cancelProduct, addOrder, renderPayment, renderOrders, renderPlaceOrder,rzpyCallback }
+const renderUserOrders = asynchandler(async (req, res) => {
+    const orders = await Order.find({ userId: req.session.userId }).sort({ createdAt: -1 })
+        .populate('items.productId')
+        .populate('address')
+        .populate('userId')
+    res.render("userOrders", { orders })
+})
+
+const renderUserOderDetails = asynchandler(async (req, res) => {
+    const orders = await Order.find({ _id: req.params.id })
+        .populate('items.productId')
+        .populate('address')
+        .populate('userId')
+    res.render("userOrderDetails", { orders })
+})
+
+const handleReorder = asynchandler(async (req, res) => {
+    const orderId = req.params.id;
+    const order = await Order.findOne({ _id: orderId });
+
+    let productStatusOk = true;
+
+    await new Promise(async (res) => {
+        order.items.forEach(async (elt, index) => {
+            const stockAvailable = await checkStockExist(elt.productId, elt.qty);
+            const listed = await checkListedStatus(elt.productId)
+            if (!stockAvailable || !listed) {
+                productStatusOk = false;  
+            }
+            if(index === order.items.length -1){
+                res();
+            }
+        })
+
+    })
+
+    if (productStatusOk) {
+        const amount = order.totalAmount;
+        const callback = `http://localhost:8080/orders/reorder/razorpaycb/${order._id}`
+        res.render('razorpay', { amount, callback });
+
+    }
+    else {
+        res.send("No stock")
+    }
+
+})
+
+const updateReorder = asynchandler(async(req,res)=>{
+    const order = await Order.findOne({_id:req.params.id});
+    const transaction = new Transaction({
+        userId: req.session.userId,
+        amount: order.totalAmount,
+        paymentMethod: order.paymentMethod,
+        description: 'Amount Paid',
+        type: 'Debit'
+    });
+    await transaction.save();
+    order.status="Placed"
+    order.paymentStatus = "successful";
+    order.save();   
+    order.items.forEach(async (item) => {
+        await Product.updateOne({ _id: item.productId }, { $inc: { stock: -1 * item.qty } })
+    })
+    await Cart.deleteOne({ userId: req.session.userId });
+    res.redirect('/orders/payment')
+})
+
+
+module.exports = {
+    renderUserOderDetails,
+    updateReorder,
+    renderUserOrders,
+    transactionList,
+    returnProduct,
+    cancelProduct,
+    addOrder,
+    renderPayment,
+    renderPlaceOrder, 
+    rzpyCallback,
+    handleReorder }

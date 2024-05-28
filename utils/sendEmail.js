@@ -22,14 +22,10 @@ const sendOTPemail = (email) => {
             subject: 'OTP',
             html: genEmailHtml(otp),
         };
-
-        // Send the email
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.error(error);
                 reject(error);
             } else {
-                console.log('Email sent: ' + info.response);
                 resolve(otp);
 
             }
