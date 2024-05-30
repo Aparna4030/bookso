@@ -335,6 +335,7 @@ const logout = asynchandler((req, res) => {
     req.session.userId = null
     req.session.isAdmin = null
     res.locals.isLoggedin = null;
+    req.session.destroy();
     res.redirect("/")
 })
 
