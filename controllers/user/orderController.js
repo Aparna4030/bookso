@@ -82,7 +82,7 @@ const addOrder = asynchandler(async (req, res) => {
             status:"pending"
         });
         const savedOrder = await order.save();
-        const callback = `http://localhost:8080/orders/razorpay/success/${savedOrder._id}`;
+        const callback = `https://bookso.shop/orders/razorpay/success/${savedOrder._id}`;
         res.render('razorpay', { amount: totalAmount, callback });
     } else {
         const amount = initialAmount ? initialAmount : totalDeliveryCharge + cartTotalAmount;
