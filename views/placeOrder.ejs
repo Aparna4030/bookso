@@ -209,11 +209,10 @@ const addressContainer = document.querySelector('#address-container');
 
 const submissionForm = document.querySelector('#placeOrderForm');
 submissionForm.addEventListener('submit',(e)=>{
-const addressElts = document.querySelectorAll('.user-address-elt')
-  if(!addressElts.length)
   e.preventDefault();
-  window.showToast('Please add address')
-
+const addressElts = document.querySelectorAll('.user-address-elt')
+  if(!addressElts.length) window.showToast('Please add address')
+ else submissionForm.submit()
 })
 
 document.addEventListener('DOMContentLoaded', function () {

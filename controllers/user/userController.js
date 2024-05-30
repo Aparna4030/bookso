@@ -14,6 +14,7 @@ const { redirect } = require("express/lib/response")
 
 
 const renderLogin = asynchandler((req, res) => {
+    console.log('check')
     let message = null
     if (req.session.message) {
         message = req.session.message
@@ -23,6 +24,7 @@ const renderLogin = asynchandler((req, res) => {
 })
 
 const userLogin = asynchandler(async (req, res) => {
+    console.log('inside login')
 
     const existingUser = await User.findOne({ email: req.body.email })
     if (!existingUser) {
@@ -37,6 +39,7 @@ const userLogin = asynchandler(async (req, res) => {
         }
         if (valid) {
             req.session.userId = existingUser._id
+            console.log(req.session)
             res.redirect("/")
         } else {
             req.session.message = "Password don't match"
@@ -327,6 +330,8 @@ const renderFilterSearch = asynchandler(async (req, res) => {
 
 
 const logout = asynchandler((req, res) => {
+    console.log('inside logout')
+    console.log(req.session)
     req.session.userId = null
     req.session.isAdmin = null
     res.locals.isLoggedin = null;
